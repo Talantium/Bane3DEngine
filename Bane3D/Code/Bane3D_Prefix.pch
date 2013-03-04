@@ -1,0 +1,55 @@
+//
+// Prefix header for all source files
+//
+
+#ifdef __OBJC__
+
+// GLOBAL DEBUG SWITCH
+#ifndef DEBUG
+    #define DEBUG                       0 // Do not change, this is set by build settings!
+#endif
+
+// DEBUG MODULES
+// Set to 1 to enable debug output for these modules
+#define DEBUG_BINARY_TREE               0 && DEBUG
+#define DEBUG_PRINT_STATS_BATCHING      1 && DEBUG
+#define DEBUG_PERFOMANCE                1 && DEBUG
+
+// Standard imports
+#import <Foundation/Foundation.h>
+
+// Logging macros
+#if DEBUG
+    #define LogError(fmt, ...) NSLog((@"[ERROR] %s [Line %d] " fmt), __FUNCTION__, __LINE__, ##__VA_ARGS__)
+    #define LogWarning(fmt, ...) NSLog((@"[WARNING] %s [Line %d] " fmt), __FUNCTION__, __LINE__, ##__VA_ARGS__)
+    #define LogEcho(fmt, ...) NSLog((@"" fmt), ##__VA_ARGS__)
+    #define LogDebug(fmt, ...) NSLog((@"[DEBUG] %s [Line %d] " fmt), __FUNCTION__, __LINE__, ##__VA_ARGS__)
+    #define LogDebugExt(fmt, ...) NSLog((@"[DEBUG] %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#else
+    #define LogError(fmt, ...) (void)0
+    #define LogWarning(fmt, ...) (void)0
+    #define LogEcho(fmt, ...) (void)0
+    #define LogDebug(fmt, ...) (void)0
+    #define LogDebugExt(fmt, ...) (void)0
+#endif
+
+#endif
+
+
+// Misc macros
+#define BUFFER_OFFSET(i) ((char *)NULL + (i))
+
+
+// Supresses warning concerning performSelector calls when using ARC, see
+// http://stackoverflow.com/questions/7017281/performselector-may-cause-a-leak-because-its-selector-is-unknown
+#if  __has_feature(objc_arc)
+
+#define B3DSuppressPerformSelectorLeakWarning(code) \
+do { \
+_Pragma("clang diagnostic push") \
+_Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") \
+code; \
+_Pragma("clang diagnostic pop") \
+} while (0)
+
+#endif
