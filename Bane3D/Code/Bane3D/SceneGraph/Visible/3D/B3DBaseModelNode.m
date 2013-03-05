@@ -78,6 +78,15 @@
 }
 
 
+- (void) awake
+{
+    [super awake];
+    
+    // Set default value
+    [_material.shader setBoolValue:NO forUniformNamed:B3DShaderUniformToggleTextureAlphaOnly];
+}
+
+
 - (void) draw
 {
     [super draw];

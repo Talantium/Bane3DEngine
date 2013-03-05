@@ -35,12 +35,10 @@
 @class B3DBaseModelNode;
 
 
-//#define SINGLESPRITEBUFFERCOUNT 1
-
 @interface B3DRenderMan : NSObject
 
-@property (nonatomic, readonly) B3DOpaqueSpriteSorter*      opaqueSpriteSorter;
-@property (nonatomic, readonly) B3DTransparentNodeSorter*   transparentNodeSorter;
+@property (nonatomic, strong, readonly) B3DOpaqueSpriteSorter*      opaqueSpriteSorter;
+@property (nonatomic, strong, readonly) B3DTransparentNodeSorter*   transparentNodeSorter;
 
 - (void) drawOpaqueSprite:(B3DSprite*)sprite;
 - (void) drawTransparentSprite:(B3DSprite*)sprite;

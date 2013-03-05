@@ -108,6 +108,7 @@ fragmentShaderSource:(NSString*)fragmentSource;
 - (BOOL) addUniformNamed:(NSString*)uniform;
 - (B3DShaderUniform*) uniformNamed:(NSString*)name;
 
+- (void) setBoolValue:(GLboolean)value forUniformNamed:(NSString*)uniform;
 - (void) setIntValue:(GLint)value forUniformNamed:(NSString*)uniform;
 - (void) setFloatValue:(GLfloat)value forUniformNamed:(NSString*)uniform;
 - (void) setMatrix3Value:(GLKMatrix3)value forUniformNamed:(NSString*)uniform;

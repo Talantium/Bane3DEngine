@@ -23,7 +23,8 @@
     if (self)
     {
         B3DLabel* label = [[B3DLabel alloc] initWithText:@"Bane3DEngine - FPS: ??"];
-        [label translateByX:0 andY:0 andZ:-10];
+        label.color = [B3DColor colorWithRGBHex:0xcccccc];
+        [label translateByX:2 andY:0 andZ:-10];
         [label updateWithBlock:^(B3DBaseNode* node, double deltaTime)
         {
             ((B3DLabel*)node).text = [NSString stringWithFormat:@"Bane3DEngine - FPS: %0.f", 1.0f/deltaTime];

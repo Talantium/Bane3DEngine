@@ -40,16 +40,17 @@ typedef struct B3DTextureFontCharSprite
 
 @interface B3DTextureFont : B3DTexture
 
-@property (nonatomic, readonly, strong) NSMutableDictionary*    charDict;
-@property (nonatomic, readonly, strong) UIFont*                 font;
-@property (nonatomic, readwrite, copy)  NSString*               charSet; // Uses B3DTextureFontDefaultCharSet as default
+@property (nonatomic, strong, readonly) NSMutableDictionary*    charDict;
+@property (nonatomic, strong, readonly) UIFont*                 font;
+@property (nonatomic, copy,  readwrite) NSString*               charSet; // Uses B3DTextureFontDefaultCharSet as default
+
++ (B3DTextureFont*) defaultFontTexture;
 
 + (B3DAssetToken*) tokenForFont:(UIFont*)font;
 
 + (B3DTextureFont*) textureWithFont:(UIFont*)font;
 + (B3DTextureFont*) textureWithFontNamed:(NSString*)name size:(CGFloat)size;
 
-+ (B3DTextureFont*) defaultFontTexture;
 
 - (id) initWithFont:(UIFont*)font;
 

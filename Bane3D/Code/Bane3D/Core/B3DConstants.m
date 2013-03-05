@@ -83,6 +83,8 @@ NSString*   const   B3DShaderUniformTextureBase             = @"u_texture_base";
 NSString*   const   B3DShaderUniformColorBase               = @"u_color_base";
 NSString*   const   B3DShaderUniformColorAmbient            = @"u_color_ambient";
 NSString*   const   B3DShaderUniformColorDiffuse            = @"u_color_diffuse";
+NSString*   const   B3DShaderUniformToggleTextureAlphaOnly  = @"u_toggle_texAlphaOnly";
+
 
 // Batching
 const       int		B3DSpriteBatcherMaxVertices             = 10000;

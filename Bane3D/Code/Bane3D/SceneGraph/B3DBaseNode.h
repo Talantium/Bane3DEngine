@@ -91,17 +91,19 @@ typedef void (^B3DAwakeBlock)(B3DBaseNode* node);
 // the now loaded assets with the node, so make sure to call super if you 
 // override. Use this to create any additional OpenGL items like VBO's etc.
 - (void) create;
+
 // This is called after the parent scene has been loaded, the node created and all
 // assets connected. Use it to do additional setup to the node (eg placement based
 // on asset size etc.)
 - (void) awake;
 - (void) awakeWithBlock:(B3DAwakeBlock)awakeBlock;
 
-// Clean up any items initialized in create, destroy buffers etc.
+// Clean up any items initialized in create, eg. destroy buffers etc.
 - (void) destroy;
 
-// Called from within awake, you should not call this directly
+// Called from within create, should not be called directly
 - (void) initAssets;
+
 // Use this to register assets you want to use
 - (void) useAssetWithToken:(B3DAssetToken*)token atKeyPath:(NSString*)keyPath;
 

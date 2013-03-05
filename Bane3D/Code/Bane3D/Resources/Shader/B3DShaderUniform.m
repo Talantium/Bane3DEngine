@@ -14,6 +14,7 @@
 typedef enum
 {
     B3DShaderUniformTypeUnknown,
+    B3DShaderUniformTypeBool,
     B3DShaderUniformTypeInt,
     B3DShaderUniformTypeFloat,
     B3DShaderUniformTypeMatrix3x3,
@@ -30,6 +31,7 @@ B3DShaderUniformType;
     @private
         B3DShaderUniformType            _type;
     
+        GLboolean                       _boolValue;
         GLint                           _intValue;
         GLfloat                         _floatValue;
         GLKMatrix3                      _matrix3Value;
@@ -46,9 +48,6 @@ B3DShaderUniformType;
 
 
 @implementation B3DShaderUniform
-
-@synthesize name        = _name;
-@synthesize location    = _location;
 
 + (B3DShaderUniform*) uniformNamed:(NSString*)name
 {
@@ -81,6 +80,10 @@ B3DShaderUniformType;
     {
         switch (_type)
         {
+            case B3DShaderUniformTypeBool:
+                glUniform1i(_location, _boolValue);
+                break;
+                
             case B3DShaderUniformTypeInt:
                 glUniform1i(_location, _intValue);
                 break;
@@ -121,6 +124,11 @@ B3DShaderUniformType;
     _type = B3DShaderUniformTypeUnknown;
 }
 
+- (void) setBoolValue:(GLboolean)value
+{
+    _boolValue = value;
+    _type = B3DShaderUniformTypeBool;
+}
 
 - (void) setIntValue:(GLint)value
 {

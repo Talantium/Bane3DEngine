@@ -88,9 +88,7 @@
 
 - (void) dealloc
 {
-    _text = nil;
     [self tearDownBuffers];
-
 }
 
 - (void) create
@@ -98,6 +96,13 @@
     [super create];
     
     [self createBuffers];
+}
+
+- (void) awake
+{
+    [super awake];
+    
+    self.material.baseColor = self.color;
 }
 
 - (void) destroy
@@ -269,6 +274,7 @@
     matrix_mvp = GLKMatrix4Multiply(self.parentScene.mainCamera.viewMatrix, [self absoluteTransform]);
     [shader setMatrix4Value:matrix_mvp forUniformNamed:B3DShaderUniformMatrixMVP];
     [shader setIntValue:0 forUniformNamed:B3DShaderUniformTextureBase];
+    [shader setBoolValue:YES forUniformNamed:B3DShaderUniformToggleTextureAlphaOnly];
     
     [_material enable];
     

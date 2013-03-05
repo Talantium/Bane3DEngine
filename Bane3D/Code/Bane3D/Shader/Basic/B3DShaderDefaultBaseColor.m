@@ -63,16 +63,26 @@
     uniform lowp sampler2D   %1$@;\
     uniform vec4             %2$@;\
     uniform vec4             %3$@;\
+    uniform bool             %4$@;\
     \
     varying vec2             v_texture_coords;\
     \
     void main ()\
     {\
-        gl_FragColor = texture2D(%1$@, v_texture_coords) * %2$@ * %3$@;\
+        if (%4$@)\
+        {\
+            float alpha = texture2D(%1$@, v_texture_coords).a;\
+            gl_FragColor = %2$@ * %3$@ * alpha;\
+        }\
+        else\
+        {\
+            gl_FragColor = texture2D(%1$@, v_texture_coords) * %2$@ * %3$@;\
+        }\
     }",
     B3DShaderUniformTextureBase,
     B3DShaderUniformColorBase,
-    B3DShaderUniformColorAmbient];
+    B3DShaderUniformColorAmbient,
+    B3DShaderUniformToggleTextureAlphaOnly];
     
     self = [super initWithName:name
             vertexShaderSource:vertexSource
@@ -91,6 +101,7 @@
             [self addUniformNamed:B3DShaderUniformTextureBase];
             [self addUniformNamed:B3DShaderUniformColorBase];
             [self addUniformNamed:B3DShaderUniformColorAmbient];
+            [self addUniformNamed:B3DShaderUniformToggleTextureAlphaOnly];
         }
     }
     

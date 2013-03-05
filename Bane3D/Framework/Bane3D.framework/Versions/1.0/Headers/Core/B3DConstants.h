@@ -125,6 +125,7 @@ extern NSString*    const   B3DShaderUniformTextureBase;
 extern NSString*    const   B3DShaderUniformColorBase;
 extern NSString*    const   B3DShaderUniformColorAmbient;
 extern NSString*    const   B3DShaderUniformColorDiffuse;
+extern NSString*    const   B3DShaderUniformToggleTextureAlphaOnly;
 
 
 // Touches for dragging

@@ -358,6 +358,11 @@
     return [_uniforms objectForKey:name];
 }
 
+- (void) setBoolValue:(GLboolean)value forUniformNamed:(NSString*)uniform
+{
+    [[self uniformNamed:uniform] setBoolValue:value];
+}
+
 - (void) setIntValue:(GLint)value forUniformNamed:(NSString*)uniform
 {
     [[self uniformNamed:uniform] setIntValue:value];

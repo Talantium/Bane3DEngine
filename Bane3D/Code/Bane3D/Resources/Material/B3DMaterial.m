@@ -168,7 +168,14 @@
 {
     [super enable];
     
-    [_texture enable];
+    if (_texture)
+    {
+        [_texture enable];
+    }
+    else
+    {
+        [_stateManager bindTexture:0];
+    }
     
     [_shader setColorValue:_baseColor forUniformNamed:B3DShaderUniformColorBase];
     [_shader setColorValue:_ambientColor forUniformNamed:B3DShaderUniformColorAmbient];

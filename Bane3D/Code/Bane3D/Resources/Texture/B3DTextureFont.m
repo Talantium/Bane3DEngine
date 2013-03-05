@@ -20,8 +20,8 @@ NSString*   const   B3DTextureFontDefaultCharSet    = @" !\"#$%&'()*+,-./0123456
 
 @interface B3DTextureFont ()
 
-@property (nonatomic, readwrite, strong) NSMutableDictionary*       charDict;
-@property (nonatomic, readwrite, strong) UIFont*                    font;
+@property (nonatomic, strong, readwrite) NSMutableDictionary*       charDict;
+@property (nonatomic, strong, readwrite) UIFont*                    font;
 
 + (NSString*) fontIdentifierForFont:(UIFont*)font;
 
@@ -32,6 +32,11 @@ NSString*   const   B3DTextureFontDefaultCharSet    = @" !\"#$%&'()*+,-./0123456
 
 
 #pragma mark - Class Methods
+
++ (B3DTextureFont*) defaultFontTexture
+{
+    return [B3DTextureFont textureWithFont:[UIFont systemFontOfSize:B3DLabelDefaultFontSize]];
+}
 
 + (NSString*) fontIdentifierForFont:(UIFont*)font
 {
@@ -59,11 +64,6 @@ NSString*   const   B3DTextureFontDefaultCharSet    = @" !\"#$%&'()*+,-./0123456
     return [B3DTextureFont textureWithFont:[UIFont fontWithName:name size:size]];
 }
 
-+ (B3DTextureFont*) defaultFontTexture
-{
-    return [B3DTextureFont textureWithFont:[UIFont systemFontOfSize:B3DLabelDefaultFontSize]];
-}
-
 
 #pragma mark - Con-/Destructor
 
@@ -78,14 +78,6 @@ NSString*   const   B3DTextureFontDefaultCharSet    = @" !\"#$%&'()*+,-./0123456
 	}
 	
 	return self;
-}
-
-- (void) dealloc
-{
-    _charSet = nil;
-    _charDict = nil;
-    _font = nil;
-    
 }
 
 

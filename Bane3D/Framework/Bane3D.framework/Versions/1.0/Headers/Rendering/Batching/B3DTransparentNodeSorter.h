@@ -33,15 +33,15 @@
 @interface B3DTransparentNodeSorter : NSObject
 
 #if DEBUG_PRINT_STATS_BATCHING
-@property (nonatomic, readonly) int nodeCount;
-@property (nonatomic, readonly) int nodeCountBatched;
-@property (nonatomic, readonly) int nodeCountSingle;
-@property (nonatomic, readonly) int nodeCountLastFrame;
-@property (nonatomic, readonly) int nodeCountBatchedLastFrame;
-@property (nonatomic, readonly) int nodeCountSingleLastFrame;
+@property (nonatomic, assign, readonly) int nodeCount;
+@property (nonatomic, assign, readonly) int nodeCountBatched;
+@property (nonatomic, assign, readonly) int nodeCountSingle;
+@property (nonatomic, assign, readonly) int nodeCountLastFrame;
+@property (nonatomic, assign, readonly) int nodeCountBatchedLastFrame;
+@property (nonatomic, assign, readonly) int nodeCountSingleLastFrame;
 #endif
 
-@property (nonatomic, readonly) BOOL hasNodes;
+@property (nonatomic, assign, readonly) BOOL hasNodes;
 
 - (id) initWithSharedBatcher:(B3DSpriteBatcher*)spriteBatcher;
 

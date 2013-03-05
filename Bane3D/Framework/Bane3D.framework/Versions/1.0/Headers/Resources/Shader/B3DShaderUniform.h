@@ -21,6 +21,7 @@
 - (void) applyValue;
 - (void) cleanUp;
 
+- (void) setBoolValue:(GLboolean)value;
 - (void) setIntValue:(GLint)value;
 - (void) setFloatValue:(GLfloat)value;
 - (void) setMatrix3Value:(GLKMatrix3)value;
