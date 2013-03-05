@@ -41,15 +41,8 @@
 
 @end
 
+
 @implementation B3DOpaqueSpriteSorter
-
-#if DEBUG_PRINT_STATS_BATCHING
-@synthesize spriteCount = _spriteCount;
-@synthesize arrayCount = _arrayCount;
-@synthesize spriteCountLastFrame = _spriteCountLastFrame;
-@synthesize arrayCountLastFrame = _arrayCountLastFrame;
-#endif
-
 
 #pragma mark - Con-/Destructor
 
@@ -64,12 +57,6 @@
     }
     
     return self;
-}
-
-- (void) dealloc
-{
-    _spritesByTexture = nil;
-    
 }
 
 

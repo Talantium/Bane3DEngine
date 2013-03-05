@@ -91,56 +91,18 @@
         
         glGenBuffers(1, &_spriteBatchVertexBufferObject[i]);
         glBindBuffer(GL_ARRAY_BUFFER, _spriteBatchVertexBufferObject[i]);
-        glBufferData(GL_ARRAY_BUFFER, size * B3DSpriteBatcherMaxVertices, NULL, GL_STREAM_DRAW);// GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, size * B3DSpriteBatcherMaxVertices, NULL, GL_STREAM_DRAW);
         
         glEnableVertexAttribArray(B3DVertexAttributesPosition);
         glVertexAttribPointer(B3DVertexAttributesPosition, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(0));
-        
-//        glEnableVertexAttribArray(B3DVertexAttributesNormal);
-//        glVertexAttribPointer(B3DVertexAttributesNormal, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(12));
-        
+                
         glEnableVertexAttribArray(B3DVertexAttributesColor);
         glVertexAttribPointer(B3DVertexAttributesColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, size, BUFFER_OFFSET(12));
         
         glEnableVertexAttribArray(B3DVertexAttributesTexCoord0);
         glVertexAttribPointer(B3DVertexAttributesTexCoord0, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(16));
         
-//        glEnableVertexAttribArray(B3DVertexAttributesTexCoord1);
-//        glVertexAttribPointer(B3DVertexAttributesTexCoord1, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(32));
-        
         glBindVertexArrayOES(0);
-        
-        //NSLog(@"%lu %lu %lu %lu %lu ", sizeof(GLfloat), sizeof(GLshort), sizeof(GLubyte), sizeof(B3DSpriteVertexData), sizeof(B3DSpriteVertexData) * B3DSpriteBatcherMaxVertices);
-        // Output 4 2 1 36 360000
-        
-        /*B3DSpriteVertexData data;
-         data.posX = 0.0f;
-         data.posY = 0.0f;
-         data.posZ = 0.0f;
-         
-         data.normX = 0.0f;
-         data.normY = 0.0f;
-         data.normZ = -1.0f;
-         
-         data.colR = 255;
-         data.colG = 0;
-         data.colB = 255;
-         data.colA = 56;
-         
-         data.texCoord0U = 0;
-         data.texCoord0V = 0;
-         data.texCoord1U = 255;
-         data.texCoord1V = 255;
-         
-         
-         for (int i = 0; i < 10; i += 1)
-         {
-         data.posX = gStrideTestData[(i*3)];
-         data.posY = gStrideTestData[(i*3)+1];
-         data.posZ = gStrideTestData[(i*3)+2];
-         
-         glBufferSubData(GL_ARRAY_BUFFER, sizeof(B3DSpriteVertexData) * i, sizeof(B3DSpriteVertexData), &data);
-         }*/
     }
 }
 
@@ -195,13 +157,8 @@
     uint totalCount = sprites.count;
     int verticeCount = 0;
     uint currentElementVerticeCount = 0;
-    // static B3DSpriteVertexData currentElementVertices[6];
-//    static B3DSpriteVertexData currentElementVertices[10000];
-    // static B3DSpriteVertexData* currentElementVertices = B3DVertexData[B3DSpriteBatcherMaxVertices];
-    
         
-    glBufferData(GL_ARRAY_BUFFER, sizeof(B3DSpriteVertexData) * B3DSpriteBatcherMaxVertices, NULL, GL_STREAM_DRAW);// GL_DYNAMIC_DRAW);
-//    GLvoid* dataArray 
+    glBufferData(GL_ARRAY_BUFFER, sizeof(B3DSpriteVertexData) * B3DSpriteBatcherMaxVertices, NULL, GL_STREAM_DRAW);
     B3DSpriteVertexData* currentElementVertices = (B3DSpriteVertexData*) glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
     
     for (B3DSprite* currentSprite in sprites)
@@ -226,31 +183,18 @@
         if (count != 0)
         {
             currentElementVertices[verticeCount + currentElementVerticeCount++] = vertices[0];
-//            currentElementVertices[currentElementVerticeCount++] = vertices[0];
         }
         
         currentElementVertices[verticeCount + currentElementVerticeCount++] = vertices[0];
         currentElementVertices[verticeCount + currentElementVerticeCount++] = vertices[1];
         currentElementVertices[verticeCount + currentElementVerticeCount++] = vertices[2];
         currentElementVertices[verticeCount + currentElementVerticeCount++] = vertices[3];
-//        currentElementVertices[currentElementVerticeCount++] = vertices[0];
-//        currentElementVertices[currentElementVerticeCount++] = vertices[1];
-//        currentElementVertices[currentElementVerticeCount++] = vertices[2];
-//        currentElementVertices[currentElementVerticeCount++] = vertices[3];
         
         // Double last vertice except for last element
         if (count != (totalCount - 1))
         {
             currentElementVertices[verticeCount + currentElementVerticeCount++] = vertices[3];
-//            currentElementVertices[currentElementVerticeCount++] = vertices[3];
         }
-        
-        // @TODO: Test performance ON THE DEVICE when batching with a big vertice array and a single 
-        // glBufferSubData call and a small array and numerous glBufferSubData calls!
-        
-        // Transmit the data of the current sprite to the buffer
-//        static int size = sizeof(B3DSpriteVertexData);
-//        glBufferSubData(GL_ARRAY_BUFFER, size * verticeCount, size * currentElementVerticeCount, currentElementVertices);
 
         verticeCount += currentElementVerticeCount;
         count += 1;
@@ -264,37 +208,6 @@
     
     glUnmapBufferOES(GL_ARRAY_BUFFER);
 
-    
-    /*
-    for (int i = 0; i < verticeCount; i++)
-    {
-        B3DSpriteVertexData data = currentElementVertices[i];
-        LogEcho(@"Vertice Print (%i): pos(%f, %f, %f) norm(%f, %f, %f) col(%u, %u, %u, %u) uv0(%u, %u) uv1(%u, %u)", 
-                (i+1),
-                data.posX,
-                data.posY,
-                data.posZ,
-                
-                data.normX,
-                data.normY,
-                data.normZ,
-                
-                data.colR,
-                data.colG,
-                data.colB,
-                data.colA,
-                
-                data.texCoord0U,
-                data.texCoord0V,
-                data.texCoord1U,
-                data.texCoord1V);
-    }
-     */
-    
-    // Transmit the data of all sprites to the buffer
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(B3DSpriteVertexData) * B3DSpriteBatcherMaxVertices, NULL, GL_STREAM_DRAW);// GL_DYNAMIC_DRAW);
-//    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(B3DSpriteVertexData) * verticeCount, currentElementVertices);
-    
     // Finally draw
     glDrawArrays(GL_TRIANGLE_STRIP, 0, verticeCount);//GL_POINTS
     

@@ -39,21 +39,14 @@
 @interface B3DRenderMan ()
 {
     @private
-        B3DSpriteBatcher*           _spriteBatcher;
-        B3DOpaqueSpriteSorter*      _opaqueSpriteSorter;
-        B3DTransparentNodeSorter*   _transparentNodeSorter;
-        B3DGLStateManager*          _stateManager;
-        //
-        //        GLuint                      _singleSpriteVertexArrayObject;
-        //        GLuint                      _singleSpriteVertexBufferObject[SINGLESPRITEBUFFERCOUNT];
-        //    
-        //    B3DVertexData               _vertexArray[4];
-
 #if DEBUG_PRINT_STATS_BATCHING
         int         _spritesRendered;
         int         _spritesRenderedLastFrame;
 #endif
 }
+
+@property (nonatomic, strong, readwrite) B3DSpriteBatcher*      spriteBatcher;
+@property (nonatomic, weak,   readwrite) B3DGLStateManager*     stateManager;
 
 - (void) createBuffers;
 - (void) tearDownBuffers;
@@ -62,10 +55,6 @@
 
 
 @implementation B3DRenderMan
-
-@synthesize opaqueSpriteSorter          = _opaqueSpriteSorter;
-@synthesize transparentNodeSorter       = _transparentNodeSorter;
-
 
 #pragma mark - Con-/Destructor
 
@@ -86,11 +75,6 @@
 - (void) dealloc
 {
     [self tearDownBuffers];
-    
-    _opaqueSpriteSorter = nil;
-    _transparentNodeSorter = nil;
-    _spriteBatcher = nil;
-    
 }
 
 
@@ -99,54 +83,13 @@
 - (void) createBuffers
 {
     [_spriteBatcher createBuffers];
-    
-    // Create a buffer and array storage to render a single sprite node
-//    {
-//        // Create and bind a vertex array object.
-//        glGenVertexArraysOES(1, &_singleSpriteVertexArrayObject);
-//        glBindVertexArrayOES(_singleSpriteVertexArrayObject);
-//        
-//        int size = sizeof(B3DVertexData);
-//        
-//        // Configure the attributes in the VAO.
-//        glGenBuffers(SINGLESPRITEBUFFERCOUNT, _singleSpriteVertexBufferObject);
-//        for (int i = 0; i < SINGLESPRITEBUFFERCOUNT; i++)
-//        {
-//            glBindBuffer(GL_ARRAY_BUFFER, _singleSpriteVertexBufferObject[i]);
-//            glBufferData(GL_ARRAY_BUFFER, size * 4, NULL, GL_STREAM_DRAW);// GL_DYNAMIC_DRAW);
-//        }
-//        
-//        glEnableVertexAttribArray(B3DVertexAttributesPosition);
-//        glVertexAttribPointer(B3DVertexAttributesPosition, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(0));
-//        
-//        glEnableVertexAttribArray(B3DVertexAttributesNormal);
-//        glVertexAttribPointer(B3DVertexAttributesNormal, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(12));
-//        
-//        glEnableVertexAttribArray(B3DVertexAttributesColor);
-//        glVertexAttribPointer(B3DVertexAttributesColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, size, BUFFER_OFFSET(24));
-//        
-//        glEnableVertexAttribArray(B3DVertexAttributesTexCoord0);
-//        glVertexAttribPointer(B3DVertexAttributesTexCoord0, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(28));
-//        
-//        glEnableVertexAttribArray(B3DVertexAttributesTexCoord1);
-//        glVertexAttribPointer(B3DVertexAttributesTexCoord1, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(32));
-//        
-//        // Bind back to the default state.
-//        glBindVertexArrayOES(0);
-//    }
 }
 
 - (void) tearDownBuffers
 {
     [_spriteBatcher tearDownBuffers];
-    
-//    for (int i = 0; i < SINGLESPRITEBUFFERCOUNT; i++)
-//    {
-//        glDeleteBuffers(1, &_singleSpriteVertexBufferObject[i]);
-//    }
-//    
-//    glDeleteVertexArraysOES(1, &_singleSpriteVertexArrayObject);
 }
+
 
 #pragma mark - Drawing
     
@@ -174,9 +117,9 @@
     // Enable blending for transparent sprites
     if (_transparentNodeSorter.hasNodes)
     {
-        glEnable(GL_BLEND);
+        [_stateManager enableBlending];
         [_transparentNodeSorter render];
-        glDisable(GL_BLEND);
+        [_stateManager disableBlending];
     }
     
 #if DEBUG_PRINT_STATS_BATCHING

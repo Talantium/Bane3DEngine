@@ -49,14 +49,7 @@
 
 @implementation B3DTransparentNodeSorter
 
-#if DEBUG_PRINT_STATS_BATCHING
-@synthesize nodeCount = _nodeCount;
-@synthesize nodeCountBatched = _nodeCountBatched;
-@synthesize nodeCountSingle = _nodeCountSingle;
-@synthesize nodeCountLastFrame = _nodeCountLastFrame;
-@synthesize nodeCountBatchedLastFrame = _nodeCountBatchedLastFrame;
-@synthesize nodeCountSingleLastFrame = _nodeCountSingleLastFrame;
-#endif
+@dynamic hasNodes;
 
 
 #pragma mark - Con-/Destructor
@@ -73,13 +66,6 @@
     }
     
     return self;
-}
-
-- (void) dealloc
-{
-    _transparentNodes = nil;
-    _currentStrideArray = nil;
-
 }
 
 

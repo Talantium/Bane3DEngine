@@ -26,20 +26,23 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-#import <OpenGLES/EAGL.h>
 #import <OpenGLES/ES2/gl.h>
 
+@class EAGLContext;
 @class B3DColor;
 
 
 @interface B3DGLStateManager : NSObject
 
-@property (weak, nonatomic, readonly)	EAGLContext*        currentContext;
+@property (nonatomic, weak, readonly)   EAGLContext*        currentContext;
 
 + (B3DGLStateManager*) sharedManager;
 
 - (BOOL) setCurrentContext:(EAGLContext*)context;
 - (void) setClearColor:(B3DColor*)color;
+
+- (void) enableBlending;
+- (void) disableBlending;
 
 - (void) bindTexture:(GLuint)textureName;
 - (BOOL) deleteTexture:(GLuint)textureName;

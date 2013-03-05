@@ -29,6 +29,7 @@
 #import <Bane3D/Rendering/Batching/B3DVerticeBatchHelper.h>
 
 
+// Increase to create double or tripple buffered batching
 #define BUFFER_COUNT 1
 
 @interface B3DSpriteBatcher : B3DVerticeBatchHelper

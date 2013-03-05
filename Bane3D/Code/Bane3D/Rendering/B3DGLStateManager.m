@@ -26,6 +26,8 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
+#import <OpenGLES/EAGL.h>
+
 #import "B3DGLStateManager.h"
 
 #import "B3DColor.h"
@@ -36,7 +38,7 @@
 {
     @private
         EAGLContext*                    __weak _currentContext;
-        B3DColor*                       _currentClearColor;
+
         GLuint                          _currentTexture;
         GLuint                          _currentShaderProgram;
         GLuint                          _currentBuffer;
@@ -44,9 +46,11 @@
     
         GLuint                          _currentFrameBuffer;
         GLuint                          _currentRenderBuffer;
+    
+        BOOL                            _blendingEnabled;
 }
 
-@property (nonatomic, readwrite, strong) B3DColor*     currentClearColor;
+@property (nonatomic, strong, readwrite) B3DColor*     currentClearColor;
 
 @end
 
@@ -75,6 +79,26 @@
     {
         glClearColor(color.r, color.g, color.b, color.a);
         self.currentClearColor = color;
+    }
+}
+
+- (void) enableBlending
+{
+    if (_blendingEnabled == NO)
+    {
+        glEnable(GL_BLEND);
+
+        _blendingEnabled = YES;
+    }
+}
+
+- (void) disableBlending
+{
+    if (_blendingEnabled == YES)
+    {
+        glDisable(GL_BLEND);
+
+        _blendingEnabled = NO;
     }
 }
 

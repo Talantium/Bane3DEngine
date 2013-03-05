@@ -432,10 +432,10 @@
 		D944990016DE5C2800A71023 /* Batching */ = {
 			isa = PBXGroup;
 			children = (
-				D944990116DE5C2800A71023 /* B3DOpaqueSpriteSorter.h */,
-				D944990216DE5C2800A71023 /* B3DOpaqueSpriteSorter.m */,
 				D944990316DE5C2800A71023 /* B3DSpriteBatcher.h */,
 				D944990416DE5C2800A71023 /* B3DSpriteBatcher.m */,
+				D944990116DE5C2800A71023 /* B3DOpaqueSpriteSorter.h */,
+				D944990216DE5C2800A71023 /* B3DOpaqueSpriteSorter.m */,
 				D944990516DE5C2800A71023 /* B3DTransparentNodeSorter.h */,
 				D944990616DE5C2800A71023 /* B3DTransparentNodeSorter.m */,
 				D944990716DE5C2800A71023 /* B3DVerticeBatchHelper.h */,
