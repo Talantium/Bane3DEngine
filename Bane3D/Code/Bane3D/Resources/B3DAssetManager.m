@@ -77,6 +77,16 @@
 {
 	if ([scene isLoaded])
 	{
+        // Add assets to keep asset retain count balanced
+        [_activeAssets addAssets:scene.assets];
+        
+        // Send init messages
+        // assetLoadingDidComplete calls create, which is neccessary after a
+        // scene has been unloaded (and thus destroy was called on its nodes)
+        [scene assetLoadingDidComplete];
+        // Don't call did load, cause assets were already loaded
+//        [scene didLoad];
+        
         // Nothing to do, bail out
 		if ([_delegate respondsToSelector:@selector(sceneLoadingDidFinishSuccessfulForScene:)])
 		{
@@ -103,8 +113,8 @@
 - (void) loadAssetsForScene:(B3DScene*)scene
 {
 	// Autoreleasepool in case we go threaded
-	@autoreleasepool {
-    
+	@autoreleasepool
+    {
         BOOL threaded = ![NSThread isMainThread];
         
         EAGLContext* secondContext = nil;
@@ -124,81 +134,81 @@
             }
         }
         
-	if ([_delegate respondsToSelector:@selector(sceneLoadingDidBeganForScene:)])
-	{
-		[_delegate sceneLoadingDidBeganForScene:scene];
-	}
+        if ([_delegate respondsToSelector:@selector(sceneLoadingDidBeganForScene:)])
+        {
+            [_delegate sceneLoadingDidBeganForScene:scene];
+        }
 	
-	[_activeAssets addAssets:scene.assets];
-	NSSet* assets = [_activeAssets assetsToLoad];
-	BOOL success = ([assets count] == 0);
+        [_activeAssets addAssets:scene.assets];
+        NSSet* assets = [_activeAssets assetsToLoad];
+        BOOL success = ([assets count] == 0);
 	
-	int loadedAssetsCount = 0;
-	float progress = 0.0f;
+        int loadedAssetsCount = 0;
+        float progress = 0.0f;
 	
-	for (B3DAsset* asset in assets)
-	{
+        for (B3DAsset* asset in assets)
+        {
             LogDebug(@"Loading asset %@ ...", asset.name);
             
-		success = [asset loadContent];
-		if (!success)
-		{
-			// Something went wrong, cancel loading and send fail message
+            success = [asset loadContent];
+            if (!success)
+            {
+                // Something went wrong, cancel loading and send fail message
                 LogDebug(@"Asset %@ failed loading, aborting scene load!", asset.name);
                 
-			break;
-		}
+                break;
+            }
             
 #if DEBUG
-            checkGLError();  
+            checkGLError();
 #endif
             
             LogDebug(@"Asset %@ did load successfully.", asset.name);
-		
-		loadedAssetsCount++;
-		progress = loadedAssetsCount/(float)([assets count] + 1);
-		if ([_delegate respondsToSelector:@selector(sceneLoadingForScene:didAchieveProgress:)])
-		{
-			[_delegate sceneLoadingForScene:scene didAchieveProgress:progress];
-		}
-	}
+            
+            loadedAssetsCount++;
+            progress = loadedAssetsCount/(float)([assets count] + 1);
+            if ([_delegate respondsToSelector:@selector(sceneLoadingForScene:didAchieveProgress:)])
+            {
+                [_delegate sceneLoadingForScene:scene didAchieveProgress:progress];
+            }
+        }
 	
-	if (success)
-	{
+        if (success)
+        {
             [scene assetLoadingDidComplete];
             
             glFlush();
             
-		// Send 1 last progress message, to make sure the delegate receives a 100% message
-		if ([_delegate respondsToSelector:@selector(sceneLoadingForScene:didAchieveProgress:)])
-		{
-			[_delegate sceneLoadingForScene:scene didAchieveProgress:1.0f];
-		}
-		
-		// Send message for further initialisation
-//		[scene performSelectorOnMainThread:@selector(didLoad) withObject:nil waitUntilDone:YES];
-		[scene didLoad];
-		
-		if ([_delegate respondsToSelector:@selector(sceneLoadingDidFinishSuccessfulForScene:)])
-		{
-			[_delegate sceneLoadingDidFinishSuccessfulForScene:scene];
-		}
-	}
-	else
-	{
-		if ([_delegate respondsToSelector:@selector(sceneLoadingDidFailForScene:)])
-		{
-			[_delegate sceneLoadingDidFailForScene:scene];
-		}
-	}
-	
-	// Delete delegate
-	self.delegate = nil;
-
-	// Reset texture
+            // Send 1 last progress message, to make sure the delegate receives a 100% message
+            if ([_delegate respondsToSelector:@selector(sceneLoadingForScene:didAchieveProgress:)])
+            {
+                [_delegate sceneLoadingForScene:scene didAchieveProgress:1.0f];
+            }
+            
+            // Send message for further initialisation
+//            [scene performSelectorOnMainThread:@selector(didLoad) withObject:nil waitUntilDone:YES];
+            [scene didLoad];
+            
+            if ([_delegate respondsToSelector:@selector(sceneLoadingDidFinishSuccessfulForScene:)])
+            {
+                [_delegate sceneLoadingDidFinishSuccessfulForScene:scene];
+            }
+        }
+        else
+        {
+            if ([_delegate respondsToSelector:@selector(sceneLoadingDidFailForScene:)])
+            {
+                [_delegate sceneLoadingDidFailForScene:scene];
+            }
+        }
+        
+        // Delete delegate
+        self.delegate = nil;
+        
+        // Reset texture
         [[B3DGLStateManager sharedManager] readTextureStateFromOpenGL];
-
-	// Cleanup
+        
+        // Cleanup
         secondContext = nil;
 	}
 }

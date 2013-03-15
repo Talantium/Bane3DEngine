@@ -119,6 +119,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1077946116EFE53000B4CA92 /* B3DSprite+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B3DSprite+Protected.h"; sourceTree = "<group>"; };
 		D928B43F16E4D59800915830 /* B3DAsset+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B3DAsset+Protected.h"; sourceTree = "<group>"; };
 		D928B44016E4D6FE00915830 /* B3DBaseNode+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B3DBaseNode+Protected.h"; sourceTree = "<group>"; };
 		D928B44116E4E41C00915830 /* B3DVisibleNode+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B3DVisibleNode+Protected.h"; sourceTree = "<group>"; };
@@ -584,6 +585,7 @@
 			children = (
 				D944994716DE5C2800A71023 /* B3DSprite.h */,
 				D944994816DE5C2800A71023 /* B3DSprite.m */,
+				1077946116EFE53000B4CA92 /* B3DSprite+Protected.h */,
 				D944994516DE5C2800A71023 /* B3DLabel.h */,
 				D944994616DE5C2800A71023 /* B3DLabel.m */,
 				D944994916DE5C2800A71023 /* GUI */,

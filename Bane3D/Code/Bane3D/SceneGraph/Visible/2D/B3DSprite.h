@@ -33,18 +33,6 @@
 
 
 @interface B3DSprite : B3DVisibleNode
-{
-	@protected
-		CGSize					_size;
-        CGPoint                 _origin;
-        CGPoint                 _center;
-
-        B3DTextureInfo			_textureInfo;
-        B3DSpriteVertexData     _vertices[4];
-    
-        GLuint                  _vertexArrayObject;
-        GLuint                  _vertexBufferObject;
-}
 
 @property (nonatomic, assign)	B3DTextureInfo	textureInfo;
 @property (nonatomic, assign)	CGSize          size;
@@ -54,8 +42,10 @@
 // Create sprite without texture and only color and size
 - (id) initWithSize:(CGSize)size andColor:(B3DColor*)baseColor;
 
-// Texture Info for use with a texture atlas (always considered of type PVR!)
-- (id) initWithTextureInfo:(B3DTextureInfo)textureInfo;
+// Texture Info for use with a texture atlas 
+- (id) initWithTextureInfo:(B3DTextureInfo)textureInfo; // !< Defaults to PVR type
+- (id) initWithTextureInfo:(B3DTextureInfo)textureInfo type:(NSString*)type;
+
 - (id) initWithPVRTexture:(NSString*)textureName;
 - (id) initWithPNGTexture:(NSString*)textureName;
 - (id) initWithTexture:(NSString*)textureName ofType:(NSString*)type;

@@ -34,6 +34,7 @@
 @implementation B3DTime
 
 static double _sDeltaTime;
+static double _sTimeElapsed;
 static double _sTimeScale;
 static double _sTimeSinceLastFrame;
 
@@ -41,6 +42,7 @@ static double _sTimeSinceLastFrame;
 {
     _sDeltaTime = 0.0;
     _sTimeScale = 1.0;
+    _sTimeElapsed = 1.0;
     [self reset];
 }
 
@@ -48,6 +50,7 @@ static double _sTimeSinceLastFrame;
 {
     double currentTime = CACurrentMediaTime();
 	_sDeltaTime = (currentTime - _sTimeSinceLastFrame) * _sTimeScale;
+    _sTimeElapsed += _sDeltaTime;
 	_sTimeSinceLastFrame = currentTime;
 }
 
@@ -59,6 +62,11 @@ static double _sTimeSinceLastFrame;
 + (double) deltaTime
 {
     return _sDeltaTime;
+}
+
++ (double) timeElapsed
+{
+    return _sTimeElapsed;
 }
 
 + (double) timeScale

@@ -10,6 +10,7 @@
 
 #import "SGLoadingScene.h"
 #import "SGMenuScene.h"
+#import "SGShaderDemoScene.h"
 
 
 @implementation SGViewController
@@ -29,6 +30,9 @@
     
     // Register additional scenes
     scene = [[SGMenuScene alloc] init];
+    [self.engine addScene:scene];
+    
+    scene = [[SGShaderDemoScene alloc] init];
     [self.engine addScene:scene];
 }
 

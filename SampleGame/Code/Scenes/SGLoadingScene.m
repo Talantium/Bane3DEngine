@@ -17,8 +17,8 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 
 @interface SGLoadingScene ()
 
-@property (nonatomic, strong, readwrite) B3DGUIImage*			loadingBar;
-@property (nonatomic, strong, readwrite) B3DGUIButton*			buttonContinue;
+@property (nonatomic, readwrite, strong) B3DGUIImage*			loadingBar;
+@property (nonatomic, readwrite, strong) B3DGUIButton*			buttonContinue;
 
 @end
 
@@ -28,7 +28,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 - (void) assetList
 {
 	[self registerAssetForUse:[B3DTexturePNG textureNamed:[B3DGUIDefaultSplashImage defaultTextureName]]];
-	[self registerAssetForUse:[B3DTexturePNG textureNamed:@"touch_to_continue"]];
+//	[self registerAssetForUse:[B3DTexturePNG textureNamed:@"touch_to_continue"]];
 }
 
 - (id) init
@@ -40,31 +40,31 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
         
 		[self addSubNode:[B3DGUIDefaultSplashImage landscapeImage]];
         
-		self.buttonContinue = [[B3DGUIButton alloc] initWithSize:screenSize
-                                                        andColor:[B3DColor colorWithRed:0 green:0 blue:0 alpha:0]];
-		{
-			[self.buttonContinue setPositionToX:0 andY:0 andZ:-10.0f];
-            self.buttonContinue.visible = NO;
-            
-            B3DGUIImage* image = [[B3DGUIImage alloc] initWithPNGTexture:@"touch_to_continue"];
-            [image awakeWithBlock:^(B3DBaseNode* node)
-            {
-                CGSize size = ((B3DGUIImage*)node).size;
-                [node setPositionToX:_loadingBar.position.x + SGLoadingBarSize.width - size.width
-                                andY:104
-                                andZ:4.0f];
-            }];
-            [self.buttonContinue addSubNode:image];
-            
-            B3DTimer* blinkTimer = [[B3DTimer alloc] initWithTarget:self
-                                                             action:@selector(blinkTouchToStart:)
-                                                             object:image
-                                                              delay:0.9
-                                                            repeats:YES];
-            [self.buttonContinue addSubNode:blinkTimer];
-		}
-		[self addSubNode:self.buttonContinue];
-                
+//		self.buttonContinue = [[B3DGUIButton alloc] initWithSize:screenSize
+//                                                        andColor:[B3DColor colorWithRed:0 green:0 blue:0 alpha:0]];
+//		{
+//			[self.buttonContinue setPositionToX:0 andY:0 andZ:-10.0f];
+//            self.buttonContinue.visible = NO;
+//            
+//            B3DGUIImage* image = [[B3DGUIImage alloc] initWithPNGTexture:@"touch_to_continue"];
+//            [image awakeWithBlock:^(B3DBaseNode* node)
+//            {
+//                CGSize size = ((B3DGUIImage*)node).size;
+//                [node setPositionToX:_loadingBar.position.x + SGLoadingBarSize.width - size.width
+//                                andY:104
+//                                andZ:4.0f];
+//            }];
+//            [self.buttonContinue addSubNode:image];
+//            
+//            B3DTimer* blinkTimer = [[B3DTimer alloc] initWithTarget:self
+//                                                             action:@selector(blinkTouchToStart:)
+//                                                             object:image
+//                                                              delay:0.9
+//                                                            repeats:YES];
+//            [self.buttonContinue addSubNode:blinkTimer];
+//		}
+//		[self addSubNode:self.buttonContinue];
+        
         self.loadingBar = [[B3DGUIImage alloc] initWithSize:CGSizeMake(SGLoadingBarSize.width * 0.02, SGLoadingBarSize.height)
                                                    andColor:[B3DColor whiteColor]];
 		{

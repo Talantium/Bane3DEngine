@@ -40,7 +40,7 @@
 
 @property (nonatomic, readwrite, weak)   id                 target;
 @property (nonatomic, readwrite, assign) SEL                action;
-@property (nonatomic, readwrite, weak)   id                 object;
+@property (nonatomic, readwrite, strong) id                 object;
 
 @property (nonatomic, readwrite, assign) B3DGUIButtonState  buttonState;
 
@@ -65,8 +65,6 @@
 	{
         _buttonState = B3DGUIButtonStatePressedInside;
         
-        // TESTING
-        // self.color = [B3DColor redColor];
         
         return YES;
     }
@@ -106,9 +104,6 @@
         }
         
         _buttonState = B3DGUIButtonStateNormal;
-        
-		// TESTING
-		// self.color = [B3DColor whiteColor];
     }
     
 	return handled;

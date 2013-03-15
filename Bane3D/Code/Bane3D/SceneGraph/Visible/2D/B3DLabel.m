@@ -159,11 +159,21 @@
 
 - (void) tearDownBuffers
 {
-    if (_vertexArrayObject != 0)
+    if (_vertexBufferObject != 0)
     {
         glDeleteBuffers(1, &_vertexBufferObject);
-        glDeleteVertexArraysOES(1, &_vertexArrayObject);
+        
+        _vertexBufferObject = 0;
     }
+    
+    if (_vertexArrayObject != 0)
+    {
+        glDeleteVertexArraysOES(1, &_vertexArrayObject);
+        
+        _vertexArrayObject = 0;
+    }
+    
+    _textDirty = YES;
 }
 
 
@@ -202,40 +212,47 @@
         
         glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
         B3DTextureFontCharSprite* textRepresentation = (B3DTextureFontCharSprite*) glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-        for (int i = 0; i < length; ++i)
+        if (textRepresentation)
         {
-            unichar currentChar = buffer[i];
-            currentCharAsString = [NSString stringWithCharacters:&currentChar length:1];
-            
-            NSValue* value = [charDict objectForKey:currentCharAsString];
-            if (value == nil)
+            for (int i = 0; i < length; ++i)
             {
-                value = [charDict objectForKey:@"?"];
+                unichar currentChar = buffer[i];
+                currentCharAsString = [NSString stringWithCharacters:&currentChar length:1];
+                
+                NSValue* value = [charDict objectForKey:currentCharAsString];
+                if (value == nil)
+                {
+                    value = [charDict objectForKey:@"?"];
+                }
+                [value getValue:&currentCharInfo];
+                
+                textRepresentation[i].bottomLeft.position   = GLKVector3Make(currentPosition.x, currentPosition.y, 0.0f);
+                textRepresentation[i].bottomRight.position  = GLKVector3Make(currentPosition.x + currentCharInfo.size.width, currentPosition.y, 0.0f);
+                textRepresentation[i].topLeft.position      = GLKVector3Make(currentPosition.x, currentPosition.y + currentCharInfo.size.height, 0.0f);
+                textRepresentation[i].topRight.position     = GLKVector3Make(currentPosition.x + currentCharInfo.size.width, currentPosition.y + currentCharInfo.size.height, 0.0f);
+                currentPosition.x += spacing + currentCharInfo.size.width;
+                
+                textRepresentation[i].bottomLeft.texCoords  = currentCharInfo.textCoords[0];
+                textRepresentation[i].bottomRight.texCoords = currentCharInfo.textCoords[1];
+                textRepresentation[i].topLeft.texCoords     = currentCharInfo.textCoords[2];
+                textRepresentation[i].topRight.texCoords    = currentCharInfo.textCoords[3];
+                
+                textRepresentation[i].degeneratedFirst      = textRepresentation[i].bottomLeft;
+                textRepresentation[i].degeneratedLast       = textRepresentation[i].topRight;
+                
+                _vertices += 6;
             }
-            [value getValue:&currentCharInfo];
             
-            textRepresentation[i].bottomLeft.position   = GLKVector3Make(currentPosition.x, currentPosition.y, 0.0f);
-            textRepresentation[i].bottomRight.position  = GLKVector3Make(currentPosition.x + currentCharInfo.size.width, currentPosition.y, 0.0f);
-            textRepresentation[i].topLeft.position      = GLKVector3Make(currentPosition.x, currentPosition.y + currentCharInfo.size.height, 0.0f);
-            textRepresentation[i].topRight.position     = GLKVector3Make(currentPosition.x + currentCharInfo.size.width, currentPosition.y + currentCharInfo.size.height, 0.0f);
-            currentPosition.x += spacing + currentCharInfo.size.width;
+            // Discard last degenerated sprite
+            _vertices -= 1;
+            glUnmapBufferOES(GL_ARRAY_BUFFER);
             
-            textRepresentation[i].bottomLeft.texCoords  = currentCharInfo.textCoords[0];
-            textRepresentation[i].bottomRight.texCoords = currentCharInfo.textCoords[1];
-            textRepresentation[i].topLeft.texCoords     = currentCharInfo.textCoords[2];
-            textRepresentation[i].topRight.texCoords    = currentCharInfo.textCoords[3];
-            
-            textRepresentation[i].degeneratedFirst = textRepresentation[i].bottomLeft;
-            textRepresentation[i].degeneratedLast = textRepresentation[i].topRight;
-            
-            _vertices += 6;
+            _textDirty = NO;
         }
-        
-        // Discard last degenerated sprite
-        _vertices -= 1;
-        glUnmapBufferOES(GL_ARRAY_BUFFER);
-
-        _textDirty = NO;
+        else
+        {
+            LogError(@"No VBO available for label!");
+        }
     }
 }
 

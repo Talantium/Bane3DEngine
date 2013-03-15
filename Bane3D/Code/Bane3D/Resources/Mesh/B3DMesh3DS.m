@@ -200,6 +200,7 @@
     if (_vertexArrayObject != 0)
     {
         glDeleteVertexArraysOES(1, &_vertexArrayObject);
+        _vertexArrayObject = 0;
     }
     
     [super cleanUp];

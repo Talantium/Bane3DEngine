@@ -30,6 +30,7 @@
 
 #import "Bane3DEngine.h"
 #import "B3DBaseNode+Protected.h"
+#import "B3DSprite+Protected.h"
 
 
 @implementation B3DGUITouchable

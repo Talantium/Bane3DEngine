@@ -33,6 +33,7 @@
 + (void) reset;
 
 + (double) deltaTime;
++ (double) timeElapsed;
 
 + (double) timeScale;
 + (void) setTimeScale:(double)timeScale;

@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  SampleGame
+
+  Created by Andreas Hanft on 15.03.13.
+  Copyright (c) 2013 talantium.net. All rights reserved.
+*/
+
+
+"SGFPSLabelText" = "Bane3DEngine - FPS: %0.f";
+
+"SGCommonBaseSceneLoadingLabelText" = "Loading...";
+
+"SGMenuSceneShaderDemoButtonLabelText" = "Shader Demos";

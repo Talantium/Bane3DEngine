@@ -6,14 +6,20 @@
 //  Copyright (c) 2013 talantium.net. All rights reserved.
 //
 
+#import <CoreGraphics/CoreGraphics.h>
+
 #import "SGMenuScene.h"
+
+#import "SGShaderDemoScene.h"
+#import "SGButton.h"
 
 
 @implementation SGMenuScene
 
 - (void) assetList
 {
-    [self registerAssetForUse:[B3DTextureFont defaultFontTexture]];
+    [super assetList];
+    
 	[self registerAssetForUse:[B3DMesh3DS meshNamed:@"Teddy"]];
 }
 
@@ -22,12 +28,14 @@
     self = [super init];
     if (self)
     {
-        B3DLabel* label = [[B3DLabel alloc] initWithText:@"Bane3DEngine - FPS: ??"];
+        CGSize screenSize = [UIApplication currentSize];
+        
+        B3DLabel* label = [[B3DLabel alloc] initWithFontNamed:SGCommonBaseSceneFontName size:SGCommonBaseSceneFontSize];
         label.color = [B3DColor colorWithRGBHex:0xcccccc];
-        [label translateByX:2 andY:0 andZ:-10];
+        [label translateByX:2 andY:screenSize.height - 22 andZ:-3];
         [label updateWithBlock:^(B3DBaseNode* node, double deltaTime)
         {
-            ((B3DLabel*)node).text = [NSString stringWithFormat:@"Bane3DEngine - FPS: %0.f", 1.0f/deltaTime];
+            ((B3DLabel*)node).text = [NSString stringWithFormat:NSLocalizedString(@"SGFPSLabelText", nil), 1.0f/deltaTime];
         }];
         [self addSubNode:label];
         
@@ -35,7 +43,7 @@
                                                                  texture:nil ofType:nil];
         {
             model.renderer = B3DBaseModelNodeRendererLine;
-            [model translateByX:0 andY:0 andZ:-4];
+            [model translateByX:0 andY:1 andZ:-4];
             [model rotateByX:-90 andY:0 andZ:0];
             [model updateWithBlock:^(B3DBaseNode* node, double deltaTime)
              {
@@ -43,6 +51,13 @@
              }];
         }
         [self addSubNode:model];
+        
+        SGButton* button = [SGButton buttonWithText:NSLocalizedString(@"SGMenuSceneShaderDemoButtonLabelText", nil)];
+        {
+            [button setPositionToX:24 andY:196 andZ:-3];
+            [button setAction:@selector(presentSceneWithKey:) forTarget:self withObject:NSStringFromClass([SGShaderDemoScene class])];
+        }
+        [self addSubNode:button];
     }
     
     return self;

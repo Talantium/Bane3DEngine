@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 talantium.net. All rights reserved.
 //
 
-#import <Bane3D/Bane3D.h>
+#import "SGCommonBaseScene.h"
 
 
-@interface SGMenuScene : B3DScene
+@interface SGMenuScene : SGCommonBaseScene
 
 @end

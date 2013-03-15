@@ -7,6 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1054BE3A16F33A620074D830 /* Mandelbrot.frag in Resources */ = {isa = PBXBuildFile; fileRef = 1054BE3816F33A390074D830 /* Mandelbrot.frag */; };
+		1054BE3D16F33B230074D830 /* SGShaderNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1054BE3C16F33B230074D830 /* SGShaderNode.m */; };
+		1077946616EFE64300B4CA92 /* LoadingCircleAtlas.png in Resources */ = {isa = PBXBuildFile; fileRef = 1077946416EFE64300B4CA92 /* LoadingCircleAtlas.png */; };
+		1077946716EFE64300B4CA92 /* LoadingCircleAtlas@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1077946516EFE64300B4CA92 /* LoadingCircleAtlas@2x.png */; };
+		1077947416F31BC100B4CA92 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1077947216F31BC100B4CA92 /* Localizable.strings */; };
+		1077947816F31DDC00B4CA92 /* SGShaderDemoScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1077947716F31DDC00B4CA92 /* SGShaderDemoScene.m */; };
+		1077947F16F3302500B4CA92 /* SGLoadingCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1077947C16F3302500B4CA92 /* SGLoadingCircle.m */; };
+		1077948016F3302500B4CA92 /* SGCommonBaseScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1077947E16F3302500B4CA92 /* SGCommonBaseScene.m */; };
+		1077948316F3346700B4CA92 /* SGButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1077948216F3346700B4CA92 /* SGButton.m */; };
+		1077948E16F3368200B4CA92 /* MandelbrotNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1077948616F3368200B4CA92 /* MandelbrotNode.m */; };
+		1077949116F3368200B4CA92 /* Mandelbrot.m in Sources */ = {isa = PBXBuildFile; fileRef = 1077948B16F3368200B4CA92 /* Mandelbrot.m */; };
+		1077949416F3369F00B4CA92 /* Apple.frag in Resources */ = {isa = PBXBuildFile; fileRef = 1077948816F3368200B4CA92 /* Apple.frag */; };
+		1077949616F336A600B4CA92 /* Apple.vert in Resources */ = {isa = PBXBuildFile; fileRef = 1077948916F3368200B4CA92 /* Apple.vert */; };
+		1077949716F336A600B4CA92 /* Mandelbrot.vert in Resources */ = {isa = PBXBuildFile; fileRef = 1077948C16F3368200B4CA92 /* Mandelbrot.vert */; };
+		1077949A16F336E300B4CA92 /* fract_palette.png in Resources */ = {isa = PBXBuildFile; fileRef = 1077949916F336E300B4CA92 /* fract_palette.png */; };
 		D928B45016E4EAB500915830 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D928B44F16E4EAB500915830 /* UIKit.framework */; };
 		D928B45216E4EAB500915830 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D928B45116E4EAB500915830 /* Foundation.framework */; };
 		D928B45416E4EAB500915830 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D928B45316E4EAB500915830 /* CoreGraphics.framework */; };
@@ -32,6 +47,29 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1054BE3816F33A390074D830 /* Mandelbrot.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Mandelbrot.frag; sourceTree = "<group>"; };
+		1054BE3B16F33B230074D830 /* SGShaderNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGShaderNode.h; sourceTree = "<group>"; };
+		1054BE3C16F33B230074D830 /* SGShaderNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGShaderNode.m; sourceTree = "<group>"; };
+		1077946316EFE64300B4CA92 /* LoadingCircleAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingCircleAtlas.h; sourceTree = "<group>"; };
+		1077946416EFE64300B4CA92 /* LoadingCircleAtlas.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LoadingCircleAtlas.png; sourceTree = "<group>"; };
+		1077946516EFE64300B4CA92 /* LoadingCircleAtlas@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LoadingCircleAtlas@2x.png"; sourceTree = "<group>"; };
+		1077947316F31BC100B4CA92 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1077947616F31DDC00B4CA92 /* SGShaderDemoScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGShaderDemoScene.h; sourceTree = "<group>"; };
+		1077947716F31DDC00B4CA92 /* SGShaderDemoScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGShaderDemoScene.m; sourceTree = "<group>"; };
+		1077947B16F3302500B4CA92 /* SGLoadingCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGLoadingCircle.h; sourceTree = "<group>"; };
+		1077947C16F3302500B4CA92 /* SGLoadingCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGLoadingCircle.m; sourceTree = "<group>"; };
+		1077947D16F3302500B4CA92 /* SGCommonBaseScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGCommonBaseScene.h; sourceTree = "<group>"; };
+		1077947E16F3302500B4CA92 /* SGCommonBaseScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGCommonBaseScene.m; sourceTree = "<group>"; };
+		1077948116F3346700B4CA92 /* SGButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGButton.h; sourceTree = "<group>"; };
+		1077948216F3346700B4CA92 /* SGButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGButton.m; sourceTree = "<group>"; };
+		1077948516F3368200B4CA92 /* MandelbrotNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MandelbrotNode.h; sourceTree = "<group>"; };
+		1077948616F3368200B4CA92 /* MandelbrotNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MandelbrotNode.m; sourceTree = "<group>"; };
+		1077948816F3368200B4CA92 /* Apple.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Apple.frag; sourceTree = "<group>"; };
+		1077948916F3368200B4CA92 /* Apple.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Apple.vert; sourceTree = "<group>"; };
+		1077948A16F3368200B4CA92 /* Mandelbrot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mandelbrot.h; sourceTree = "<group>"; };
+		1077948B16F3368200B4CA92 /* Mandelbrot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mandelbrot.m; sourceTree = "<group>"; };
+		1077948C16F3368200B4CA92 /* Mandelbrot.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Mandelbrot.vert; sourceTree = "<group>"; };
+		1077949916F336E300B4CA92 /* fract_palette.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fract_palette.png; sourceTree = "<group>"; };
 		D928B44C16E4EAB500915830 /* SampleGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D928B44F16E4EAB500915830 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D928B45116E4EAB500915830 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -81,6 +119,80 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1077946216EFE64300B4CA92 /* LoadingCircleAtlas */ = {
+			isa = PBXGroup;
+			children = (
+				1077946316EFE64300B4CA92 /* LoadingCircleAtlas.h */,
+				1077946416EFE64300B4CA92 /* LoadingCircleAtlas.png */,
+				1077946516EFE64300B4CA92 /* LoadingCircleAtlas@2x.png */,
+			);
+			path = LoadingCircleAtlas;
+			sourceTree = "<group>";
+		};
+		1077947516F31DC100B4CA92 /* ShaderDemoScene */ = {
+			isa = PBXGroup;
+			children = (
+				1077948416F3368200B4CA92 /* Nodes */,
+				1077948716F3368200B4CA92 /* Shader */,
+				1077947616F31DDC00B4CA92 /* SGShaderDemoScene.h */,
+				1077947716F31DDC00B4CA92 /* SGShaderDemoScene.m */,
+			);
+			path = ShaderDemoScene;
+			sourceTree = "<group>";
+		};
+		1077947916F3302500B4CA92 /* CommonBaseScene */ = {
+			isa = PBXGroup;
+			children = (
+				1077947A16F3302500B4CA92 /* Nodes */,
+				1077947D16F3302500B4CA92 /* SGCommonBaseScene.h */,
+				1077947E16F3302500B4CA92 /* SGCommonBaseScene.m */,
+			);
+			path = CommonBaseScene;
+			sourceTree = "<group>";
+		};
+		1077947A16F3302500B4CA92 /* Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				1077947B16F3302500B4CA92 /* SGLoadingCircle.h */,
+				1077947C16F3302500B4CA92 /* SGLoadingCircle.m */,
+				1077948116F3346700B4CA92 /* SGButton.h */,
+				1077948216F3346700B4CA92 /* SGButton.m */,
+			);
+			path = Nodes;
+			sourceTree = "<group>";
+		};
+		1077948416F3368200B4CA92 /* Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				1054BE3B16F33B230074D830 /* SGShaderNode.h */,
+				1054BE3C16F33B230074D830 /* SGShaderNode.m */,
+				1077948516F3368200B4CA92 /* MandelbrotNode.h */,
+				1077948616F3368200B4CA92 /* MandelbrotNode.m */,
+			);
+			path = Nodes;
+			sourceTree = "<group>";
+		};
+		1077948716F3368200B4CA92 /* Shader */ = {
+			isa = PBXGroup;
+			children = (
+				1077948916F3368200B4CA92 /* Apple.vert */,
+				1077948816F3368200B4CA92 /* Apple.frag */,
+				1077948A16F3368200B4CA92 /* Mandelbrot.h */,
+				1077948B16F3368200B4CA92 /* Mandelbrot.m */,
+				1077948C16F3368200B4CA92 /* Mandelbrot.vert */,
+				1054BE3816F33A390074D830 /* Mandelbrot.frag */,
+			);
+			path = Shader;
+			sourceTree = "<group>";
+		};
+		1077949816F336E300B4CA92 /* ShaderDemos */ = {
+			isa = PBXGroup;
+			children = (
+				1077949916F336E300B4CA92 /* fract_palette.png */,
+			);
+			path = ShaderDemos;
+			sourceTree = "<group>";
+		};
 		D928B44316E4EAB500915830 = {
 			isa = PBXGroup;
 			children = (
@@ -180,6 +292,7 @@
 			isa = PBXGroup;
 			children = (
 				D928B48516E4ECF800915830 /* InfoPlist.strings */,
+				1077947216F31BC100B4CA92 /* Localizable.strings */,
 			);
 			path = Localization;
 			sourceTree = "<group>";
@@ -199,6 +312,8 @@
 				D928B4A116E4F22500915830 /* SGLoadingScene.m */,
 				D928B4A816E5166F00915830 /* SGMenuScene.h */,
 				D928B4A916E5166F00915830 /* SGMenuScene.m */,
+				1077947516F31DC100B4CA92 /* ShaderDemoScene */,
+				1077947916F3302500B4CA92 /* CommonBaseScene */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -206,6 +321,8 @@
 		D928B4A316E4F56300915830 /* Textures */ = {
 			isa = PBXGroup;
 			children = (
+				1077949816F336E300B4CA92 /* ShaderDemos */,
+				1077946216EFE64300B4CA92 /* LoadingCircleAtlas */,
 				D928B4A416E4F56300915830 /* touch_to_continue.png */,
 				D928B4A516E4F56300915830 /* touch_to_continue@2x.png */,
 			);
@@ -264,6 +381,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1054BE3A16F33A620074D830 /* Mandelbrot.frag in Resources */,
+				1077949616F336A600B4CA92 /* Apple.vert in Resources */,
+				1077949716F336A600B4CA92 /* Mandelbrot.vert in Resources */,
+				1077949416F3369F00B4CA92 /* Apple.frag in Resources */,
 				D928B48E16E4ECF800915830 /* Icon-72.png in Resources */,
 				D928B48F16E4ECF800915830 /* Icon.png in Resources */,
 				D928B49016E4ECF800915830 /* Icon@2x.png in Resources */,
@@ -274,6 +395,10 @@
 				D928B49516E4ECF800915830 /* Teddy.3ds in Resources */,
 				D928B4A616E4F56300915830 /* touch_to_continue.png in Resources */,
 				D928B4A716E4F56300915830 /* touch_to_continue@2x.png in Resources */,
+				1077946616EFE64300B4CA92 /* LoadingCircleAtlas.png in Resources */,
+				1077946716EFE64300B4CA92 /* LoadingCircleAtlas@2x.png in Resources */,
+				1077947416F31BC100B4CA92 /* Localizable.strings in Resources */,
+				1077949A16F336E300B4CA92 /* fract_palette.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,12 +414,27 @@
 				D928B48D16E4ECF800915830 /* main.m in Sources */,
 				D928B4A216E4F22500915830 /* SGLoadingScene.m in Sources */,
 				D928B4AA16E5166F00915830 /* SGMenuScene.m in Sources */,
+				1077947816F31DDC00B4CA92 /* SGShaderDemoScene.m in Sources */,
+				1077947F16F3302500B4CA92 /* SGLoadingCircle.m in Sources */,
+				1077948016F3302500B4CA92 /* SGCommonBaseScene.m in Sources */,
+				1077948316F3346700B4CA92 /* SGButton.m in Sources */,
+				1077948E16F3368200B4CA92 /* MandelbrotNode.m in Sources */,
+				1077949116F3368200B4CA92 /* Mandelbrot.m in Sources */,
+				1054BE3D16F33B230074D830 /* SGShaderNode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		1077947216F31BC100B4CA92 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1077947316F31BC100B4CA92 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		D928B48516E4ECF800915830 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

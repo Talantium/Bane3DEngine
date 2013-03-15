@@ -29,6 +29,7 @@
 #import <OpenGLES/ES2/gl.h>
 
 #import "B3DSprite.h"
+#import "B3DSprite+Protected.h"
 
 #import "B3DConstants.h"
 #import "B3DColor.h"
@@ -75,12 +76,16 @@
 	return self;
 }
 
+- (id) initWithTextureInfo:(B3DTextureInfo)textureInfo 
+{
+    return [self initWithTextureInfo:textureInfo type:[B3DTexturePVR extension]];
+}
 
-- (id) initWithTextureInfo:(B3DTextureInfo)textureInfo
+- (id) initWithTextureInfo:(B3DTextureInfo)textureInfo type:(NSString*)type
 {
 	NSString* textureName = [NSString stringWithCString:textureInfo.atlasName encoding:NSUTF8StringEncoding];
 	
-	self = [self initWithTexture:textureName ofType:[B3DTexturePVR extension]];
+	self = [self initWithTexture:textureName ofType:type];
 	if (self)
 	{
 		_textureInfo	= textureInfo;
