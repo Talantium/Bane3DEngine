@@ -25,7 +25,8 @@ const   int SGLoadingCircleFrameCount        = 9;
 
 - (void) setProgress:(float)progress
 {
-    static B3DTextureInfo info[] = {
+    static B3DTextureInfo info[] =
+    {
         TEX_LOADINGCIRCLEANIM00,
         TEX_LOADINGCIRCLEANIM01,
         TEX_LOADINGCIRCLEANIM02,
@@ -34,7 +35,8 @@ const   int SGLoadingCircleFrameCount        = 9;
         TEX_LOADINGCIRCLEANIM05,
         TEX_LOADINGCIRCLEANIM06,
         TEX_LOADINGCIRCLEANIM07,
-        TEX_LOADINGCIRCLEANIM08};
+        TEX_LOADINGCIRCLEANIM08
+    };
     
     progress = clamp01(progress);
     int index = ((double)SGLoadingCircleFrameCount - 0.01) * progress;

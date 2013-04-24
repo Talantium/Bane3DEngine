@@ -11,7 +11,8 @@
 
 @interface B3DLabel : B3DVisibleNode
 
-@property (nonatomic, readwrite, copy)  NSString*       text;
+@property (nonatomic, readwrite, copy)   NSString*      text;
+@property (nonatomic, readonly,  assign) CGSize         size;
 
 - (id) initWithText:(NSString*)text;
 - (id) initWithFontNamed:(NSString*)fontName size:(CGFloat)size;

@@ -54,6 +54,7 @@
         
         SGButton* button = [SGButton buttonWithText:NSLocalizedString(@"SGMenuSceneShaderDemoButtonLabelText", nil)];
         {
+            button.textAlignment = SGButtonTextAlignmentCenter;
             [button setPositionToX:24 andY:196 andZ:-3];
             [button setAction:@selector(presentSceneWithKey:) forTarget:self withObject:NSStringFromClass([SGShaderDemoScene class])];
         }

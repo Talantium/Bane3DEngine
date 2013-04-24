@@ -184,6 +184,7 @@
     if ([_text isEqualToString:text] == NO)
     {
         _text = [text copy];
+        _size = CGSizeZero;
         _textDirty = YES;
     }
 }
@@ -231,6 +232,9 @@
                 textRepresentation[i].topLeft.position      = GLKVector3Make(currentPosition.x, currentPosition.y + currentCharInfo.size.height, 0.0f);
                 textRepresentation[i].topRight.position     = GLKVector3Make(currentPosition.x + currentCharInfo.size.width, currentPosition.y + currentCharInfo.size.height, 0.0f);
                 currentPosition.x += spacing + currentCharInfo.size.width;
+                
+                _size.width = currentPosition.x - spacing; // Remove spacing for bounding size
+                _size.height = MAX(_size.height, currentCharInfo.size.height);
                 
                 textRepresentation[i].bottomLeft.texCoords  = currentCharInfo.textCoords[0];
                 textRepresentation[i].bottomRight.texCoords = currentCharInfo.textCoords[1];

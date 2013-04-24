@@ -62,7 +62,7 @@
 @dynamic	center;
 
 
-- (id) initWithSize:(CGSize)size andColor:(B3DColor*)baseColor
+- (id) initWithSize:(CGSize)size color:(B3DColor*)baseColor
 {    
 	self = [self initWithTexture:nil ofType:nil];
 	if (self)

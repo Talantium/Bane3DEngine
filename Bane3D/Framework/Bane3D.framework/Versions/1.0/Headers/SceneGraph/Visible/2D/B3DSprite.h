@@ -40,7 +40,7 @@
 @property (nonatomic, assign)	CGPoint         origin;
 
 // Create sprite without texture and only color and size
-- (id) initWithSize:(CGSize)size andColor:(B3DColor*)baseColor;
+- (id) initWithSize:(CGSize)size color:(B3DColor*)baseColor;
 
 // Texture Info for use with a texture atlas 
 - (id) initWithTextureInfo:(B3DTextureInfo)textureInfo; // !< Defaults to PVR type

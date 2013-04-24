@@ -9,7 +9,19 @@
 #import <Bane3D/Bane3D.h>
 
 
+typedef enum
+{
+    SGButtonTextAlignmentLeft,
+    SGButtonTextAlignmentCenter,
+    SGButtonTextAlignmentRight
+} SGButtonTextAlignment;
+
+
 @interface SGButton : B3DGUIButton
+
+@property (nonatomic, readwrite, strong) B3DLabel*              label;
+@property (nonatomic, readwrite, assign) SGButtonTextAlignment  textAlignment;
+@property (nonatomic, readwrite, assign) UIEdgeInsets           padding;
 
 + (SGButton*) buttonWithText:(NSString*)text;
 

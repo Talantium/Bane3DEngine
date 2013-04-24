@@ -1,3 +1,7 @@
+//
+//  Shader Code (c) https://www.shadertoy.com/
+//
+
 
 uniform mat4        u_matrix_mvp;
 

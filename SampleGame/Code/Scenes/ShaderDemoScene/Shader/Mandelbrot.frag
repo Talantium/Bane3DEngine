@@ -1,10 +1,7 @@
 //
-//  Shader.fsh
-//  SampleGame
+//  Shader Code (c) https://www.shadertoy.com/
 //
-//  Created by Andreas Hanft on 06.04.11.
-//  Copyright 2011 talantium.net All rights reserved.
-//
+
 
 precision mediump float;
 uniform lowp sampler2D   u_texture_base;

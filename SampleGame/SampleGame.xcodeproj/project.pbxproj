@@ -22,6 +22,10 @@
 		1077949616F336A600B4CA92 /* Apple.vert in Resources */ = {isa = PBXBuildFile; fileRef = 1077948916F3368200B4CA92 /* Apple.vert */; };
 		1077949716F336A600B4CA92 /* Mandelbrot.vert in Resources */ = {isa = PBXBuildFile; fileRef = 1077948C16F3368200B4CA92 /* Mandelbrot.vert */; };
 		1077949A16F336E300B4CA92 /* fract_palette.png in Resources */ = {isa = PBXBuildFile; fileRef = 1077949916F336E300B4CA92 /* fract_palette.png */; };
+		1084D5841727F34D00E3B0F8 /* 704.vert in Resources */ = {isa = PBXBuildFile; fileRef = 1084D5811727F2C200E3B0F8 /* 704.vert */; };
+		1084D5851727F34D00E3B0F8 /* 704.frag in Resources */ = {isa = PBXBuildFile; fileRef = 1084D5801727F2C200E3B0F8 /* 704.frag */; };
+		1084D58A1727F6F400E3B0F8 /* Julia.frag in Resources */ = {isa = PBXBuildFile; fileRef = 1084D5861727F6A200E3B0F8 /* Julia.frag */; };
+		1084D58B1727F6F400E3B0F8 /* Julia.vert in Resources */ = {isa = PBXBuildFile; fileRef = 1084D5871727F6A200E3B0F8 /* Julia.vert */; };
 		D928B45016E4EAB500915830 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D928B44F16E4EAB500915830 /* UIKit.framework */; };
 		D928B45216E4EAB500915830 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D928B45116E4EAB500915830 /* Foundation.framework */; };
 		D928B45416E4EAB500915830 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D928B45316E4EAB500915830 /* CoreGraphics.framework */; };
@@ -70,6 +74,10 @@
 		1077948B16F3368200B4CA92 /* Mandelbrot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mandelbrot.m; sourceTree = "<group>"; };
 		1077948C16F3368200B4CA92 /* Mandelbrot.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Mandelbrot.vert; sourceTree = "<group>"; };
 		1077949916F336E300B4CA92 /* fract_palette.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fract_palette.png; sourceTree = "<group>"; };
+		1084D5801727F2C200E3B0F8 /* 704.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = 704.frag; sourceTree = "<group>"; };
+		1084D5811727F2C200E3B0F8 /* 704.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = 704.vert; sourceTree = "<group>"; };
+		1084D5861727F6A200E3B0F8 /* Julia.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Julia.frag; sourceTree = "<group>"; };
+		1084D5871727F6A200E3B0F8 /* Julia.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Julia.vert; sourceTree = "<group>"; };
 		D928B44C16E4EAB500915830 /* SampleGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D928B44F16E4EAB500915830 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D928B45116E4EAB500915830 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -132,10 +140,10 @@
 		1077947516F31DC100B4CA92 /* ShaderDemoScene */ = {
 			isa = PBXGroup;
 			children = (
-				1077948416F3368200B4CA92 /* Nodes */,
-				1077948716F3368200B4CA92 /* Shader */,
 				1077947616F31DDC00B4CA92 /* SGShaderDemoScene.h */,
 				1077947716F31DDC00B4CA92 /* SGShaderDemoScene.m */,
+				1077948416F3368200B4CA92 /* Nodes */,
+				1077948716F3368200B4CA92 /* Shader */,
 			);
 			path = ShaderDemoScene;
 			sourceTree = "<group>";
@@ -143,9 +151,9 @@
 		1077947916F3302500B4CA92 /* CommonBaseScene */ = {
 			isa = PBXGroup;
 			children = (
-				1077947A16F3302500B4CA92 /* Nodes */,
 				1077947D16F3302500B4CA92 /* SGCommonBaseScene.h */,
 				1077947E16F3302500B4CA92 /* SGCommonBaseScene.m */,
+				1077947A16F3302500B4CA92 /* Nodes */,
 			);
 			path = CommonBaseScene;
 			sourceTree = "<group>";
@@ -175,6 +183,10 @@
 		1077948716F3368200B4CA92 /* Shader */ = {
 			isa = PBXGroup;
 			children = (
+				1084D5871727F6A200E3B0F8 /* Julia.vert */,
+				1084D5861727F6A200E3B0F8 /* Julia.frag */,
+				1084D5811727F2C200E3B0F8 /* 704.vert */,
+				1084D5801727F2C200E3B0F8 /* 704.frag */,
 				1077948916F3368200B4CA92 /* Apple.vert */,
 				1077948816F3368200B4CA92 /* Apple.frag */,
 				1077948A16F3368200B4CA92 /* Mandelbrot.h */,
@@ -381,6 +393,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1084D58A1727F6F400E3B0F8 /* Julia.frag in Resources */,
+				1084D58B1727F6F400E3B0F8 /* Julia.vert in Resources */,
+				1084D5841727F34D00E3B0F8 /* 704.vert in Resources */,
+				1084D5851727F34D00E3B0F8 /* 704.frag in Resources */,
 				1054BE3A16F33A620074D830 /* Mandelbrot.frag in Resources */,
 				1077949616F336A600B4CA92 /* Apple.vert in Resources */,
 				1077949716F336A600B4CA92 /* Mandelbrot.vert in Resources */,

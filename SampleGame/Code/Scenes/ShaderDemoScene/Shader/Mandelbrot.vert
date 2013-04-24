@@ -1,9 +1,5 @@
 //
-//  Shader.vsh
-//  SampleGame
-//
-//  Created by Andreas Hanft on 06.04.11.
-//  Copyright 2011 talantium.net All rights reserved.
+//  Shader Code (c) https://www.shadertoy.com/
 //
 
 

@@ -11,21 +11,62 @@
 #import "SGCommonBaseScene.h"
 
 
+const UIEdgeInsets SGButtonDefaultPadding = {0, 6, 0, 6};
+
+
 @implementation SGButton
 
 + (SGButton*) buttonWithText:(NSString*)text
 {
-    SGButton* button = [[self alloc] initWithSize:CGSizeMake(196, 46) andColor:[B3DColor colorWithRGBHex:0xaaaaaa]];
-    {
-        B3DLabel* label = [[B3DLabel alloc] initWithFontNamed:SGCommonBaseSceneFontName
-                                                         size:SGCommonBaseSceneButtonFontSize
-                                                         text:text];
-        label.color = [B3DColor blackColor];
-        [label translateByX:12 andY:6 andZ:0.5];
-        [button addSubNode:label];
-    }
+    SGButton* button = [[self alloc] initWithSize:CGSizeMake(156, 42) color:[B3DColor colorWithRGBHex:0xaaaaaa] text:text];
     
     return button;
+}
+
+- (id) initWithSize:(CGSize)size color:(B3DColor*)baseColor text:(NSString*)text
+{
+    self = [super initWithSize:size color:baseColor];
+    if (self)
+    {
+        _textAlignment  = SGButtonTextAlignmentCenter;
+        _padding        = SGButtonDefaultPadding;
+        
+        _label = [[B3DLabel alloc] initWithFontNamed:SGCommonBaseSceneFontName
+                                                size:SGCommonBaseSceneButtonFontSize
+                                                text:text];
+        {
+            _label.color = [B3DColor blackColor];
+            [_label translateByX:0 andY:0 andZ:0.5];
+        }
+        [self addSubNode:_label];
+    }
+    
+    return self;
+}
+
+- (void) update
+{
+    [super update];
+    
+    CGSize size = self.size;
+    CGSize labelSize = _label.size;
+    switch (_textAlignment)
+    {
+        case SGButtonTextAlignmentLeft:
+            _label.position = GLKVector3Make(_padding.left, (int) (size.height/2 - labelSize.height/2), _label.position.z);
+            break;
+            
+        case SGButtonTextAlignmentCenter:
+            _label.position = GLKVector3Make((int) (size.width/2 - labelSize.width/2), (int) (size.height/2 - labelSize.height/2), _label.position.z);
+            break;
+            
+        case SGButtonTextAlignmentRight:
+            _label.position = GLKVector3Make(size.width - labelSize.width - _padding.right, (int) (size.height/2 - labelSize.height/2), _label.position.z);
+            break;
+            
+        default:
+            break;
+    }
 }
 
 @end

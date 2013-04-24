@@ -17,8 +17,9 @@
 
 @interface SGShaderDemoScene ()
 
-@property (nonatomic, readwrite, strong) MandelbrotNode*    mandelbrot;
-@property (nonatomic, readwrite, strong) SGShaderNode*      otherShader;
+@property (nonatomic, readwrite, strong) NSArray*       shaders;
+@property (nonatomic, readwrite, strong) B3DLabel*      currentShaderInfo;
+@property (nonatomic, readwrite, assign) NSUInteger     currentShaderIndex;
 
 @end
 
@@ -30,11 +31,35 @@
     [super assetList];
     
     [self registerAssetForUse:[B3DTexturePNG textureNamed:@"fract_palette"]];
+    
 	[self registerAssetForUse:[Mandelbrot shader]];
+    
     B3DShader* shader = [B3DShader shaderNamed:@"Apple"];
     {
         [shader bindAttributeNamed:B3DVertexAttributesPositionName toIndex:B3DVertexAttributesPosition];
 
+        [shader addUniformNamed:B3DShaderUniformMatrixMVP];
+        [shader addUniformNamed:@"time"];
+        [shader addUniformNamed:@"resolution"];
+        [shader addUniformNamed:@"u_offset"];
+    }
+    [self registerAssetForUse:shader];
+    
+    shader = [B3DShader shaderNamed:@"704"];
+    {
+        [shader bindAttributeNamed:B3DVertexAttributesPositionName toIndex:B3DVertexAttributesPosition];
+        
+        [shader addUniformNamed:B3DShaderUniformMatrixMVP];
+        [shader addUniformNamed:@"time"];
+        [shader addUniformNamed:@"resolution"];
+        [shader addUniformNamed:@"u_offset"];
+    }
+    [self registerAssetForUse:shader];
+    
+    shader = [B3DShader shaderNamed:@"Julia"];
+    {
+        [shader bindAttributeNamed:B3DVertexAttributesPositionName toIndex:B3DVertexAttributesPosition];
+        
         [shader addUniformNamed:B3DShaderUniformMatrixMVP];
         [shader addUniformNamed:@"time"];
         [shader addUniformNamed:@"resolution"];
@@ -52,32 +77,69 @@
 
         SGButton* button = [SGButton buttonWithText:@"Toggle"];
         {
-            [button setPositionToX:24 andY:screenSize.height - 64 andZ:-3];
+            [button setPositionToX:screenSize.width - 24 - button.size.width andY:screenSize.height - 64 andZ:-3];
             [button setAction:@selector(toggleShader) forTarget:self withObject:nil];
         }
         [self addSubNode:button];
         
         button = [SGButton buttonWithText:@"Back"];
         {
-            [button setPositionToX:screenSize.width - 24 - button.size.width andY:screenSize.height - 64 andZ:-3];
+            [button setPositionToX:24 andY:screenSize.height - 64 andZ:-3];
             [button setAction:@selector(presentSceneWithKey:) forTarget:self withObject:NSStringFromClass([SGMenuScene class])];
         }
         [self addSubNode:button];
-               
-        self.mandelbrot = [[MandelbrotNode alloc] init];
-        [self addSubNode:self.mandelbrot];
         
-        self.otherShader = [[SGShaderNode alloc] initWithShaderNamed:@"Apple"];
-        self.otherShader.visible = NO;
-		[self addSubNode:self.otherShader];
+        NSMutableArray* array = [NSMutableArray array];
+               
+        B3DGUIImage* shader = [[MandelbrotNode alloc] init];
+        [array addObject:shader];
+        [self addSubNode:shader];
+        
+        self.currentShaderInfo = [[B3DLabel alloc] initWithFontNamed:SGCommonBaseSceneFontName size:SGCommonBaseSceneFontSize];
+        self.currentShaderInfo.color = [B3DColor colorWithRGBHex:0xcccccc];
+        [self.currentShaderInfo translateByX:4 andY:26 andZ:-3];
+        self.currentShaderInfo.text = [NSString stringWithFormat:@"Current shader: %@", shader.name];
+        [self addSubNode:self.currentShaderInfo];
+        
+        shader = [[SGShaderNode alloc] initWithShaderNamed:@"Julia"];
+        shader.visible = NO;
+        [array addObject:shader];
+        [self addSubNode:shader];
+        
+        shader = [[SGShaderNode alloc] initWithShaderNamed:@"704"];
+        shader.visible = NO;
+        [array addObject:shader];
+        [self addSubNode:shader];
+        
+        shader = [[SGShaderNode alloc] initWithShaderNamed:@"Apple"];
+        shader.visible = NO;
+        [array addObject:shader];
+        [self addSubNode:shader];
+        
+        self.shaders = [NSArray arrayWithArray:array];
+        
+        
+        B3DLabel* label = [[B3DLabel alloc] initWithFontNamed:SGCommonBaseSceneFontName size:SGCommonBaseSceneFontSize text:@"Some shaders are expensive, please be patient..."];
+        label.color = [B3DColor colorWithRGBHex:0xcccccc];
+        [label translateByX:4 andY:4 andZ:-3];
+        [self addSubNode:label];
     }
     
     return self;
 }
 - (void) toggleShader
 {
-    self.mandelbrot.visible = self.otherShader.visible;
-    self.otherShader.visible = !self.mandelbrot.visible;
+    self.currentShaderIndex = (self.currentShaderIndex + 1) % self.shaders.count;
+    
+    for (int i = 0; i < self.shaders.count; i++)
+    {
+        B3DGUIImage* shader = self.shaders[i];
+        shader.visible = (i == self.currentShaderIndex);
+        if (shader.visible)
+        {
+            self.currentShaderInfo.text = [NSString stringWithFormat:@"Current shader: %@", shader.name];
+        }
+    }
 }
 
 @end

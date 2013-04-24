@@ -66,7 +66,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 //		[self addSubNode:self.buttonContinue];
         
         self.loadingBar = [[B3DGUIImage alloc] initWithSize:CGSizeMake(SGLoadingBarSize.width * 0.02, SGLoadingBarSize.height)
-                                                   andColor:[B3DColor whiteColor]];
+                                                      color:[B3DColor whiteColor]];
 		{
 			[self.loadingBar setPositionToX:screenSize.width/2 - SGLoadingBarSize.width/2 // center X
                                        andY:screenSize.height - SGLoadingBarTopDistance - SGLoadingBarSize.height

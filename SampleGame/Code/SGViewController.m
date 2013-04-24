@@ -22,7 +22,7 @@
     
     // If needed, change some engine settings
 //    self.desiredFPS = 30;
-    self.engine.clearColor = [B3DColor colorWithRGBHex:0x2e2e2e];
+    self.engine.clearColor = [B3DColor colorWithRGBHex:0x4e4e4e];
     
     // Create and set root scene here!
     B3DScene* scene = [[SGLoadingScene alloc] init];

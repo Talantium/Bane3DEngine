@@ -1,9 +1,5 @@
 //
-//  Shader.fsh
-//  iOS5GLKit
-//
-//  Created by Andreas Hanft on 25.11.11.
-//  Copyright (c) 2011 talantium.net All rights reserved.
+//  Shader Code (c) https://www.shadertoy.com/
 //
 
 

@@ -12,8 +12,8 @@
 
 
 NSString*   const   SGCommonBaseSceneFontName           = @"Futura-CondensedMedium";
-const       float   SGCommonBaseSceneFontSize           = 18.0f;
-const       float   SGCommonBaseSceneButtonFontSize     = 24.0f;
+const       float   SGCommonBaseSceneFontSize           = 16.0f;
+const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
 
 
 @interface SGCommonBaseScene ()
@@ -44,7 +44,7 @@ const       float   SGCommonBaseSceneButtonFontSize     = 24.0f;
         self.handleSceneLoadingEvents = YES;
         
         self.loadingShade = [[B3DGUIImage alloc] initWithSize:screenSize
-                                                     andColor:[B3DColor colorWithRed:0.4 green:0.4 blue:0.4 alpha:0.8]];
+                                                        color:[B3DColor colorWithRed:0.4 green:0.4 blue:0.4 alpha:0.8]];
         {
             [self.loadingShade translateByX:0 andY:0 andZ:-1];
             self.loadingShade.visible = NO;

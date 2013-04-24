@@ -28,6 +28,7 @@
     self = [super initWithPNGTexture:@"fract_palette"];
     if (self)
     {
+        self.name = @"Mandelbrot (touch enabled)";
         [self useShader:[Mandelbrot token]];
         
         CGSize screenSize = [UIApplication currentSize];
