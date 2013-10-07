@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		10445E4917FDE77700B8996A /* B3DMeshGeneric.m in Sources */ = {isa = PBXBuildFile; fileRef = 10445E4817FDE77700B8996A /* B3DMeshGeneric.m */; };
+		10CF9FC017FE368A00D4222F /* B3DPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 10CF9FBF17FE368A00D4222F /* B3DPoint.m */; };
 		D94498B416DE443500A71023 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D94498B316DE443500A71023 /* Foundation.framework */; };
 		D94498C316DE443500A71023 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D94498C216DE443500A71023 /* SenTestingKit.framework */; };
 		D94498C616DE443500A71023 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D94498B316DE443500A71023 /* Foundation.framework */; };
@@ -119,7 +121,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		10445E4717FDE77700B8996A /* B3DMeshGeneric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = B3DMeshGeneric.h; sourceTree = "<group>"; };
+		10445E4817FDE77700B8996A /* B3DMeshGeneric.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = B3DMeshGeneric.m; sourceTree = "<group>"; };
 		1077946116EFE53000B4CA92 /* B3DSprite+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B3DSprite+Protected.h"; sourceTree = "<group>"; };
+		10CF9FBE17FE368A00D4222F /* B3DPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = B3DPoint.h; sourceTree = "<group>"; };
+		10CF9FBF17FE368A00D4222F /* B3DPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = B3DPoint.m; sourceTree = "<group>"; };
 		D928B43F16E4D59800915830 /* B3DAsset+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B3DAsset+Protected.h"; sourceTree = "<group>"; };
 		D928B44016E4D6FE00915830 /* B3DBaseNode+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B3DBaseNode+Protected.h"; sourceTree = "<group>"; };
 		D928B44116E4E41C00915830 /* B3DVisibleNode+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B3DVisibleNode+Protected.h"; sourceTree = "<group>"; };
@@ -491,10 +497,12 @@
 				D944992016DE5C2800A71023 /* Loader */,
 				D944991A16DE5C2800A71023 /* B3DMesh.h */,
 				D944991B16DE5C2800A71023 /* B3DMesh.m */,
-				D944991C16DE5C2800A71023 /* B3DMesh3DS.h */,
-				D944991D16DE5C2800A71023 /* B3DMesh3DS.m */,
 				D944991E16DE5C2800A71023 /* B3DVertexBuffer.h */,
 				D944991F16DE5C2800A71023 /* B3DVertexBuffer.m */,
+				10445E4717FDE77700B8996A /* B3DMeshGeneric.h */,
+				10445E4817FDE77700B8996A /* B3DMeshGeneric.m */,
+				D944991C16DE5C2800A71023 /* B3DMesh3DS.h */,
+				D944991D16DE5C2800A71023 /* B3DMesh3DS.m */,
 			);
 			path = Mesh;
 			sourceTree = "<group>";
@@ -657,6 +665,8 @@
 				D944997316DE5C2800A71023 /* B3DTime.h */,
 				D944997416DE5C2800A71023 /* B3DTime.m */,
 				D944997516DE5C2800A71023 /* SynthesizeSingleton.h */,
+				10CF9FBE17FE368A00D4222F /* B3DPoint.h */,
+				10CF9FBF17FE368A00D4222F /* B3DPoint.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -748,7 +758,7 @@
 		D94498A816DE443500A71023 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = talantium.net;
 			};
 			buildConfigurationList = D94498AB16DE443500A71023 /* Build configuration list for PBXProject "Bane3D" */;
@@ -834,6 +844,7 @@
 				D944999316DE5C2800A71023 /* B3DAsset.m in Sources */,
 				D944999416DE5C2800A71023 /* B3DAssetManager.m in Sources */,
 				D944999516DE5C2800A71023 /* B3DAssetSet.m in Sources */,
+				10445E4917FDE77700B8996A /* B3DMeshGeneric.m in Sources */,
 				D944999616DE5C2800A71023 /* B3DAssetToken.m in Sources */,
 				D944999716DE5C2800A71023 /* B3DMaterial.m in Sources */,
 				D944999816DE5C2800A71023 /* B3DMesh.m in Sources */,
@@ -853,6 +864,7 @@
 				D94499A616DE5C2800A71023 /* B3DSceneManager.m in Sources */,
 				D94499A716DE5C2800A71023 /* B3DCamera.m in Sources */,
 				D94499A816DE5C2800A71023 /* B3DScene.m in Sources */,
+				10CF9FC017FE368A00D4222F /* B3DPoint.m in Sources */,
 				D94499A916DE5C2800A71023 /* B3DTimer.m in Sources */,
 				D94499AA16DE5C2800A71023 /* B3DLabel.m in Sources */,
 				D94499AB16DE5C2800A71023 /* B3DSprite.m in Sources */,
@@ -948,11 +960,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "Code/**";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				STRIP_STYLE = "non-global";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 i386";
+				VALID_ARCHS = "armv7 armv7s i386";
 			};
 			name = Debug;
 		};
@@ -974,12 +987,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "Code/**";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				SDKROOT = iphoneos;
 				STRIP_STYLE = "non-global";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 i386";
+				VALID_ARCHS = "armv7 armv7s i386";
 			};
 			name = Release;
 		};

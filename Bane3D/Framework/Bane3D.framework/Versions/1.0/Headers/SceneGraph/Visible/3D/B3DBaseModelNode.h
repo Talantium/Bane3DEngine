@@ -33,10 +33,12 @@
 
 typedef enum
 {
-    B3DBaseModelNodeRendererSolid,
-    B3DBaseModelNodeRendererPoint,
-    B3DBaseModelNodeRendererLine
-} B3DBaseModelNodeRenderer;
+    B3DModelRendererSolid,
+    B3DModelRendererPoint,
+    B3DModelRendererLines,
+    B3DModelRendererLineStrip,
+    B3DModelRendererLineLoop
+} B3DModelRenderer;
 
 
 @interface B3DBaseModelNode : B3DVisibleNode
@@ -46,7 +48,8 @@ typedef enum
 }
 
 @property (nonatomic, strong)   B3DMesh*            mesh;
-@property (nonatomic, assign)   B3DBaseModelNodeRenderer renderer;
+@property (nonatomic, assign)   B3DModelRenderer    renderer;
+@property (nonatomic, assign)   CGFloat             lineWidth; // !< Default: 4.0f
 
 - (id) initWithMesh:(NSString*)meshName ofType:(NSString*)meshType
             texture:(NSString*)textureName ofType:(NSString*)textureType;

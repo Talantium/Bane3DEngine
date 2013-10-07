@@ -72,6 +72,7 @@
                           atKeyPath:@"material.texture"];
 		}
 
+        _lineWidth = 4.0f;
     }
 	
 	return self;
@@ -123,15 +124,28 @@
     GLenum mode;
     switch (_renderer)
     {
-        case B3DBaseModelNodeRendererPoint:
+        case B3DModelRendererPoint:
             // Draws every vertice as a single point
             mode = GL_POINTS;
             glDisable(GL_CULL_FACE);
             break;
             
-        case B3DBaseModelNodeRendererLine:
+        case B3DModelRendererLines:
             // Draws every vertice as lines
             mode = GL_LINES;
+            glLineWidth(_lineWidth);
+            break;
+            
+        case B3DModelRendererLineStrip:
+            // Draws every vertice as lines
+            mode = GL_LINE_STRIP;
+            glLineWidth(_lineWidth);
+            break;
+            
+        case B3DModelRendererLineLoop:
+            // Draws every vertice as lines
+            mode = GL_LINE_LOOP;
+            glLineWidth(_lineWidth);
             break;
             
         default:
@@ -152,7 +166,7 @@
         
     switch (_renderer)
     {
-        case B3DBaseModelNodeRendererPoint:
+        case B3DModelRendererPoint:
             glEnable(GL_CULL_FACE);
             break;
             

@@ -42,7 +42,8 @@
         B3DBaseModelNode* model = [[B3DBaseModelNode alloc] initWithMesh:@"Teddy" ofType:B3DAssetMesh3DSDefaultExtension
                                                                  texture:nil ofType:nil];
         {
-            model.renderer = B3DBaseModelNodeRendererLine;
+            model.renderer = B3DModelRendererLines;
+            model.lineWidth = 1;
             [model translateByX:0 andY:1 andZ:-4];
             [model rotateByX:-90 andY:0 andZ:0];
             [model updateWithBlock:^(B3DBaseNode* node, double deltaTime)

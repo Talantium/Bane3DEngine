@@ -1,11 +1,11 @@
 //
-//  B3DMesh3DS.m
+//  B3DMeshGeneric.m
 //  Bane3D
 //
-//  Created by Andreas Hanft on 06.04.11.
+//  Created by Andreas Hanft on 03.10.13.
 //
 //
-//  Copyright (C) 2012 Andreas Hanft (talantium.net)
+//  Copyright (C) 2013 Andreas Hanft (talantium.net)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a
 //  copy of this software and associated documentation files (the "Software"),
@@ -28,54 +28,48 @@
 
 #import <OpenGLES/ES2/glext.h>
 
-#import "B3DMesh3DS.h"
+#import "B3DMeshGeneric.h"
 
 #import "B3DAsset+Protected.h"
 #import "B3DDatatypes.h"
 #import "B3DConstants.h"
 #import "B3DVertexBuffer.h"
-#import "CB3DMeshLoader3DS.h"
+#import "B3DPoint.h"
 
 
-
-@interface B3DMesh3DS ()
+@interface B3DMeshGeneric ()
 {
-    @private
-        GLuint                  _vertexArrayObject;
+  @private
+    GLuint                  _vertexArrayObject;
 }
+
+@property (nonatomic, readwrite, copy) NSString* meshName;
+@property (nonatomic, readwrite, copy) NSString* meshFileType;
+@property (nonatomic, readwrite, copy) B3DMeshLoadingBlock loadingBlock;
 
 @end
 
 
-@implementation B3DMesh3DS
+@implementation B3DMeshGeneric
 
-#pragma mark - Class Methods
-
-+ (B3DMesh3DS*) meshNamed:(NSString*)name
+- (id) initWithMesh:(NSString*)name ofType:(NSString*)type
 {
-	B3DMesh3DS* mesh = [[B3DMesh3DS alloc] initWithMesh:name];
-	return mesh;
-}
-
-+ (NSString*) extension
-{
-	return B3DAssetMesh3DSDefaultExtension;
-}
-
-
-#pragma mark - Con-/Destructor
-
-- (id) initWithMesh:(NSString*)name
-{
-	self = [super initWithMesh:name ofType:B3DAssetMesh3DSDefaultExtension];
+	self = [super initWithMesh:name ofType:type];
 	if (self != nil)
-	{}
+	{
+        _meshName = name;
+        _meshFileType = type;
+	}
 	
 	return self;
 }
 
-
 #pragma mark - Asset handling
+
+- (void) loadContentWithBlock:(B3DMeshLoadingBlock)loadBlock
+{
+    self.loadingBlock = loadBlock ;
+}
 
 - (BOOL) loadContent
 {
@@ -85,12 +79,15 @@
 	}
 	
 	BOOL success	= NO;
-	
-    CB3DMeshLoader3DS* model = new CB3DMeshLoader3DS();
-    model->Create([self.path UTF8String]);
     
-    // @TODO: ATM only a single mesh is supported per model file, this should be extended.
-    uint verticeCount = model->m_pMeshs[0].iNumVerts;
+    if (self.loadingBlock == nil)
+    {
+        return NO;
+    }
+    
+    NSArray* points = self.loadingBlock(self.meshName, self.meshFileType);
+    
+    uint verticeCount = points.count;
     if (verticeCount > 0)
     {
         dispatch_block_t block = ^(void)
@@ -107,6 +104,8 @@
                 // Bind the VBO so we can fill it with data
                 [_vertexBuffer enable];
                 
+                NSAssert(_vertexBuffer != nil, @"No vertex buffer!");
+                
                 // Set the buffer's data
                 GLsizei size = sizeof(B3DMeshVertexData);
                 unsigned int uiSize = verticeCount * size;
@@ -115,18 +114,10 @@
                 [_vertexBuffer setData:NULL size:uiSize usage:GL_STATIC_DRAW];
                 
                 B3DMeshVertexData* vertexBuffer = (B3DMeshVertexData*)glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-                for (int i = 0; i < verticeCount; i++)
+                for (NSUInteger i = 0; i < verticeCount; i++)
                 {
-                    vertexBuffer[i].posX        = model->m_pMeshs[0].pVerts[i].x;
-                    vertexBuffer[i].posY        = model->m_pMeshs[0].pVerts[i].y;
-                    vertexBuffer[i].posZ        = model->m_pMeshs[0].pVerts[i].z;
-                    //            vertexBuffer[i].normX       = 1.0f;
-                    //            vertexBuffer[i].normY       = 0.0f;
-                    //            vertexBuffer[i].normZ       = 0.0f;
-                    vertexBuffer[i].texCoord0U  = model->m_pMeshs[0].pTexs[i].tu * USHRT_MAX;
-                    vertexBuffer[i].texCoord0V  = model->m_pMeshs[0].pTexs[i].tv * USHRT_MAX;
-                    //            vertexBuffer[i].texCoord1U  = 0;
-                    //            vertexBuffer[i].texCoord1V  = 0;
+                    B3DPoint* point = points[i];
+                    vertexBuffer[i]             = [point pointAsMeshData];
                 }
                 glUnmapBufferOES(GL_ARRAY_BUFFER);
                 
@@ -134,19 +125,12 @@
                 {
                     glEnableVertexAttribArray(B3DVertexAttributesPosition);
                     glVertexAttribPointer(B3DVertexAttributesPosition, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(0));
-                    
-                    //            glEnableVertexAttribArray(B3DVertexAttributesNormal);
-                    //            glVertexAttribPointer(B3DVertexAttributesNormal, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(12));
-                    
+
                     glEnableVertexAttribArray(B3DVertexAttributesTexCoord0);
                     glVertexAttribPointer(B3DVertexAttributesTexCoord0, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(12));
-                    
-                    //            glEnableVertexAttribArray(B3DVertexAttributesTexCoord1);
-                    //            glVertexAttribPointer(B3DVertexAttributesTexCoord1, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(28));
                 }
                 // Bind back to the default state.
                 glBindVertexArrayOES(0);
-                
                 
                 [_vertexBuffer disable];
             }
@@ -161,19 +145,21 @@
             dispatch_sync(dispatch_get_main_queue(), block);
         }
         
-
+        unsigned short indices[verticeCount];
         
-        self.vertexIndexLength = model->m_pMeshs[0].iNumIndices;
+        for (unsigned short i = 0; i < verticeCount; i++)
+        {
+            indices[i] = i;
+        }
         
-        self.vertexIndexData = [NSData dataWithBytes:model->m_pMeshs[0].pIndices
-                                               length:(model->m_pMeshs[0].iNumIndices * sizeof(unsigned short))];
+        self.vertexIndexLength = verticeCount;
+        
+        self.vertexIndexData = [NSData dataWithBytes:indices
+                                              length:(verticeCount * sizeof(unsigned short))];
         
         success = YES;
     }
-
-    model->Release();
-    delete model;
-
+    
 	_loaded = success;
 	
 	return success;
@@ -203,6 +189,5 @@
     
     [super cleanUp];
 }
-
 
 @end

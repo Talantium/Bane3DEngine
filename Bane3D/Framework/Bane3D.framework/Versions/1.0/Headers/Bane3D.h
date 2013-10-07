@@ -91,6 +91,7 @@
 #pragma mark • Mesh
 #import <Bane3D/Resources/Mesh/B3DVertexBuffer.h>
 #import <Bane3D/Resources/Mesh/B3DMesh.h>
+#import <Bane3D/Resources/Mesh/B3DMeshGeneric.h>
 #import <Bane3D/Resources/Mesh/B3DMesh3DS.h>
 #pragma mark • Material
 #import <Bane3D/Resources/Material/B3DMaterial.h>
@@ -107,6 +108,7 @@
 
 
 #pragma mark - Utils
+#import <Bane3D/Utils/B3DPoint.h>
 #import <Bane3D/Utils/B3DHelper.h>
 #import <Bane3D/Utils/B3DDebug.h>
 #import <Bane3D/Utils/B3DColor.h>

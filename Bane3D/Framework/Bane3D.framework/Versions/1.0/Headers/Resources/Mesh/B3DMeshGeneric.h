@@ -1,11 +1,11 @@
 //
-//  B3DBaseModelNode.h
+//  B3DMeshGeneric.h
 //  Bane3D
 //
-//  Created by Andreas Hanft on 06.04.11.
+//  Created by Andreas Hanft on 03.10.13.
 //
 //
-//  Copyright (C) 2012 Andreas Hanft (talantium.net)
+//  Copyright (C) 2013 Andreas Hanft (talantium.net)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a
 //  copy of this software and associated documentation files (the "Software"),
@@ -26,32 +26,14 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-#import <Bane3D/SceneGraph/Visible/B3DVisibleNode.h>
+#import <Bane3D/Resources/Mesh/B3DMesh.h>
 
-@class B3DMesh;
-
-
-typedef enum
-{
-    B3DModelRendererSolid,
-    B3DModelRendererPoint,
-    B3DModelRendererLines,
-    B3DModelRendererLineStrip,
-    B3DModelRendererLineLoop
-} B3DModelRenderer;
+// Expects an array of B3DPoints as return value
+typedef NSArray* (^B3DMeshLoadingBlock)(NSString* meshName, NSString* meshType);
 
 
-@interface B3DBaseModelNode : B3DVisibleNode
-{
-    @protected
-        B3DMesh*                _mesh;
-}
+@interface B3DMeshGeneric : B3DMesh
 
-@property (nonatomic, strong)   B3DMesh*            mesh;
-@property (nonatomic, assign)   B3DModelRenderer    renderer;
-@property (nonatomic, assign)   CGFloat             lineWidth; // !< Default: 4.0f
-
-- (id) initWithMesh:(NSString*)meshName ofType:(NSString*)meshType
-            texture:(NSString*)textureName ofType:(NSString*)textureType;
+- (void) loadContentWithBlock:(B3DMeshLoadingBlock)loadBlock;
 
 @end
