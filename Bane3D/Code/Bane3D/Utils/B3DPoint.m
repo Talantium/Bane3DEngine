@@ -16,6 +16,34 @@
     return [[self alloc] init];
 }
 
++ (instancetype) pointWithPoint:(B3DPoint*)otherPoint
+{
+    B3DPoint* point = [self point];
+    
+    point.x = otherPoint.x;
+    point.y = otherPoint.y;
+    point.z = otherPoint.z;
+    
+    point.u = otherPoint.u;
+    point.v = otherPoint.v;
+    
+    return point;
+}
+
++ (instancetype) pointWithVector:(GLKVector3)position uv:(CGPoint)uvCoords
+{
+    B3DPoint* point = [self point];
+    
+    point.x = position.x;
+    point.y = position.y;
+    point.z = position.z;
+    
+    point.u = uvCoords.x * USHRT_MAX;
+    point.v = uvCoords.y * USHRT_MAX;
+    
+    return point;
+}
+
 + (B3DPoint*) interpolateWithPoint1:(B3DPoint*)point1 point2:(B3DPoint*)point2 point3:(B3DPoint*)point3 point4:(B3DPoint*)point4 amount:(GLfloat)amount
 {
     B3DPoint *point = [self point];
@@ -45,6 +73,16 @@
     data.texCoord0V = self.v;
     
     return data;
+}
+
+- (GLKVector3) positionAsVector3
+{
+    return GLKVector3Make(self.x, self.y, self.z);
+}
+
+- (NSString*) description
+{
+    return [NSString stringWithFormat:@"%@ [%f, %f, %f]", NSStringFromClass([self class]), self.x, self.y, self.z];
 }
 
 @end

@@ -40,11 +40,6 @@ const       float   B3DInputAccelerometerDefaultFilterFactor = 0.1f;
 // Scene Graph
 NSString*   const   B3DSceneManagerRootSceneKey             = @"B3DSceneManagerRootSceneKey";
 
-// Scene Camera Defaults
-const       GLfloat B3DCameraDefaultNearClippingPlane       = 0.01f;
-const       GLfloat B3DCameraDefaultFarClippingPlane        = 10000.0f;
-const       GLfloat B3DCameraDefaultFov                     = 60.0f;
-
 // Scene
 NSString*   const   B3DSceneCameraDefaultPerspectiveKey     = @"B3DSceneCameraDefaultPerspectiveKey";
 NSString*   const   B3DSceneCameraDefaultOrthoKey           = @"B3DSceneCameraDefaultOrthoKey";

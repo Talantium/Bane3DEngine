@@ -48,11 +48,6 @@ extern NSString*    const   B3DSceneManagerRootSceneKey;
 extern NSString*    const   B3DSceneCameraDefaultPerspectiveKey;
 extern NSString*    const   B3DSceneCameraDefaultOrthoKey;
 
-// Scene Camera Defaults
-extern const        GLfloat B3DCameraDefaultNearClippingPlane;          //!< 0.01
-extern const        GLfloat B3DCameraDefaultFarClippingPlane;           //!< 10000.0
-extern const        GLfloat B3DCameraDefaultFov;                        //!< 60.0
-
 // Assets
 // By default expected extensions
 extern NSString*    const   B3DAssetTexturePVRDefaultExtension;         //!< .pvr

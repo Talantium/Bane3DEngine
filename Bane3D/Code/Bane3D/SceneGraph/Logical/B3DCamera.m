@@ -35,6 +35,16 @@
 #import "B3DBaseNode+Protected.h"
 
 
+// Scene Camera Defaults
+const       GLfloat B3DCameraDefaultNearOrtho               = -1000.0f;
+const       GLfloat B3DCameraDefaultFarOrtho                = 1000.0f;
+
+const       GLfloat B3DCameraDefaultNearPerspective         = 0.01f;
+const       GLfloat B3DCameraDefaultFarPerspective          = 10000.0f;
+
+const       GLfloat B3DCameraDefaultFov                     = 60.0f;
+
+
 @interface B3DCamera ()
 {
     @private
@@ -70,8 +80,8 @@
 - (id) initAsOrtho:(BOOL)ortho
 {
     return [self initAsOrtho:ortho
-                    withNear:B3DCameraDefaultNearClippingPlane
-                      andFar:B3DCameraDefaultFarClippingPlane
+                    withNear:(ortho ? B3DCameraDefaultNearOrtho : B3DCameraDefaultNearPerspective)
+                      andFar:(ortho ? B3DCameraDefaultFarOrtho : B3DCameraDefaultFarPerspective)
                       andFov:B3DCameraDefaultFov];
 }
 

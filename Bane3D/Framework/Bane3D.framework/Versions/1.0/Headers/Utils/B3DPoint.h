@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <OpenGLES/ES2/glext.h>
+#import <GLKit/GLKit.h>
 #import <Bane3D/Core/B3DDatatypes.h>
 
 
@@ -28,5 +29,7 @@
 + (B3DPoint*) interpolateWithPoint1:(B3DPoint*)point1 point2:(B3DPoint*)point2 point3:(B3DPoint*)point3 point4:(B3DPoint*)point4 amount:(GLfloat)amount;
 
 - (B3DMeshVertexData) pointAsMeshData;
+
+- (GLKVector3) positionAsVector3;
 
 @end

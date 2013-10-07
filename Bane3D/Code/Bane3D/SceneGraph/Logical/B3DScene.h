@@ -58,7 +58,7 @@
 // Called by scene manager when the scene has been visible and was replaced by another one
 - (void) didBecomeInactive;
 
-- (void) assetList; //!< Override in subclasses to build up asset set list
+- (void) assetList; //!< Override and create the list of assets used in the scene by calling -registerAssetForUse:
 - (void) registerAssetForUse:(B3DAsset*)asset;
 - (void) lazyInitNode:(B3DBaseNode*)node;
 - (void) lazyCleanUpNode:(B3DBaseNode*)node;

@@ -29,6 +29,16 @@
 #import <Bane3D/SceneGraph/B3DBaseNode.h>
 
 
+// Scene Camera Defaults
+extern const        GLfloat B3DCameraDefaultNearOrtho;                  //!< -1000.0
+extern const        GLfloat B3DCameraDefaultFarOrtho;                   //!< +1000.0
+
+extern const        GLfloat B3DCameraDefaultNearPerspective;            //!< +0.01
+extern const        GLfloat B3DCameraDefaultFarPerspective;             //!< +10000.0
+
+extern const        GLfloat B3DCameraDefaultFov;                        //!< 60.0
+
+
 @interface B3DCamera : B3DBaseNode
 
 @property (nonatomic, readonly) GLKMatrix4      viewMatrix;

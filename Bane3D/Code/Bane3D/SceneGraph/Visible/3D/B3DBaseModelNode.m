@@ -59,7 +59,14 @@
 		if (meshName != nil && meshType != nil)
 		{
             token = [[B3DAssetToken alloc] init];
-            token.uniqueIdentifier = [B3DAssetToken uniqueIdForAsset:meshName withExtension:meshType];
+            if (meshType == B3DAssetTypeVolatile)
+            {
+                token.uniqueIdentifier = [B3DAssetToken uniqueIdForAsset:meshName withExtension:@"" ofType:meshType];
+            }
+            else
+            {
+                token.uniqueIdentifier = [B3DAssetToken uniqueIdForAsset:meshName withExtension:meshType];
+            }
             [self useAssetWithToken:token
                           atKeyPath:@"mesh"];
 		}
@@ -146,6 +153,10 @@
             // Draws every vertice as lines
             mode = GL_LINE_LOOP;
             glLineWidth(_lineWidth);
+            break;
+            
+        case B3DModelRendererSolidStrip:
+            mode = GL_TRIANGLE_STRIP;
             break;
             
         default:
