@@ -195,6 +195,11 @@
 //    }
 //}
 
+- (BOOL) prefersStatusBarHidden
+{
+    return YES;
+}
+
 
 #pragma mark - Application Lifecycle
 
