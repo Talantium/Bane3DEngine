@@ -27,6 +27,7 @@
 //
 
 #import <OpenGLES/ES2/glext.h>
+#import <GLKit/GLKit.h>
 
 #import "B3DMesh3DS.h"
 
@@ -114,19 +115,27 @@
                 // Create empty buffer, we have to rewrite the data to get it interleaved.
                 [_vertexBuffer setData:NULL size:uiSize usage:GL_STATIC_DRAW];
                 
+                // Account for the model having a different coord sys in 3DS vs OpenGL and rotate by 270° around x
+                GLKMatrix3 rotateBy = GLKMatrix3MakeRotation(GLKMathDegreesToRadians(270.0f), 1.0f, 0.0f, 0.0f);
+                
                 B3DMeshVertexData* vertexBuffer = (B3DMeshVertexData*)glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
                 for (int i = 0; i < verticeCount; i++)
                 {
-                    vertexBuffer[i].posX        = model->m_pMeshs[0].pVerts[i].x;
-                    vertexBuffer[i].posY        = model->m_pMeshs[0].pVerts[i].y;
-                    vertexBuffer[i].posZ        = model->m_pMeshs[0].pVerts[i].z;
-                    //            vertexBuffer[i].normX       = 1.0f;
-                    //            vertexBuffer[i].normY       = 0.0f;
-                    //            vertexBuffer[i].normZ       = 0.0f;
+                    GLKVector3 vertice = GLKVector3Make(model->m_pMeshs[0].pVerts[i].x,
+                                                        model->m_pMeshs[0].pVerts[i].y,
+                                                        model->m_pMeshs[0].pVerts[i].z);
+                    vertice = GLKMatrix3MultiplyVector3(rotateBy, vertice);
+                    
+                    vertexBuffer[i].posX        = vertice.x;
+                    vertexBuffer[i].posY        = vertice.y;
+                    vertexBuffer[i].posZ        = vertice.z;
+//                    vertexBuffer[i].normX       = 1.0f;
+//                    vertexBuffer[i].normY       = 0.0f;
+//                    vertexBuffer[i].normZ       = 0.0f;
                     vertexBuffer[i].texCoord0U  = model->m_pMeshs[0].pTexs[i].tu * USHRT_MAX;
                     vertexBuffer[i].texCoord0V  = model->m_pMeshs[0].pTexs[i].tv * USHRT_MAX;
-                    //            vertexBuffer[i].texCoord1U  = 0;
-                    //            vertexBuffer[i].texCoord1V  = 0;
+//                    vertexBuffer[i].texCoord1U  = 0;
+//                    vertexBuffer[i].texCoord1V  = 0;
                 }
                 glUnmapBufferOES(GL_ARRAY_BUFFER);
                 
