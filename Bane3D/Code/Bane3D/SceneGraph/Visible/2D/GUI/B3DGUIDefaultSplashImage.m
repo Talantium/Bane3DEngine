@@ -53,8 +53,8 @@
 {
     B3DGUIDefaultSplashImage* image = [self image];
     CGSize size = [UIApplication currentSize];
-    [image setPositionToX:0 andY:size.height andZ:-9123.0f];
-    [image rotateByX:0.0f andY:0.0f andZ:-90.0f];
+    [image setPositionToX:0 y:size.height z:-9123.0f];
+    [image rotateByX:0.0f y:0.0f z:-90.0f];
     
     return image;
 }
@@ -62,7 +62,7 @@
 + (B3DGUIDefaultSplashImage*) portraitImage
 {
     B3DGUIDefaultSplashImage* image = [self image];
-    [image setPositionToX:0 andY:0 andZ:-9123.0f];
+    [image setPositionToX:0 y:0 z:-9123.0f];
     
     return image;
 }

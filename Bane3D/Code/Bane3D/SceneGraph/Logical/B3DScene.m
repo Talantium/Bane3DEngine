@@ -39,6 +39,7 @@
 #import "B3DShaderDefaultBaseColor.h"
 #import "B3DShaderDefaultSimpleColor.h"
 #import "B3DNode+Protected.h"
+#import "B3DTime.h"
 
 
 @interface B3DScene ()
@@ -72,11 +73,11 @@
 	self = [super init];
 	if (self)
 	{
-		_visible                    = NO;
+		_hidden                     = YES;
 		self.key                    = NSStringFromClass([self class]);
 		_handleSceneLoadingEvents   = NO;
 		self.assets                 = [[B3DAssetSet alloc] init];
-		_parentScene                = self;
+		_scene                = self;
         
         // Create default scene cameras
         _mutableCameras = [[NSMutableDictionary alloc] init];
@@ -114,9 +115,9 @@
 	return [_assets isLoaded];
 }
 
-- (BOOL) isVisible
+- (BOOL) isHidden
 {
-	return _visible;
+	return _hidden;
 }
 
 
@@ -134,7 +135,7 @@
 
 - (void) assetLoadingDidComplete
 {
-    for (B3DNode* node in _mutableChildren)
+    for (B3DNode* node in _children)
 	{
 		[node create];
 	}
@@ -144,7 +145,7 @@
 // been loaded and initialized.
 - (void) didLoad
 {
-	for (B3DNode* node in _mutableChildren)
+	for (B3DNode* node in _children)
 	{
 		[node awake];
 	}
@@ -156,12 +157,12 @@
 {
 	LogDebug(@"Scene '%@' was made visible", self.key);
 	
-	for (B3DNode* child in _mutableChildren)
+	for (B3DNode* child in _children)
 	{
 		[self registerRecursivelyForTouchHandling:child];
 	}
 	
-	_visible = YES;
+	_hidden = NO;
 }
 
 // Called right after the scene is no more the visible scene
@@ -169,9 +170,9 @@
 {
 	LogDebug(@"Cleaning up scene '%@'", self.key);
 	
- 	_visible = NO;
+	_hidden = YES;
 	
-	for (B3DNode* child in _mutableChildren)
+	for (B3DNode* child in _children)
 	{
 		[self unregisterRecursivelyFromTouchHandling:child];
         [child destroy];
@@ -184,7 +185,7 @@
 - (void) lazyInitNode:(B3DNode*)node
 {
 	// Only init if scene is already visible
-	if (self.visible)
+	if (self.isHidden == NO)
 	{
 		[node initAssets];
 		[self registerRecursivelyForTouchHandling:node];
@@ -198,7 +199,7 @@
 - (void) lazyCleanUpNode:(B3DNode*)node
 {
 	// LogDebug(@"Scene: %@ - lazyCleanUpNode: %@", _sceneKey, node);
-	if (self.visible)
+	if (self.isHidden == NO)
 	{
 		[self unregisterRecursivelyFromTouchHandling:node];
 	}
@@ -230,6 +231,18 @@
 	}
 }
 
+
+- (void) update
+{
+    GLKMatrixStackRef matrixStack = GLKMatrixStackCreate(kCFAllocatorDefault);
+    
+    B3DSceneGraphInfo info;
+    info.matrixStack    = matrixStack;
+    info.deltaTime      = [B3DTime deltaTime];
+    
+    [self updateWithSceneGraphInfo:info];
+    CFRelease(matrixStack);
+}
 
 #pragma mark - Scene Management / Scene Loading Delegates
 
@@ -269,7 +282,7 @@
 - (void) addCamera:(B3DCamera*)camera forKey:(NSString*)key
 {
     [_mutableCameras setObject:camera forKey:key];
-    [self addSubNode:camera];
+    [self addChild:camera];
 }
 
 - (void) removeCameraWithKey:(NSString*)key
@@ -278,7 +291,7 @@
     if (camera)
     {
         [_mutableCameras removeObjectForKey:key];
-        [self removeSubNode:camera];
+        [self removeChild:camera];
     }
 }
 

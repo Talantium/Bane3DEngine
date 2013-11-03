@@ -73,13 +73,13 @@
 
 #pragma mark - Game Loop
 
-- (void) update
+- (void) updateWithSceneGraphInfo:(B3DSceneGraphInfo)info
 {
-	[super update];
+	[super updateWithSceneGraphInfo:info];
 	
 	if (_momentumEnabled && GLKVector2Length(_momentum) > 0.01f)
 	{
-		[self translateByX:_momentum.x andY:_momentum.y andZ:0];
+		[self translateByX:_momentum.x y:_momentum.y z:0];
 		_momentum = GLKVector2MultiplyScalar(_momentum, _friction);
 	}
 }
@@ -135,7 +135,7 @@
             if (touch == self.firstTouch)
             {
                 CGPoint delta = [self movementDeltaForTouch:touch inView:parentView];
-                [self translateByX:delta.x andY:delta.y andZ:0];
+                [self translateByX:delta.x y:delta.y z:0];
             }
         }
         else
@@ -158,7 +158,7 @@
             CGPoint delta = [self movementDeltaForTouch:touch inView:parentView];
             if (touch == primaryTouch)
             {
-                [self translateByX:delta.x andY:delta.y andZ:0];
+                [self translateByX:delta.x y:delta.y z:0];
             }
             
             if (touch == secondaryTouch

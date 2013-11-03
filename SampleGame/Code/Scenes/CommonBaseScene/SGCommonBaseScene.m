@@ -46,15 +46,15 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
         self.loadingShade = [[B3DGUIImage alloc] initWithSize:screenSize
                                                         color:[B3DColor colorWithRed:0.4 green:0.4 blue:0.4 alpha:0.8]];
         {
-            [self.loadingShade translateByX:0 andY:0 andZ:-1];
+            [self.loadingShade translateByX:0 y:0 z:-1];
             self.loadingShade.visible = NO;
         }
-        [self addSubNode:self.loadingShade];
+        [self addChild:self.loadingShade];
         
         
         self.loadingCircle = [SGLoadingCircle loadingCircle];
-        [self.loadingCircle translateByX:4 andY:20 andZ:0.5];
-        [self.loadingShade addSubNode:self.loadingCircle];
+        [self.loadingCircle translateByX:4 y:20 z:0.5];
+        [self.loadingShade addChild:self.loadingCircle];
         
         
         B3DLabel* label = [[B3DLabel alloc] initWithFontNamed:SGCommonBaseSceneFontName
@@ -62,9 +62,9 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
                                                          text:NSLocalizedString(@"SGCommonBaseSceneLoadingLabelText", nil)];
         {
             label.color = [B3DColor colorWithRGBHex:0xffffff];
-            [label translateByX:4 andY:0 andZ:0.6];
+            [label translateByX:4 y:0 z:0.6];
         }
-        [self.loadingShade addSubNode:label];
+        [self.loadingShade addChild:label];
 	}
 	
 	return self;

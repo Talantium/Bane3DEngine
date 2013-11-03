@@ -38,12 +38,12 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 	{
         CGSize screenSize = [UIApplication currentSize];
         
-		[self addSubNode:[B3DGUIDefaultSplashImage landscapeImage]];
+		[self addChild:[B3DGUIDefaultSplashImage landscapeImage]];
         
 //		self.buttonContinue = [[B3DGUIButton alloc] initWithSize:screenSize
 //                                                        andColor:[B3DColor colorWithRed:0 green:0 blue:0 alpha:0]];
 //		{
-//			[self.buttonContinue setPositionToX:0 andY:0 andZ:-10.0f];
+//			[self.buttonContinue setPositionToX:0 y:0 z:-10.0f];
 //            self.buttonContinue.visible = NO;
 //            
 //            B3DGUIImage* image = [[B3DGUIImage alloc] initWithPNGTexture:@"touch_to_continue"];
@@ -51,29 +51,29 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 //            {
 //                CGSize size = ((B3DGUIImage*)node).size;
 //                [node setPositionToX:_loadingBar.position.x + SGLoadingBarSize.width - size.width
-//                                andY:104
-//                                andZ:4.0f];
+//                                y:104
+//                                z:4.0f];
 //            }];
-//            [self.buttonContinue addSubNode:image];
+//            [self.buttonContinue addChild:image];
 //            
 //            B3DTimer* blinkTimer = [[B3DTimer alloc] initWithTarget:self
 //                                                             action:@selector(blinkTouchToStart:)
 //                                                             object:image
 //                                                              delay:0.9
 //                                                            repeats:YES];
-//            [self.buttonContinue addSubNode:blinkTimer];
+//            [self.buttonContinue addChild:blinkTimer];
 //		}
-//		[self addSubNode:self.buttonContinue];
+//		[self addChild:self.buttonContinue];
         
         self.loadingBar = [[B3DGUIImage alloc] initWithSize:CGSizeMake(SGLoadingBarSize.width * 0.02, SGLoadingBarSize.height)
                                                       color:[B3DColor whiteColor]];
 		{
 			[self.loadingBar setPositionToX:screenSize.width/2 - SGLoadingBarSize.width/2 // center X
-                                       andY:screenSize.height - SGLoadingBarTopDistance - SGLoadingBarSize.height
-                                       andZ:-128.0f];
+                                       y:screenSize.height - SGLoadingBarTopDistance - SGLoadingBarSize.height
+                                       z:-128.0f];
 			self.loadingBar.visible = NO;
 		}
-		[self addSubNode:self.loadingBar];
+		[self addChild:self.loadingBar];
 	}
 	
 	return self;
@@ -92,7 +92,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 												object:sceneToLoadKey
 												 delay:0.1
 											   repeats:NO];
-	[self addSubNode:timer];
+	[self addChild:timer];
 }
 
 - (void) sceneLoadingDidBeganForScene:(B3DScene*)scene

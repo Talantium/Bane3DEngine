@@ -41,30 +41,22 @@
 
 @interface B3DNode ()
 {
-    @private
-        GLKMatrix4              _transform;
-        BOOL					_sceneGraphHierarchyDirty;
-        BOOL                    _userInteractionEnabled;
+  @private
+    BOOL					_sceneGraphHierarchyDirty;
 }
 
-@property (nonatomic, weak, readwrite)					Bane3DEngine*		engine;
+@property (nonatomic, readwrite,   weak) Bane3DEngine*  engine;
+@property (nonatomic, readwrite, strong) NSArray*       children;
 
 @end
 
 
 @implementation B3DNode
 
-#pragma mark - Dynamic Properties
-
-@dynamic	visible;
-@dynamic	transform;
-@dynamic	worldTransform;
-@dynamic	worldPosition;
-@dynamic	worldScale;
-@dynamic	worldRotation;
-@dynamic	userInteractionEnabled;
-@dynamic	parentScene;
-@dynamic	children;
++ (instancetype) node
+{
+    return [[self alloc] init];
+}
 
 
 #pragma mark - Con-/Destructor
@@ -85,14 +77,11 @@
 		_rotation           = GLKQuaternionIdentity;
 				
 		// Properties
-		_visible            = YES;
-        _assetTokens        = [[NSMutableDictionary alloc] init];
+        _assetTokens        = [NSMutableDictionary dictionary];
 		
 		// Hierarchy
-		_parentScene		= nil;
-		_parentNode         = nil;
-		_mutableChildren    = [[NSMutableSet alloc] init];
-        _immutableChildren  = nil;
+        _children           = @[];
+        _childrenMutable    = [NSMutableArray array];
 	}
 	
 	return self;
@@ -105,7 +94,7 @@
 {
     [self initAssets];
 	
-    for (B3DNode* node in _mutableChildren)
+    for (B3DNode* node in _children)
 	{
 		[node create];
 	}
@@ -113,7 +102,7 @@
 
 - (void) awake
 {
-	_transformationDirty = YES;
+	_transformDirty = YES;
     _sceneGraphHierarchyDirty = YES;
     
     if (_awakeBlock)
@@ -121,7 +110,7 @@
         self.awakeBlock(self);
     }
 	
-	for (B3DNode* node in _mutableChildren)
+	for (B3DNode* node in _children)
 	{
 		[node awake];
 	}
@@ -134,7 +123,7 @@
 
 - (void) destroy
 {
-    for (B3DNode* node in _mutableChildren)
+    for (B3DNode* node in _children)
 	{
 		[node destroy];
 	}
@@ -152,11 +141,11 @@
     // Example:
 	// self.texture = [[Bane3DEngine assetManager] assetForId:someTextureId];
     
-    // Setting
-    B3DAssetToken* token = nil;
-    for (NSString* keyPath in [[_assetTokens allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)])
+    // Setting assets by their token
+    NSArray* assetsSortedByKeyPath = [[_assetTokens allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    for (NSString* keyPath in assetsSortedByKeyPath)
     {
-        token = [_assetTokens objectForKey:keyPath];
+        B3DAssetToken* token = [_assetTokens objectForKey:keyPath];
 //        LogDebug(@"Assigning asset %@ to keypath %@", token.uniqueIdentifier, keyPath);
         [self setValue:[[Bane3DEngine assetManager] assetForId:token.uniqueIdentifier]
             forKeyPath:keyPath];
@@ -173,44 +162,47 @@
 
 #pragma mark - Update/Drawing
 
-- (void) update
+- (void) updateWithSceneGraphInfo:(B3DSceneGraphInfo)info
 {
     if (_sceneGraphHierarchyDirty)
 	{
-		_immutableChildren = [_mutableChildren allObjects];
+		_children = [NSArray arrayWithArray:_childrenMutable];
 		_sceneGraphHierarchyDirty = NO;
 	}
     
+    if (_transformDirty) [self updateTransform];
+    
+    GLKMatrixStackRef matrixStack = info.matrixStack;
+    GLKMatrixStackPush(matrixStack);
+    GLKMatrixStackMultiplyMatrix4(matrixStack, _transform);
+    
+    _worldTransform = GLKMatrixStackGetMatrix4(matrixStack);
+    
+    GLKVector4 translation = GLKMatrix4GetColumn(_worldTransform, 3);
+    _worldPosition  = GLKVector3Make(translation.x, translation.y, translation.z);
+    
     if (_updateLoopBlock)
     {
-        self.updateLoopBlock(self, [B3DTime deltaTime]);
+        self.updateLoopBlock(self, info.deltaTime);
     }
     
-    for (B3DNode* node in _immutableChildren)
+    for (B3DNode* node in _children)
     {
-        if (node.isVisible)
-        {
-            [node update];
-        }
+        if (node.isHidden) continue;
+        
+        [node updateWithSceneGraphInfo:info];
     }
+    
+    GLKMatrixStackPop(matrixStack);
 }
 
 - (void) draw
 {
-    if (_transformationDirty)
+    for (B3DNode* node in _children)
     {
-        // Update the transformation matrix of node, done here since only needed 
-        // when really drawing a node!
-        [self updateMatrix];
-        _transformationDirty = NO;
-    }
-    
-    for (B3DNode* node in _immutableChildren)
-    {
-        if (node.isVisible)
-        {
-            [node draw];
-        }
+        if (node.isHidden) continue;
+        
+        [node draw];
     }
 }
 
@@ -224,19 +216,14 @@
 
 #pragma mark > Visibility
 
-- (void) setVisible:(BOOL)visible
+- (BOOL) isHidden
 {
-	_visible = visible;
-}
-
-- (BOOL) isVisible
-{
-	if (!_parentScene)
+	if (_scene == nil)
 	{
-		return NO;
+		return YES;
 	}
 	
-	return (_visible && _parentScene.isVisible);
+	return (_hidden && _scene.isHidden);
 }
 
 #pragma mark > Sorting
@@ -279,28 +266,28 @@
 
 #pragma mark > Altering Hierarchy
 
-- (void) addSubNode:(B3DNode*)node
+- (void) addChild:(B3DNode*)node
 {
 	[B3DAssert that:(node != self) errorMessage:@"Adding Node to self as child!"];
 	
-    [node removeFromParentNode];
+    [node removeFromParent];
     
-	[_mutableChildren addObject:node];
+	[_childrenMutable addObject:node];
 	node.parentNode = self;
-	node.parentScene = _parentScene;
+	node.scene = _scene;
     
     _sceneGraphHierarchyDirty = YES;
 }
 
 
-- (BOOL) removeSubNode:(B3DNode*)node
+- (BOOL) removeChild:(B3DNode*)node
 {
 	// Is given node a child of this node?
-	if ([_mutableChildren containsObject:node])
+	if ([_childrenMutable containsObject:node])
 	{
 		node.parentNode = nil;
-		node.parentScene = nil;
-		[_mutableChildren removeObject:node];
+		node.scene = nil;
+		[_childrenMutable removeObject:node];
         
         _sceneGraphHierarchyDirty = YES;
 		
@@ -312,26 +299,21 @@
 	}
 }
 
-- (BOOL) removeFromParentNode
+- (BOOL) removeFromParent
 {
-	if (_parentNode)
+	if (_parent)
 	{
-		return [_parentNode removeSubNode:self];
+		return [_parent removeChild:self];
 	}
 	
 	return NO;
 }
 
-- (B3DScene*) parentScene
+- (void) setScene:(B3DScene*)scene
 {
-	return _parentScene;
-}
-
-- (void) setParentScene:(B3DScene*)scene
-{
-	if (_parentScene)
+	if (_scene)
 	{
-		[_parentScene lazyCleanUpNode:self];
+		[_scene lazyCleanUpNode:self];
 	}
 	
 	if (scene)
@@ -339,17 +321,12 @@
 		[scene lazyInitNode:self];
 	}
 	
-	_parentScene = scene;
+	_scene = scene;
 
-	for (B3DNode* node in _mutableChildren)
+	for (B3DNode* node in _children)
 	{
-		node.parentScene = scene;
+		node.scene = _scene;
 	}
-}
-
-- (NSSet*) children
-{
-	return [[NSSet alloc] initWithSet:_mutableChildren];
 }
 
 
@@ -358,38 +335,33 @@
 - (void) setPosition:(GLKVector3)position
 {
     _position = position;
-    _transformationDirty = YES;
+    _transformDirty = YES;
 }
 
 - (void) setRotation:(GLKQuaternion)rotation
 {
     _rotation = rotation;
-    _transformationDirty = YES;
+    _transformDirty = YES;
 }
 
 - (void) setScale:(GLKVector3)scale
 {
     _scale = scale;
-    _transformationDirty = YES;
+    _transformDirty = YES;
 }
 
-- (GLKVector3) worldPosition
+- (void) setWorldPosition:(GLKVector3)worldPosition
 {
-	if (_parentNode)
-	{
-		return GLKVector3Add(_parentNode.worldPosition, _position);
-	}
-	else
-	{
-		return _position;
-	}
+    GLKVector3 worldDelta = GLKVector3Subtract(_worldPosition, worldPosition);
+    self.position = GLKVector3Add(_position, worldDelta);
+    _worldPosition = worldPosition;
 }
 
 - (GLKVector3) worldScale
 {
-	if (_parentNode)
+	if (_parent)
 	{
-		return GLKVector3Multiply(_parentNode.worldScale, _scale);
+		return GLKVector3Multiply(_parent.worldScale, _scale);
 	}
 	else
 	{
@@ -399,9 +371,9 @@
 
 - (GLKQuaternion) worldRotation
 {
-	if (_parentNode)
+	if (_parent)
 	{
-		return GLKQuaternionMultiply(_parentNode.worldRotation, _rotation);
+		return GLKQuaternionMultiply(_parent.worldRotation, _rotation);
 	}
 	else
 	{
@@ -409,24 +381,7 @@
 	}
 }
 
-- (GLKMatrix4) transform
-{	
-	return _transform;
-}
-
-- (GLKMatrix4) worldTransform
-{
-	if (_parentNode)
-	{
-		return GLKMatrix4Multiply(_parentNode.worldTransform, _transform);
-	}
-	else
-	{
-		return _transform;
-	}
-}
-
-- (void) updateMatrix
+- (void) updateTransform
 {
     // The order of multiplication is important to ensure
     // correct accumulation of transformations!
@@ -435,27 +390,29 @@
     GLKMatrix4 position = GLKMatrix4MakeTranslation(_position.x, _position.y, _position.z);
     GLKMatrix4 rotation = GLKMatrix4Multiply(position, GLKMatrix4MakeWithQuaternion(_rotation));
     _transform          = GLKMatrix4Multiply(rotation, GLKMatrix4MakeScale(_scale.x, _scale.y, _scale.z));
+    
+    _transformDirty     = NO;
 }
 
-- (void) setPositionToX:(GLfloat)xPos andY:(GLfloat)yPos andZ:(GLfloat)zPos
+- (void) setPositionToX:(GLfloat)xPos y:(GLfloat)yPos z:(GLfloat)zPos
 {
 	_position = GLKVector3Make(xPos, yPos, zPos);
-    _transformationDirty = YES;
+    _transformDirty = YES;
 }
 
 - (void) translateBy:(GLKVector3)translation
 {
 	_position = GLKVector3Add(_position, translation);
-    _transformationDirty = YES;
+    _transformDirty = YES;
 }
 
-- (void) translateByX:(GLfloat)xTrans andY:(GLfloat)yTrans andZ:(GLfloat)zTrans
+- (void) translateByX:(GLfloat)xTrans y:(GLfloat)yTrans z:(GLfloat)zTrans
 {
 	_position = GLKVector3Add(_position, GLKVector3Make(xTrans, yTrans, zTrans));
-    _transformationDirty = YES;
+    _transformDirty = YES;
 }
 
-- (void) setRotationToAngleX:(GLfloat)xAngle andY:(GLfloat)yAngle andZ:(GLfloat)zAngle
+- (void) setRotationToAngleX:(GLfloat)xAngle y:(GLfloat)yAngle z:(GLfloat)zAngle
 {
     GLKQuaternion quadRot = GLKQuaternionIdentity;
     if (xAngle != 0.0f)
@@ -474,25 +431,23 @@
     }
     
     _rotation = quadRot;    
-    _transformationDirty = YES;
+    _transformDirty = YES;
 }
 
-- (void) setRotationToAngle:(GLfloat)angle byAxisX:(GLfloat)xAxis andY:(GLfloat)yAxis andZ:(GLfloat)zAxis
+- (void) setRotationToAngle:(GLfloat)angle byAxisX:(GLfloat)xAxis y:(GLfloat)yAxis z:(GLfloat)zAxis
 {
     _rotation = GLKQuaternionMakeWithAngleAndAxis(GLKMathDegreesToRadians(angle), xAxis, yAxis, zAxis);
-    _transformationDirty = YES;
+    _transformDirty = YES;
 }
 
 - (void) rotateBy:(GLKVector3)rotation
 {
-	[self rotateByX:rotation.x andY:rotation.y andZ:rotation.z];
+	[self rotateByX:rotation.x y:rotation.y z:rotation.z];
 }
 
 // Expects euler angles
-- (void) rotateByX:(GLfloat)xRot andY:(GLfloat)yRot andZ:(GLfloat)zRot
+- (void) rotateByX:(GLfloat)xRot y:(GLfloat)yRot z:(GLfloat)zRot
 {
-    // TODO: Check if this rotation algo is still mostly correct :)
-    
     if (xRot != 0.0f)
     {
         _rotation = GLKQuaternionMultiply(_rotation, GLKQuaternionMakeWithAngleAndAxis(GLKMathDegreesToRadians(xRot), 1.0f, 0.0f, 0.0f));
@@ -508,71 +463,38 @@
         _rotation = GLKQuaternionMultiply(_rotation, GLKQuaternionMakeWithAngleAndAxis(GLKMathDegreesToRadians(zRot), 0.0f, 0.0f, 1.0f));
     }
     
-    _transformationDirty = YES;
-    
-    // Older version, kept for reference
-    
-//    GLKQuaternion quadRot = GLKQuaternionIdentity;
-//    if (xRot != 0.0f)
-//    {
-//        quadRot = GLKQuaternionMakeWithAngleAndAxis(GLKMathDegreesToRadians(xRot), 1.0f, 0.0f, 0.0f);
-//    }
-//    
-//    if (yRot != 0.0f)
-//    {
-//        quadRot = GLKQuaternionMultiply(quadRot, GLKQuaternionMakeWithAngleAndAxis(GLKMathDegreesToRadians(yRot), 0.0f, 1.0f, 0.0f));
-//    }
-//    
-//    if (zRot != 0.0f)
-//    {
-//        quadRot = GLKQuaternionMultiply(quadRot, GLKQuaternionMakeWithAngleAndAxis(GLKMathDegreesToRadians(zRot), 0.0f, 0.0f, 1.0f));
-//    }
-//    
-//    _rotation = GLKQuaternionMultiply(_rotation, quadRot);
-    
-    
-    // Oldest version without checks
-    
-//    GLKQuaternion quadRotX = GLKQuaternionMakeWithAngleAndAxis(GLKMathDegreesToRadians(xRot), 1.0f, 0.0f, 0.0f);
-//    GLKQuaternion quadRotXY = GLKQuaternionMultiply(quadRotX, GLKQuaternionMakeWithAngleAndAxis(GLKMathDegreesToRadians(yRot), 0.0f, 1.0f, 0.0f));
-//    GLKQuaternion quadRotXYZ = GLKQuaternionMultiply(quadRotXY, GLKQuaternionMakeWithAngleAndAxis(GLKMathDegreesToRadians(zRot), 0.0f, 0.0f, 1.0f));
-//    _rotation = GLKQuaternionMultiply(_rotation, quadRotXYZ);
+    _transformDirty = YES;
 }
 
-- (void) rotateByAngle:(GLfloat)angle aroundX:(GLfloat)xAxis andY:(GLfloat)yAxis andZ:(GLfloat)zAxis
+- (void) rotateByAngle:(GLfloat)angle aroundX:(GLfloat)xAxis y:(GLfloat)yAxis z:(GLfloat)zAxis
 {
     _rotation = GLKQuaternionMultiply(_rotation, GLKQuaternionMakeWithAngleAndAxis(GLKMathDegreesToRadians(angle), xAxis, yAxis, zAxis));
-    _transformationDirty = YES;
+    _transformDirty = YES;
 }
 
 - (void) rotateByAngle:(GLfloat)angle aroundAxis:(GLKVector3)axisVector
 {
-    [self rotateByAngle:angle aroundX:axisVector.v[0] andY:axisVector.v[1] andZ:axisVector.v[2]];
+    [self rotateByAngle:angle aroundX:axisVector.v[0] y:axisVector.v[1] z:axisVector.v[2]];
 }
 
-- (void) setScaleUniform:(GLfloat)unifor_scale
+- (void) setScaleUniform:(GLfloat)uniformScale
 {
-    _scale = GLKVector3Make(unifor_scale, unifor_scale, unifor_scale);
-    _transformationDirty = YES;
+    _scale = GLKVector3Make(uniformScale, uniformScale, uniformScale);
+    _transformDirty = YES;
 }
 
-- (void) setScaleToX:(GLfloat)xScale andY:(GLfloat)yScale andZ:(GLfloat)zScale
+- (void) setScaleToX:(GLfloat)xScale y:(GLfloat)yScale z:(GLfloat)zScale
 {
     _scale = GLKVector3Make(xScale, yScale, zScale);
-    _transformationDirty = YES;
+    _transformDirty = YES;
 }
 
 
 #pragma mark - Touch
 
-- (BOOL) isUserInteractionEnabled
+- (void) setUserInteractionEnabled:(BOOL)userInteractionEnabled
 {
-	return _userInteractionEnabled;
-}
-
-- (void) setuserInteractionEnabled:(BOOL)receive
-{
-	_userInteractionEnabled = receive;
+	_userInteractionEnabled = userInteractionEnabled;
 	
 	// If we change reveiving state while we are in a scene graph
 	// an the scene is also visible, we directly communicate with
@@ -580,7 +502,7 @@
 	// All other cases are handled by the scene itself we are connected
 	// to when it becomes visible/unloaded or when we connect during
 	// runtime.
-	if (_parentScene && [_parentScene isVisible])
+	if (_scene && _scene.isHidden == NO)
 	{
 		if (_userInteractionEnabled)
 		{
@@ -598,7 +520,7 @@
 
 - (void) viewportDidChangeTo:(CGRect)viewport
 {
-	for (B3DNode* node in _immutableChildren)
+	for (B3DNode* node in _children)
 	{
 		[node viewportDidChangeTo:viewport];
 	}

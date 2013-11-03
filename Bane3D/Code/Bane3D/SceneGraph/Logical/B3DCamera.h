@@ -40,11 +40,12 @@ extern const        GLfloat B3DCameraPerspectiveDefaultFov;             //!< 60.
 
 @interface B3DCamera : B3DNode
 
-@property (nonatomic, readonly) GLKMatrix4      viewMatrix;
-@property (nonatomic, readonly) CGRect          viewport;
-@property (nonatomic,   assign) GLfloat         near;
-@property (nonatomic,   assign) GLfloat         far;
-@property (nonatomic, readonly, getter = isOrtho) BOOL ortho;
+@property (nonatomic, readonly,  assign) GLKMatrix4      viewMatrix;
+@property (nonatomic, readonly,  assign) GLKMatrix4      projectionMatrix;
+@property (nonatomic, readonly,  assign) CGRect          viewport;
+@property (nonatomic, readwrite, assign) GLfloat         near;
+@property (nonatomic, readwrite, assign) GLfloat         far;
+@property (nonatomic, readonly,  assign, getter = isOrtho) BOOL ortho;
 
 @end
 
@@ -54,7 +55,7 @@ extern const        GLfloat B3DCameraPerspectiveDefaultFov;             //!< 60.
 @property (nonatomic, readwrite,   weak) B3DNode*   target;
 @property (nonatomic, readwrite,   weak) B3DNode*   up;
 
-@property (nonatomic, readwrite, assign) GLfloat        fov;
+@property (nonatomic, readwrite, assign) GLfloat    fov;
 
 - (id) initWithFov:(GLfloat)fov near:(GLfloat)near far:(GLfloat)far;
 

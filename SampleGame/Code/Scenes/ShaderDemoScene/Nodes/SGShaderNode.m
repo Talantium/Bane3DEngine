@@ -19,8 +19,8 @@
     if (self)
     {
         self.name = shaderName;
-        [self setPositionToX:screenSize.width/2 - size.width/2 andY:screenSize.height/2 - size.height/2 andZ:-5.0f];
-//        [self setPositionToX:0 andY:0 andZ:-5.0f];
+        [self setPositionToX:screenSize.width/2 - size.width/2 y:screenSize.height/2 - size.height/2 z:-5.0f];
+//        [self setPositionToX:0 y:0 z:-5.0f];
         [self useShader:[B3DShader tokenWithName:shaderName]];
         
         self.opaque = NO;

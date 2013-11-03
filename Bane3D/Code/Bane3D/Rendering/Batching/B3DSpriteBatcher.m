@@ -144,11 +144,11 @@
     
     if (sprite.useOrtho)
     {
-        [sprite.parentScene useOrthoCamera];
+        [sprite.scene useOrthoCamera];
     }
     
     // Create Model-View-Projection-Matrix based on currently used scene camera
-    [shader setMatrix4Value:sprite.parentScene.mainCamera.viewMatrix forUniformNamed:B3DShaderUniformMatrixMVP];
+    [shader setMatrix4Value:sprite.scene.mainCamera.viewMatrix forUniformNamed:B3DShaderUniformMatrixMVP];
     [shader setIntValue:0 forUniformNamed:B3DShaderUniformTextureBase];
     
     [sprite.material enable];
@@ -215,7 +215,7 @@
     
     if (sprite.useOrtho)
     {
-        [sprite.parentScene usePerspectiveCamera];
+        [sprite.scene usePerspectiveCamera];
     }
     
 

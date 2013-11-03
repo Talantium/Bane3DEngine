@@ -36,6 +36,7 @@
 #import "B3DGLStateManager.h"
 #import "B3DRenderMan.h"
 #import "B3DScene.h"
+#import "B3DNode+Protected.h"
 #import "B3DFrameBuffer.h"
 #import "B3DColor.h"
 #import "B3DHelper.h"

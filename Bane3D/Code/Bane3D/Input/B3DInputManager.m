@@ -101,7 +101,7 @@ const CGFloat           B3DInputAccelerometerDefaultFilterFactor    = 0.1f;
 	// Get all visible receiver currently registered
 	for (B3DNode<B3DTouchResponder>* responder in _touchResponder)
 	{
-		if (responder.isVisible)
+		if (responder.isHidden == NO)
 		{
 			[_visibleResponder addObject:responder];
 		}
@@ -126,7 +126,7 @@ const CGFloat           B3DInputAccelerometerDefaultFilterFactor    = 0.1f;
 	{
 		for (B3DNode<B3DTouchResponder>* responder in _touchResponder)
 		{
-			if ([responder isVisible]
+			if ([responder isHidden] == NO
 				&& [responder respondsToSelector:selector])
 			{
 				BOOL handled = [(NSNumber*)[responder performSelector:selector 

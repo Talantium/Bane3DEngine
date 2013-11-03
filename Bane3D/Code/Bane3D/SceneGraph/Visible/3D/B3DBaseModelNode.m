@@ -40,6 +40,7 @@
 #import "B3DScene.h"
 #import "B3DCamera.h"
 #import "B3DMesh.h"
+#import "B3DNode+Protected.h"
 #import "B3DVisibleNode+Protected.h"
 
 
@@ -120,11 +121,11 @@
     static GLKMatrix4 matrix_mvp;
     if (self.useOrtho)
     {
-        [self.parentScene useOrthoCamera];
+        [self.scene useOrthoCamera];
     }
     
     // Create Model-View-Projection-Matrix based on currently used scene camera
-    matrix_mvp = GLKMatrix4Multiply(self.parentScene.mainCamera.viewMatrix, [self worldTransform]);
+    matrix_mvp = GLKMatrix4Multiply(self.scene.mainCamera.viewMatrix, self.worldTransform);
     [_material.shader setMatrix4Value:matrix_mvp forUniformNamed:B3DShaderUniformMatrixMVP];
     [_material.shader setIntValue:0 forUniformNamed:B3DShaderUniformTextureBase];
     

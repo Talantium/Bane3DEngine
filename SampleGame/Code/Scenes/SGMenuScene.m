@@ -32,34 +32,34 @@
         
         B3DLabel* label = [[B3DLabel alloc] initWithFontNamed:SGCommonBaseSceneFontName size:SGCommonBaseSceneFontSize];
         label.color = [B3DColor colorWithRGBHex:0xcccccc];
-        [label translateByX:2 andY:screenSize.height - 22 andZ:-3];
+        [label translateByX:2 y:screenSize.height - 22 z:-3];
         [label updateWithBlock:^(B3DNode* node, double deltaTime)
         {
             ((B3DLabel*)node).text = [NSString stringWithFormat:NSLocalizedString(@"SGFPSLabelText", nil), 1.0f/deltaTime];
         }];
-        [self addSubNode:label];
+        [self addChild:label];
         
         B3DBaseModelNode* model = [[B3DBaseModelNode alloc] initWithMesh:@"Teddy" ofType:B3DAssetMesh3DSDefaultExtension
                                                                  texture:nil ofType:nil];
         {
             model.renderer = B3DModelRendererLines;
             model.lineWidth = 1;
-            [model translateByX:0 andY:1 andZ:-4];
-            [model rotateByX:-90 andY:0 andZ:0];
+            [model translateByX:0 y:1 z:-4];
+            [model rotateByX:-90 y:0 z:0];
             [model updateWithBlock:^(B3DNode* node, double deltaTime)
              {
-                 [node rotateByAngle:30 * deltaTime aroundX:1 andY:1 andZ:0];
+                 [node rotateByAngle:30 * deltaTime aroundX:1 y:1 z:0];
              }];
         }
-        [self addSubNode:model];
+        [self addChild:model];
         
         SGButton* button = [SGButton buttonWithText:NSLocalizedString(@"SGMenuSceneShaderDemoButtonLabelText", nil)];
         {
             button.textAlignment = SGButtonTextAlignmentCenter;
-            [button setPositionToX:24 andY:196 andZ:-3];
+            [button setPositionToX:24 y:196 z:-3];
             [button setAction:@selector(presentSceneWithKey:) forTarget:self withObject:NSStringFromClass([SGShaderDemoScene class])];
         }
-        [self addSubNode:button];
+        [self addChild:button];
     }
     
     return self;

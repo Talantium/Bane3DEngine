@@ -78,11 +78,11 @@
 	return self;
 }
 
-- (void) update
+- (void) updateWithSceneGraphInfo:(B3DSceneGraphInfo)info
 {
-    if (_visible)
+    if (_hidden == NO)
     {
-        [super update];
+        [super updateWithSceneGraphInfo:info];
         
         _timeElapsed += [B3DTime deltaTime];
         
@@ -106,7 +106,7 @@
             }
             else
             {
-                [self removeFromParentNode];
+                [self removeFromParent];
             }
         }
     }

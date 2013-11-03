@@ -18,6 +18,7 @@
 #import "B3DMaterial.h"
 #import "B3DScene.h"
 #import "B3DCamera.h"
+#import "B3DNode+Protected.h"
 #import "B3DVisibleNode+Protected.h"
 
 
@@ -192,71 +193,13 @@
 
 #pragma mark - Loop
 
-- (void) update
+- (void) updateWithSceneGraphInfo:(B3DSceneGraphInfo)info
 {
-    [super update];
+    [super updateWithSceneGraphInfo:info];
     
     if (_textDirty)
     {
-        _vertices = 0;
-        NSDictionary* charDict = _textureFont.charDict;
-
-        unsigned int length = _text.length;
-        unichar buffer[length + 1];
-        [_text getCharacters:buffer range:NSMakeRange(0, length)];
-        
-        CGFloat spacing = 0.0f;
-        CGPoint currentPosition = CGPointZero;
-
-        NSString* currentCharAsString = nil;
-        B3DTextureFontCharMapInfo currentCharInfo;
-        
-        glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
-        B3DTextureFontCharSprite* textRepresentation = (B3DTextureFontCharSprite*) glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-        if (textRepresentation)
-        {
-            for (int i = 0; i < length; ++i)
-            {
-                unichar currentChar = buffer[i];
-                currentCharAsString = [NSString stringWithCharacters:&currentChar length:1];
-                
-                NSValue* value = [charDict objectForKey:currentCharAsString];
-                if (value == nil)
-                {
-                    value = [charDict objectForKey:@"?"];
-                }
-                [value getValue:&currentCharInfo];
-                
-                textRepresentation[i].bottomLeft.position   = GLKVector3Make(currentPosition.x, currentPosition.y, 0.0f);
-                textRepresentation[i].bottomRight.position  = GLKVector3Make(currentPosition.x + currentCharInfo.size.width, currentPosition.y, 0.0f);
-                textRepresentation[i].topLeft.position      = GLKVector3Make(currentPosition.x, currentPosition.y + currentCharInfo.size.height, 0.0f);
-                textRepresentation[i].topRight.position     = GLKVector3Make(currentPosition.x + currentCharInfo.size.width, currentPosition.y + currentCharInfo.size.height, 0.0f);
-                currentPosition.x += spacing + currentCharInfo.size.width;
-                
-                _size.width = currentPosition.x - spacing; // Remove spacing for bounding size
-                _size.height = MAX(_size.height, currentCharInfo.size.height);
-                
-                textRepresentation[i].bottomLeft.texCoords  = currentCharInfo.textCoords[0];
-                textRepresentation[i].bottomRight.texCoords = currentCharInfo.textCoords[1];
-                textRepresentation[i].topLeft.texCoords     = currentCharInfo.textCoords[2];
-                textRepresentation[i].topRight.texCoords    = currentCharInfo.textCoords[3];
-                
-                textRepresentation[i].degeneratedFirst      = textRepresentation[i].bottomLeft;
-                textRepresentation[i].degeneratedLast       = textRepresentation[i].topRight;
-                
-                _vertices += 6;
-            }
-            
-            // Discard last degenerated sprite
-            _vertices -= 1;
-            glUnmapBufferOES(GL_ARRAY_BUFFER);
-            
-            _textDirty = NO;
-        }
-        else
-        {
-            LogError(@"No VBO available for label!");
-        }
+        [self updateTextData];
     }
 }
 
@@ -283,7 +226,7 @@
 
     if (_useOrtho)
     {
-        [self.parentScene useOrthoCamera];
+        [self.scene useOrthoCamera];
     }
     
     // Bind the vertex array storage for single sprite rendering
@@ -292,7 +235,7 @@
     
     // Create Model-View-Projection-Matrix based on currently used scene camera
     static GLKMatrix4 matrix_mvp;
-    matrix_mvp = GLKMatrix4Multiply(self.parentScene.mainCamera.viewMatrix, [self worldTransform]);
+    matrix_mvp = GLKMatrix4Multiply(self.scene.mainCamera.viewMatrix, self.worldTransform);
     [shader setMatrix4Value:matrix_mvp forUniformNamed:B3DShaderUniformMatrixMVP];
     [shader setIntValue:0 forUniformNamed:B3DShaderUniformTextureBase];
     [shader setBoolValue:YES forUniformNamed:B3DShaderUniformToggleTextureAlphaOnly];
@@ -308,11 +251,74 @@
     
     if (_useOrtho)
     {
-        [self.parentScene usePerspectiveCamera];
+        [self.scene usePerspectiveCamera];
     }
     
     glBindVertexArrayOES(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+- (void) updateTextData
+{
+    _vertices = 0;
+    NSDictionary* charDict = _textureFont.charDict;
+    
+    unsigned int length = _text.length;
+    unichar buffer[length + 1];
+    [_text getCharacters:buffer range:NSMakeRange(0, length)];
+    
+    CGFloat spacing = 0.0f;
+    CGPoint currentPosition = CGPointZero;
+    
+    NSString* currentCharAsString = nil;
+    B3DTextureFontCharMapInfo currentCharInfo;
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
+    B3DTextureFontCharSprite* textRepresentation = (B3DTextureFontCharSprite*) glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    if (textRepresentation)
+    {
+        for (int i = 0; i < length; ++i)
+        {
+            unichar currentChar = buffer[i];
+            currentCharAsString = [NSString stringWithCharacters:&currentChar length:1];
+            
+            NSValue* value = [charDict objectForKey:currentCharAsString];
+            if (value == nil)
+            {
+                value = [charDict objectForKey:@"?"];
+            }
+            [value getValue:&currentCharInfo];
+            
+            textRepresentation[i].bottomLeft.position   = GLKVector3Make(currentPosition.x, currentPosition.y, 0.0f);
+            textRepresentation[i].bottomRight.position  = GLKVector3Make(currentPosition.x + currentCharInfo.size.width, currentPosition.y, 0.0f);
+            textRepresentation[i].topLeft.position      = GLKVector3Make(currentPosition.x, currentPosition.y + currentCharInfo.size.height, 0.0f);
+            textRepresentation[i].topRight.position     = GLKVector3Make(currentPosition.x + currentCharInfo.size.width, currentPosition.y + currentCharInfo.size.height, 0.0f);
+            currentPosition.x += spacing + currentCharInfo.size.width;
+            
+            _size.width = currentPosition.x - spacing; // Remove spacing for bounding size
+            _size.height = MAX(_size.height, currentCharInfo.size.height);
+            
+            textRepresentation[i].bottomLeft.texCoords  = currentCharInfo.textCoords[0];
+            textRepresentation[i].bottomRight.texCoords = currentCharInfo.textCoords[1];
+            textRepresentation[i].topLeft.texCoords     = currentCharInfo.textCoords[2];
+            textRepresentation[i].topRight.texCoords    = currentCharInfo.textCoords[3];
+            
+            textRepresentation[i].degeneratedFirst      = textRepresentation[i].bottomLeft;
+            textRepresentation[i].degeneratedLast       = textRepresentation[i].topRight;
+            
+            _vertices += 6;
+        }
+        
+        // Discard last degenerated sprite
+        _vertices -= 1;
+        glUnmapBufferOES(GL_ARRAY_BUFFER);
+        
+        _textDirty = NO;
+    }
+    else
+    {
+        LogError(@"No VBO available for label!");
+    }
 }
 
 

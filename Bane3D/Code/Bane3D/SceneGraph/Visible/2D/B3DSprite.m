@@ -240,7 +240,7 @@
 
 - (CGPoint) center
 {
-    if (_transformationDirty)
+    if (_transformDirty)
     {
         _center = CGPointMake(self.position.x + self.size.width / 2.0f, self.position.y + self.size.height / 2.0f);
     }
@@ -255,7 +255,7 @@
 
 - (void) setSize:(CGSize)size
 {
-    //[self setScaleToX:size.width andY:size.height andZ:self.scale.z];
+    //[self setScaleToX:size.width y:size.height z:self.scale.z];
     _size = size;
 }
 
@@ -304,11 +304,11 @@
     static GLKMatrix4 matrix_mvp;
     if (_useOrtho)
     {
-        [self.parentScene useOrthoCamera];
+        [self.scene useOrthoCamera];
     }
     
     // Create Model-View-Projection-Matrix based on currently used scene camera
-    matrix_mvp = GLKMatrix4Multiply(self.parentScene.mainCamera.viewMatrix, [self worldTransform]);
+    matrix_mvp = GLKMatrix4Multiply(self.scene.mainCamera.viewMatrix, self.worldTransform);
     [shader setMatrix4Value:matrix_mvp forUniformNamed:B3DShaderUniformMatrixMVP];
     
     [shader setIntValue:0 forUniformNamed:B3DShaderUniformTextureBase];
@@ -343,7 +343,7 @@
     
     if (_useOrtho)
     {
-        [self.parentScene usePerspectiveCamera];
+        [self.scene usePerspectiveCamera];
     }
     
     glBindVertexArrayOES(0);

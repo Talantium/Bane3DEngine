@@ -46,20 +46,22 @@ const       GLfloat B3DCameraPerspectiveDefaultFov          = 60.0f;
 
 @interface B3DCamera ()
 {
-    @protected
-        GLKMatrix4                  _projectionMatrix;
-        GLKMatrix4                  _viewMatrix;
-        
-        CGRect                      _viewport;
-        
-        GLfloat                     _near;
-        GLfloat                     _far;
-                
-        BOOL						_ortho;
-        BOOL                        _projectionMatrixDirty;
+  @protected
+    GLKMatrix4      _viewMatrix;
+    GLKMatrix4      _projectionMatrix;
+    
+    CGRect          _viewport;
+    
+    GLfloat         _near;
+    GLfloat         _far;
+    
+    BOOL            _ortho;
+    BOOL            _projectionMatrixDirty;
 }
 
-- (GLKMatrix4) projectionMatrix;
+@property (nonatomic, readwrite, assign) GLKMatrix4      viewMatrix;
+@property (nonatomic, readwrite, assign) GLKMatrix4      projectionMatrix;
+@property (nonatomic, readwrite, assign) CGRect          viewport;
 
 @end
 
@@ -105,34 +107,24 @@ const       GLfloat B3DCameraPerspectiveDefaultFov          = 60.0f;
     _projectionMatrixDirty = YES;
 }
 
-- (GLKMatrix4) projectionMatrix
+- (void) updateWithSceneGraphInfo:(B3DSceneGraphInfo)info
 {
-    return GLKMatrix4Identity;
+    [super updateWithSceneGraphInfo:info];
+    
+    if (_projectionMatrixDirty) [self updateProjectionMatrix];
+    
+    [self updateViewMatrix];
 }
 
 - (void) updateProjectionMatrix
 {
-    if (_projectionMatrixDirty)
-    {
-        _projectionMatrix = [self projectionMatrix];
-        _projectionMatrixDirty = NO;
-    }
+    _projectionMatrix = GLKMatrix4Identity;
+    _projectionMatrixDirty = NO;
 }
 
-- (void) updateMatrix
+- (void) updateViewMatrix
 {
-    [super updateMatrix];
-    
-    [self updateProjectionMatrix];
-        
     _viewMatrix = GLKMatrix4Multiply(_projectionMatrix, self.worldTransform);
-}
-
-- (GLKMatrix4) viewMatrix
-{
-    [self updateMatrix];
-    
-    return _viewMatrix;
 }
 
 @end
@@ -167,7 +159,7 @@ const       GLfloat B3DCameraPerspectiveDefaultFov          = 60.0f;
     _projectionMatrixDirty = YES;
 }
 
-- (GLKMatrix4) projectionMatrix
+- (void) updateProjectionMatrix
 {
     [B3DAssert that:(CGRectIsEmpty(_viewport) == NO)
        errorMessage:@"Setting Camera with zero viewport rect!"];
@@ -176,19 +168,14 @@ const       GLfloat B3DCameraPerspectiveDefaultFov          = 60.0f;
                                                   (_viewport.size.width / _viewport.size.height),
                                                   _near,
                                                   _far);
-
-    return matrix;
+    
+    _projectionMatrix = matrix;
+    _projectionMatrixDirty = NO;
 }
 
-- (void) updateMatrix
+- (void) updateViewMatrix
 {
-    [self.parentNode updateMatrix];
-    
-//    GLKMatrix4 absTrans = self.parentNode.worldTransform;
-    GLKMatrix4 absTrans = GLKMatrix4MakeWithQuaternion(self.parentNode.worldRotation);
-    GLKVector3 eye = GLKVector3Add(self.parentNode.worldPosition, GLKMatrix4MultiplyVector3(absTrans, self.position));// self.worldPosition;
-//    NSLog(@"%@ --- %@", NSStringFromGLKMatrix4(absTrans), NSStringFromGLKVector3(eye));
-//    eye = self.worldPosition;
+    GLKVector3 eye = self.worldPosition;
     GLKVector3 center;
     GLKVector3 up;
     GLKMatrix4 rotation;
@@ -222,8 +209,6 @@ const       GLfloat B3DCameraPerspectiveDefaultFov          = 60.0f;
     GLKMatrix4 lookAtMatrix = GLKMatrix4MakeLookAt(eye.x, eye.y, eye.z,
                                                    center.x, center.y, center.z,
                                                    -up.x, -up.y, -up.z);
-
-    [self updateProjectionMatrix];
     
     _viewMatrix = GLKMatrix4Multiply(_projectionMatrix, lookAtMatrix);
 }
@@ -252,11 +237,11 @@ const       GLfloat B3DCameraPerspectiveDefaultFov          = 60.0f;
     return self;
 }
 
-- (GLKMatrix4) projectionMatrix
+- (void) updateProjectionMatrix
 {
     [B3DAssert that:(CGRectIsEmpty(_viewport) == NO)
        errorMessage:@"Setting Camera with zero viewport rect!"];
-
+    
     GLKMatrix4 matrix = GLKMatrix4MakeOrtho(0.0f,
                                             _viewport.size.width,
                                             0.0f,
@@ -264,7 +249,8 @@ const       GLfloat B3DCameraPerspectiveDefaultFov          = 60.0f;
                                             _near,
                                             _far);
     
-    return matrix;
+    _projectionMatrix = matrix;
+    _projectionMatrixDirty = NO;
 }
 
 @end

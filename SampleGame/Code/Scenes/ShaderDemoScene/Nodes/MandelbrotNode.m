@@ -34,7 +34,7 @@
         CGSize screenSize = [UIApplication currentSize];
         self.size = screenSize;
         
-        [self setPositionToX:0 andY:0 andZ:-50.0f];
+        [self setPositionToX:0 y:0 z:-50.0f];
         
         self.multitouchEnabled  = YES;
         self.batchable          = NO;
