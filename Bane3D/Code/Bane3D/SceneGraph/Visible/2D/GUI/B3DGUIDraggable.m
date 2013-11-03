@@ -31,7 +31,7 @@
 
 #import "Bane3DEngine.h"
 #import "B3DColor.h"
-#import "B3DBaseNode+Protected.h"
+#import "B3DNode+Protected.h"
 
 
 @interface B3DGUIDraggable ()

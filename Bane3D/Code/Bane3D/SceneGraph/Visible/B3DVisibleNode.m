@@ -35,7 +35,7 @@
 #import "Bane3DEngine.h"
 #import "B3DShader.h"
 #import "B3DTexture.h"
-#import "B3DBaseNode+Protected.h"
+#import "B3DNode+Protected.h"
 #import "B3DVisibleNode+Protected.h"
 
 

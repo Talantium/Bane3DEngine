@@ -1,5 +1,5 @@
 //
-//  B3DBaseNode.h
+//  B3DNode.h
 //  Bane3D
 //
 //  Created by Andreas Hanft on 06.04.11.
@@ -30,16 +30,16 @@
 #import <Bane3D/Input/B3DTouchResponder.h>
 
 @class Bane3DEngine;
-@class B3DBaseNode;
+@class B3DNode;
 @class B3DScene;
 @class B3DAssetToken;
 
 
-typedef void (^B3DUpdateLoopBlock)(B3DBaseNode* node, double deltaTime);
-typedef void (^B3DAwakeBlock)(B3DBaseNode* node);
+typedef void (^B3DUpdateLoopBlock)(B3DNode* node, double deltaTime);
+typedef void (^B3DAwakeBlock)(B3DNode* node);
 
 
-@interface B3DBaseNode : NSObject <B3DTouchResponder>
+@interface B3DNode : NSObject <B3DTouchResponder>
 
 /**
  *
@@ -57,21 +57,21 @@ typedef void (^B3DAwakeBlock)(B3DBaseNode* node);
  *
  */
 @property (nonatomic, assign, readonly)					GLKMatrix4			transform;
-@property (nonatomic, assign, readonly)					GLKMatrix4			absoluteTransform;
+@property (nonatomic, assign, readonly)					GLKMatrix4			worldTransform;
 @property (nonatomic, assign, readwrite)                GLKVector3			position;
-@property (nonatomic, assign, readonly)					GLKVector3			absolutePosition;
+@property (nonatomic, assign, readonly)					GLKVector3			worldPosition;
 @property (nonatomic, assign, readwrite)                GLKVector3			scale;
-@property (nonatomic, assign, readonly)					GLKVector3			absoluteScale;
+@property (nonatomic, assign, readonly)					GLKVector3			worldScale;
 @property (nonatomic, assign, readwrite)                GLKQuaternion       rotation;
-@property (nonatomic, assign, readonly)					GLKQuaternion       absoluteRotation;
+@property (nonatomic, assign, readonly)					GLKQuaternion       worldRotation;
 
 // Input
-@property (nonatomic, assign, readwrite, getter=isReceivingTouchEvents)     BOOL receivesTouchEvents;
+@property (nonatomic, assign, readwrite, getter=isUserInteractionEnabled)     BOOL userInteractionEnabled;
 
 // Scene graph
 @property (nonatomic, assign, readwrite, getter=isVisible)	BOOL            visible;
 @property (nonatomic, weak, readwrite)                  B3DScene*			parentScene;
-@property (nonatomic, weak, readwrite)                  B3DBaseNode*		parentNode;
+@property (nonatomic, weak, readwrite)                  B3DNode*		parentNode;
 @property (nonatomic, weak, readonly)					NSSet*				children;
 @property (nonatomic, weak, readonly)					Bane3DEngine*		engine;
 
@@ -118,7 +118,7 @@ typedef void (^B3DAwakeBlock)(B3DBaseNode* node);
 @end
 
 
-@interface B3DBaseNode (GameLoop)
+@interface B3DNode (GameLoop)
 
 - (void) update;
 - (void) draw;
@@ -128,16 +128,16 @@ typedef void (^B3DAwakeBlock)(B3DBaseNode* node);
 @end
 
 
-@interface B3DBaseNode (SceneGraph)
+@interface B3DNode (SceneGraph)
 
-- (void) addSubNode:(B3DBaseNode*)node;
-- (BOOL) removeSubNode:(B3DBaseNode*)node;
+- (void) addSubNode:(B3DNode*)node;
+- (BOOL) removeSubNode:(B3DNode*)node;
 - (BOOL) removeFromParentNode;
 
 @end
 
 
-@interface B3DBaseNode (Manipulation)
+@interface B3DNode (Manipulation)
 
 /**
  * Translating the node

@@ -44,7 +44,7 @@
 {   
     B3DGUIDefaultSplashImage* image = [[self alloc] initWithTexture:[self defaultTextureName]
                                                              ofType:[B3DTexturePNG extension]];
-    image.receivesTouchEvents = NO;
+    image.userInteractionEnabled = NO;
     
     return image;
 }

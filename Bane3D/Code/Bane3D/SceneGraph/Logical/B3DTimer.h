@@ -26,10 +26,10 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-#import <Bane3D/SceneGraph/B3DBaseNode.h>
+#import <Bane3D/SceneGraph/B3DNode.h>
 
 
-@interface B3DTimer : B3DBaseNode
+@interface B3DTimer : B3DNode
 
 @property (nonatomic, assign, getter = isRepeating)	BOOL    repeats;
 @property (nonatomic, assign, readwrite)            double	delay;

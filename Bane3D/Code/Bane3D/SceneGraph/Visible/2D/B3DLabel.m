@@ -292,7 +292,7 @@
     
     // Create Model-View-Projection-Matrix based on currently used scene camera
     static GLKMatrix4 matrix_mvp;
-    matrix_mvp = GLKMatrix4Multiply(self.parentScene.mainCamera.viewMatrix, [self absoluteTransform]);
+    matrix_mvp = GLKMatrix4Multiply(self.parentScene.mainCamera.viewMatrix, [self worldTransform]);
     [shader setMatrix4Value:matrix_mvp forUniformNamed:B3DShaderUniformMatrixMVP];
     [shader setIntValue:0 forUniformNamed:B3DShaderUniformTextureBase];
     [shader setBoolValue:YES forUniformNamed:B3DShaderUniformToggleTextureAlphaOnly];

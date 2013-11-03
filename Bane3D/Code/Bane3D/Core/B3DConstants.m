@@ -33,10 +33,6 @@
 NSString*   const   B3DEngineVersionString                  = @"0.6.0";
 const       int		B3DEngineMaxFps                         = 60;
 
-// Input
-const       float   B3DInputAccelerometerDefaultFrequency   = 60.0f;
-const       float   B3DInputAccelerometerDefaultFilterFactor = 0.1f;
-
 // Scene Graph
 NSString*   const   B3DSceneManagerRootSceneKey             = @"B3DSceneManagerRootSceneKey";
 

@@ -47,7 +47,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 //            self.buttonContinue.visible = NO;
 //            
 //            B3DGUIImage* image = [[B3DGUIImage alloc] initWithPNGTexture:@"touch_to_continue"];
-//            [image awakeWithBlock:^(B3DBaseNode* node)
+//            [image awakeWithBlock:^(B3DNode* node)
 //            {
 //                CGSize size = ((B3DGUIImage*)node).size;
 //                [node setPositionToX:_loadingBar.position.x + SGLoadingBarSize.width - size.width

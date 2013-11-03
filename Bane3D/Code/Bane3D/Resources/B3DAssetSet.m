@@ -28,7 +28,7 @@
 
 #import "B3DAssetSet.h"
 
-#import "B3DBaseNode.h"
+#import "B3DNode.h"
 #import "B3DAsset.h"
 
 

@@ -164,7 +164,7 @@
     for (B3DSprite* currentSprite in sprites)
     {   
         B3DSpriteVertexData* vertices = [currentSprite updateVerticeData];
-        GLKMatrix4 transform = currentSprite.absoluteTransform;
+        GLKMatrix4 transform = currentSprite.worldTransform;
         for (int i = 0; i < 4; i++)
         {
             GLKVector4 posMultiplied = GLKMatrix4MultiplyVector4(transform, 

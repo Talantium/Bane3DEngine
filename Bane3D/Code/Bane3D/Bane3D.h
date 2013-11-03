@@ -49,7 +49,7 @@
 
 
 #pragma mark - Scene Graph
-#import <Bane3D/SceneGraph/B3DBaseNode.h>
+#import <Bane3D/SceneGraph/B3DNode.h>
 #import <Bane3D/SceneGraph/B3DSceneManager.h>
 #pragma mark • Logical
 #import <Bane3D/SceneGraph/Logical/B3DScene.h>

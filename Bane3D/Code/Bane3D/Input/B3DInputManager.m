@@ -26,23 +26,33 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
+#import <CoreMotion/CoreMotion.h>
+
 #import "B3DInputManager.h"
 
 #import "SynthesizeSingleton.h"
-#import "B3DBaseNode.h"
+#import "B3DNode.h"
 #import "B3DConstants.h"
+
+
+const NSTimeInterval    B3DInputAccelerometerDefaultFrequency       = 60.0f;
+const CGFloat           B3DInputAccelerometerDefaultFilterFactor    = 0.1f;
 
 
 @interface B3DInputManager ()
 {
-    @private
-        NSMutableSet*			_touchResponder;
-        NSArray*				_touchResponderZSorted;
-        NSMutableArray*         _visibleResponder;
-        GLKVector3              _rawAcceleration;
-        GLKVector3              _filteredAcceleration;
-        GLfloat                 _accFilterFactor;
+  @private
+    NSMutableSet*			_touchResponder;
+    NSArray*				_touchResponderZSorted;
+    NSMutableArray*         _visibleResponder;
+    
+    GLfloat                 _accelerationFilterFactor;
 }
+
+@property (nonatomic, readwrite, assign) GLKVector3  accelerationRaw;
+@property (nonatomic, readwrite, assign) GLKVector3  accelerationFiltered;
+
+@property (nonatomic, readwrite, strong) CMMotionManager* motionManager;
 
 @end
 
@@ -60,9 +70,11 @@
 		_touchResponderZSorted  = nil;
 		_visibleResponder       = [[NSMutableArray alloc] init];
         
-        _rawAcceleration        = GLKVector3Make(0.0f, 0.0f, 0.0f);
-        _filteredAcceleration   = GLKVector3Make(0.0f, 0.0f, 0.0f);
-        _accFilterFactor        = B3DInputAccelerometerDefaultFilterFactor;
+        _motionManager          = [[CMMotionManager alloc] init];
+        
+        _accelerationRaw        = GLKVector3Make(0.0f, 0.0f, 0.0f);
+        _accelerationFiltered   = GLKVector3Make(0.0f, 0.0f, 0.0f);
+        _accelerationFilterFactor = B3DInputAccelerometerDefaultFilterFactor;
 	}
 	
 	return self;
@@ -71,12 +83,12 @@
 
 #pragma mark - Managing Touch Receivers
 
-- (void) registerForTouchEvents:(B3DBaseNode<B3DTouchResponder>*)node
+- (void) registerForTouchEvents:(B3DNode<B3DTouchResponder>*)node
 {
 	[_touchResponder addObject:node];
 }
 
-- (void) unregisterForTouchEvents:(B3DBaseNode<B3DTouchResponder>*)node
+- (void) unregisterForTouchEvents:(B3DNode<B3DTouchResponder>*)node
 {
 	if ([_touchResponder containsObject:node])
 	{
@@ -87,7 +99,7 @@
 - (void) updateReceiverOrder
 {
 	// Get all visible receiver currently registered
-	for (B3DBaseNode<B3DTouchResponder>* responder in _touchResponder)
+	for (B3DNode<B3DTouchResponder>* responder in _touchResponder)
 	{
 		if (responder.isVisible)
 		{
@@ -112,7 +124,7 @@
 {
 	for (UITouch* touch in touches)
 	{
-		for (B3DBaseNode<B3DTouchResponder>* responder in _touchResponder)
+		for (B3DNode<B3DTouchResponder>* responder in _touchResponder)
 		{
 			if ([responder isVisible]
 				&& [responder respondsToSelector:selector])
@@ -141,7 +153,7 @@
 {
 	for (UITouch* touch in touches)
 	{
-		for (B3DBaseNode<B3DTouchResponder>* responder in _touchResponderZSorted)
+		for (B3DNode<B3DTouchResponder>* responder in _touchResponderZSorted)
 		{
 			if ([responder respondsToSelector:@selector(handleTouchesBegan:forView:)])
 			{
@@ -158,7 +170,7 @@
 {
 	for (UITouch* touch in touches)
 	{
-		for (B3DBaseNode<B3DTouchResponder>* responder in _touchResponderZSorted)
+		for (B3DNode<B3DTouchResponder>* responder in _touchResponderZSorted)
 		{
 			if ([responder respondsToSelector:@selector(handleTouchesMoved:forView:)])
 			{
@@ -175,7 +187,7 @@
 {
 	for (UITouch* touch in touches)
 	{
-		for (B3DBaseNode<B3DTouchResponder>* responder in _touchResponderZSorted)
+		for (B3DNode<B3DTouchResponder>* responder in _touchResponderZSorted)
 		{
 			if ([responder respondsToSelector:@selector(handleTouchesEnded:forView:)])
 			{
@@ -192,7 +204,7 @@
 {
 	for (UITouch* touch in touches)
 	{
-		for (B3DBaseNode<B3DTouchResponder>* responder in _touchResponderZSorted)
+		for (B3DNode<B3DTouchResponder>* responder in _touchResponderZSorted)
 		{
 			if ([responder respondsToSelector:@selector(handleTouchesCancelled:forView:)])
 			{
@@ -208,28 +220,46 @@
 
 #pragma mark - Accelerometer Input
 
-- (void) enableAccelerometerInput
+- (void) startAccelerometerInput
 {
-	[self enableAccelerometerInput:B3DInputAccelerometerDefaultFrequency];
+	[self startAccelerometerInputWithFrequency:B3DInputAccelerometerDefaultFrequency];
 }
 
-- (void) enableAccelerometerInput:(float)accelerometerFrequency
+- (void) startAccelerometerInputWithFrequency:(NSTimeInterval)accelerometerFrequency
 {
-	// Configure and start accelerometer
-	[[UIAccelerometer sharedAccelerometer] setUpdateInterval:(1.0 / accelerometerFrequency)];
-	[[UIAccelerometer sharedAccelerometer] setDelegate:self];
+    _motionManager.accelerometerUpdateInterval = (1.0 / accelerometerFrequency);
+    
+    NSOperationQueue *accelerometerQueue = [[NSOperationQueue alloc] init];
+    
+    __block typeof(self) blockSelf = self;
+    [_motionManager
+     startAccelerometerUpdatesToQueue:accelerometerQueue
+     withHandler:^(CMAccelerometerData* accelerometerData, NSError* error)
+     {
+         if (error != nil)
+         {
+             [blockSelf motionManagerDidProduceAccelerometerData:accelerometerData];
+         }
+     }];
+
 }
 
-- (void) accelerometer:(UIAccelerometer*)accelerometer didAccelerate:(UIAcceleration*)acceleration
+- (void) stopAccelerometerInput
 {
-	_rawAcceleration.x = acceleration.x;
-	_rawAcceleration.y = acceleration.y;
-	_rawAcceleration.z = acceleration.z;
+    [_motionManager stopAccelerometerUpdates];
+}
+
+- (void) motionManagerDidProduceAccelerometerData:(CMAccelerometerData*)accelerometerData
+{
+	_accelerationRaw.x = accelerometerData.acceleration.x;
+	_accelerationRaw.y = accelerometerData.acceleration.y;
+	_accelerationRaw.z = accelerometerData.acceleration.z;
 	
 	// Use a basic low-pass filter to only keep the gravity in the accelerometer values
-	_filteredAcceleration.x = acceleration.x * _accFilterFactor + _filteredAcceleration.x * (1.0f - _accFilterFactor);
-	_filteredAcceleration.y = acceleration.y * _accFilterFactor + _filteredAcceleration.y * (1.0f - _accFilterFactor);
-	_filteredAcceleration.z = acceleration.z * _accFilterFactor + _filteredAcceleration.z * (1.0f - _accFilterFactor);
+    CGFloat factor = _accelerationFilterFactor;
+	_accelerationFiltered.x = _accelerationRaw.x * factor + _accelerationFiltered.x * (1.0f - factor);
+	_accelerationFiltered.y = _accelerationRaw.y * factor + _accelerationFiltered.y * (1.0f - factor);
+	_accelerationFiltered.z = _accelerationRaw.z * factor + _accelerationFiltered.z * (1.0f - factor);
 }
 
 

@@ -29,7 +29,7 @@
 #import "B3DGUITouchable.h"
 
 #import "Bane3DEngine.h"
-#import "B3DBaseNode+Protected.h"
+#import "B3DNode+Protected.h"
 #import "B3DSprite+Protected.h"
 
 
@@ -50,7 +50,7 @@
 	self = [super initWithTexture:textureName ofType:type];
 	if (self != nil)
 	{
-		self.receivesTouchEvents	= YES;
+		self.userInteractionEnabled	= YES;
 	}
 	
 	return self;
@@ -102,7 +102,7 @@
     // Invert touch y to conform to OpenGL coords
     location.y = _engine.viewportSize.height - location.y;
     // @TODO: Cache own rect for better perf
-    CGRect rect = CGRectMake(self.absolutePosition.x, self.absolutePosition.y, _size.width, _size.height);
+    CGRect rect = CGRectMake(self.worldPosition.x, self.worldPosition.y, _size.width, _size.height);
 
     return (CGRectContainsPoint(rect, location));
 }

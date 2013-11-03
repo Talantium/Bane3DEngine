@@ -38,7 +38,7 @@
 #import "B3DDefaultMaterial.h"
 #import "B3DShaderDefaultBaseColor.h"
 #import "B3DShaderDefaultSimpleColor.h"
-#import "B3DBaseNode+Protected.h"
+#import "B3DNode+Protected.h"
 
 
 @interface B3DScene ()
@@ -50,8 +50,8 @@
 
 @property (nonatomic, strong, readwrite) B3DAssetSet*        assets;
 
-- (void) registerRecursivelyForTouchHandling:(B3DBaseNode*)node;
-- (void) unregisterRecursivelyFromTouchHandling:(B3DBaseNode*)node;
+- (void) registerRecursivelyForTouchHandling:(B3DNode*)node;
+- (void) unregisterRecursivelyFromTouchHandling:(B3DNode*)node;
 
 @end
 
@@ -82,7 +82,7 @@
         _mutableCameras = [[NSMutableDictionary alloc] init];
         {
             // First camera for regular perspective drawing
-            B3DCamera* camera = [[B3DCamera alloc] init];
+            B3DCamera* camera = [[B3DCameraPerspective alloc] init];
             {
                 // Also set this camera as the default main camera
                 _mainCamera = camera;
@@ -91,7 +91,7 @@
         
             // Default camera setup for ortho drawing (usually GUI and 
             // other 2D sprites etc.)
-            camera = [[B3DCamera alloc] initAsOrtho:YES];
+            camera = [[B3DCameraOrtho alloc] init];
             [self addCamera:camera forKey:B3DSceneCameraDefaultOrthoKey];
         }
 		
@@ -134,7 +134,7 @@
 
 - (void) assetLoadingDidComplete
 {
-    for (B3DBaseNode* node in _mutableChildren)
+    for (B3DNode* node in _mutableChildren)
 	{
 		[node create];
 	}
@@ -144,7 +144,7 @@
 // been loaded and initialized.
 - (void) didLoad
 {
-	for (B3DBaseNode* node in _mutableChildren)
+	for (B3DNode* node in _mutableChildren)
 	{
 		[node awake];
 	}
@@ -156,7 +156,7 @@
 {
 	LogDebug(@"Scene '%@' was made visible", self.key);
 	
-	for (B3DBaseNode* child in _mutableChildren)
+	for (B3DNode* child in _mutableChildren)
 	{
 		[self registerRecursivelyForTouchHandling:child];
 	}
@@ -171,7 +171,7 @@
 	
  	_visible = NO;
 	
-	for (B3DBaseNode* child in _mutableChildren)
+	for (B3DNode* child in _mutableChildren)
 	{
 		[self unregisterRecursivelyFromTouchHandling:child];
         [child destroy];
@@ -181,7 +181,7 @@
 
 // This method is used to initialize nodes that are added to 
 // scene graph after the scene has been loaded and became visible.
-- (void) lazyInitNode:(B3DBaseNode*)node
+- (void) lazyInitNode:(B3DNode*)node
 {
 	// Only init if scene is already visible
 	if (self.visible)
@@ -195,7 +195,7 @@
 // while the scene is still visible and loaded and can be used to 
 // do required clean up work that would otherwise be called when
 // scene receives the didBecomeInactive call.
-- (void) lazyCleanUpNode:(B3DBaseNode*)node
+- (void) lazyCleanUpNode:(B3DNode*)node
 {
 	// LogDebug(@"Scene: %@ - lazyCleanUpNode: %@", _sceneKey, node);
 	if (self.visible)
@@ -204,27 +204,27 @@
 	}
 }
 
-- (void) registerRecursivelyForTouchHandling:(B3DBaseNode*)node
+- (void) registerRecursivelyForTouchHandling:(B3DNode*)node
 {
-	if (node.isReceivingTouchEvents)
+	if (node.isUserInteractionEnabled)
 	{
 		[[B3DInputManager sharedManager] registerForTouchEvents:node];
 	}
 	
-	for (B3DBaseNode* childNode in node.children)
+	for (B3DNode* childNode in node.children)
 	{
 		[self registerRecursivelyForTouchHandling:childNode];
 	}
 }
 
-- (void) unregisterRecursivelyFromTouchHandling:(B3DBaseNode*)node
+- (void) unregisterRecursivelyFromTouchHandling:(B3DNode*)node
 {
-	if (node.isReceivingTouchEvents)
+	if (node.isUserInteractionEnabled)
 	{
 		[[B3DInputManager sharedManager] unregisterForTouchEvents:node];
 	}
 	
-	for (B3DBaseNode* childNode in node.children)
+	for (B3DNode* childNode in node.children)
 	{
 		[self unregisterRecursivelyFromTouchHandling:childNode];
 	}

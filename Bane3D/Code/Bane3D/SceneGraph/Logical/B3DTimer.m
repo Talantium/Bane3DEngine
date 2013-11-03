@@ -29,7 +29,7 @@
 #import "B3DTimer.h"
 
 #import "B3DTime.h"
-#import "B3DBaseNode+Protected.h"
+#import "B3DNode+Protected.h"
 
 
 @interface B3DTimer ()

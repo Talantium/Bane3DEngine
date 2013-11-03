@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		100939B41826EF7C0055ABD6 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 100939B31826EF7C0055ABD6 /* CoreMotion.framework */; };
 		10445E4917FDE77700B8996A /* B3DMeshGeneric.m in Sources */ = {isa = PBXBuildFile; fileRef = 10445E4817FDE77700B8996A /* B3DMeshGeneric.m */; };
 		10CF9FC017FE368A00D4222F /* B3DPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 10CF9FBF17FE368A00D4222F /* B3DPoint.m */; };
 		D94498B416DE443500A71023 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D94498B316DE443500A71023 /* Foundation.framework */; };
@@ -62,7 +63,7 @@
 		D94499A216DE5C2800A71023 /* B3DTextureFont.m in Sources */ = {isa = PBXBuildFile; fileRef = D944993216DE5C2800A71023 /* B3DTextureFont.m */; };
 		D94499A316DE5C2800A71023 /* B3DTexturePNG.m in Sources */ = {isa = PBXBuildFile; fileRef = D944993416DE5C2800A71023 /* B3DTexturePNG.m */; };
 		D94499A416DE5C2800A71023 /* B3DTexturePVR.m in Sources */ = {isa = PBXBuildFile; fileRef = D944993616DE5C2800A71023 /* B3DTexturePVR.m */; };
-		D94499A516DE5C2800A71023 /* B3DBaseNode.m in Sources */ = {isa = PBXBuildFile; fileRef = D944993916DE5C2800A71023 /* B3DBaseNode.m */; };
+		D94499A516DE5C2800A71023 /* B3DNode.m in Sources */ = {isa = PBXBuildFile; fileRef = D944993916DE5C2800A71023 /* B3DNode.m */; };
 		D94499A616DE5C2800A71023 /* B3DSceneManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D944993B16DE5C2800A71023 /* B3DSceneManager.m */; };
 		D94499A716DE5C2800A71023 /* B3DCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = D944993E16DE5C2800A71023 /* B3DCamera.m */; };
 		D94499A816DE5C2800A71023 /* B3DScene.m in Sources */ = {isa = PBXBuildFile; fileRef = D944994016DE5C2800A71023 /* B3DScene.m */; };
@@ -121,13 +122,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		100939B31826EF7C0055ABD6 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		10445E4717FDE77700B8996A /* B3DMeshGeneric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = B3DMeshGeneric.h; sourceTree = "<group>"; };
 		10445E4817FDE77700B8996A /* B3DMeshGeneric.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = B3DMeshGeneric.m; sourceTree = "<group>"; };
 		1077946116EFE53000B4CA92 /* B3DSprite+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B3DSprite+Protected.h"; sourceTree = "<group>"; };
 		10CF9FBE17FE368A00D4222F /* B3DPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = B3DPoint.h; sourceTree = "<group>"; };
 		10CF9FBF17FE368A00D4222F /* B3DPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = B3DPoint.m; sourceTree = "<group>"; };
 		D928B43F16E4D59800915830 /* B3DAsset+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B3DAsset+Protected.h"; sourceTree = "<group>"; };
-		D928B44016E4D6FE00915830 /* B3DBaseNode+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B3DBaseNode+Protected.h"; sourceTree = "<group>"; };
+		D928B44016E4D6FE00915830 /* B3DNode+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B3DNode+Protected.h"; sourceTree = "<group>"; };
 		D928B44116E4E41C00915830 /* B3DVisibleNode+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B3DVisibleNode+Protected.h"; sourceTree = "<group>"; };
 		D928B44216E4E68A00915830 /* B3DTexture_Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = B3DTexture_Protected.h; sourceTree = "<group>"; };
 		D94498B016DE443500A71023 /* libBane3D.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBane3D.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -207,8 +209,8 @@
 		D944993416DE5C2800A71023 /* B3DTexturePNG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = B3DTexturePNG.m; sourceTree = "<group>"; };
 		D944993516DE5C2800A71023 /* B3DTexturePVR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = B3DTexturePVR.h; sourceTree = "<group>"; };
 		D944993616DE5C2800A71023 /* B3DTexturePVR.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = B3DTexturePVR.m; sourceTree = "<group>"; };
-		D944993816DE5C2800A71023 /* B3DBaseNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = B3DBaseNode.h; sourceTree = "<group>"; };
-		D944993916DE5C2800A71023 /* B3DBaseNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = B3DBaseNode.m; sourceTree = "<group>"; };
+		D944993816DE5C2800A71023 /* B3DNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = B3DNode.h; sourceTree = "<group>"; };
+		D944993916DE5C2800A71023 /* B3DNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = B3DNode.m; sourceTree = "<group>"; };
 		D944993A16DE5C2800A71023 /* B3DSceneManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = B3DSceneManager.h; sourceTree = "<group>"; };
 		D944993B16DE5C2800A71023 /* B3DSceneManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = B3DSceneManager.m; sourceTree = "<group>"; };
 		D944993D16DE5C2800A71023 /* B3DCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = B3DCamera.h; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				100939B41826EF7C0055ABD6 /* CoreMotion.framework in Frameworks */,
 				D94499D816DE6DC200A71023 /* UIKit.framework in Frameworks */,
 				D94499D616DE6D9100A71023 /* QuartzCore.framework in Frameworks */,
 				D94499D416DE6D8700A71023 /* GLKit.framework in Frameworks */,
@@ -329,6 +332,7 @@
 		D94498B216DE443500A71023 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				100939B31826EF7C0055ABD6 /* CoreMotion.framework */,
 				D94499D716DE6DC100A71023 /* UIKit.framework */,
 				D94499D516DE6D9000A71023 /* QuartzCore.framework */,
 				D94499D316DE6D8600A71023 /* GLKit.framework */,
@@ -552,9 +556,9 @@
 		D944993716DE5C2800A71023 /* SceneGraph */ = {
 			isa = PBXGroup;
 			children = (
-				D944993816DE5C2800A71023 /* B3DBaseNode.h */,
-				D944993916DE5C2800A71023 /* B3DBaseNode.m */,
-				D928B44016E4D6FE00915830 /* B3DBaseNode+Protected.h */,
+				D944993816DE5C2800A71023 /* B3DNode.h */,
+				D944993916DE5C2800A71023 /* B3DNode.m */,
+				D928B44016E4D6FE00915830 /* B3DNode+Protected.h */,
 				D944993A16DE5C2800A71023 /* B3DSceneManager.h */,
 				D944993B16DE5C2800A71023 /* B3DSceneManager.m */,
 				D944993C16DE5C2800A71023 /* Logical */,
@@ -860,7 +864,7 @@
 				D94499A216DE5C2800A71023 /* B3DTextureFont.m in Sources */,
 				D94499A316DE5C2800A71023 /* B3DTexturePNG.m in Sources */,
 				D94499A416DE5C2800A71023 /* B3DTexturePVR.m in Sources */,
-				D94499A516DE5C2800A71023 /* B3DBaseNode.m in Sources */,
+				D94499A516DE5C2800A71023 /* B3DNode.m in Sources */,
 				D94499A616DE5C2800A71023 /* B3DSceneManager.m in Sources */,
 				D94499A716DE5C2800A71023 /* B3DCamera.m in Sources */,
 				D94499A816DE5C2800A71023 /* B3DScene.m in Sources */,

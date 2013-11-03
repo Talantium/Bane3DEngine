@@ -41,7 +41,7 @@
 #import "B3DScene.h"
 #import "B3DRenderMan.h"
 #import "B3DCamera.h"
-#import "B3DBaseNode+Protected.h"
+#import "B3DNode+Protected.h"
 #import "B3DVisibleNode+Protected.h"
 
 
@@ -308,7 +308,7 @@
     }
     
     // Create Model-View-Projection-Matrix based on currently used scene camera
-    matrix_mvp = GLKMatrix4Multiply(self.parentScene.mainCamera.viewMatrix, [self absoluteTransform]);
+    matrix_mvp = GLKMatrix4Multiply(self.parentScene.mainCamera.viewMatrix, [self worldTransform]);
     [shader setMatrix4Value:matrix_mvp forUniformNamed:B3DShaderUniformMatrixMVP];
     
     [shader setIntValue:0 forUniformNamed:B3DShaderUniformTextureBase];

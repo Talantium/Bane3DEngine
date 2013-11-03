@@ -26,7 +26,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-#import <Bane3D/SceneGraph/B3DBaseNode.h>
+#import <Bane3D/SceneGraph/B3DNode.h>
 
 @class B3DMaterial;
 @class B3DShader;
@@ -35,7 +35,7 @@
 @class B3DGLStateManager;
 
 
-@interface B3DVisibleNode : B3DBaseNode
+@interface B3DVisibleNode : B3DNode
 
 @property (nonatomic, copy)     B3DMaterial*            material;   //!< We need to copy the material so each node has its own settings for color etc.
 @property (nonatomic, strong)   B3DColor*               color;      //!< More or less equals to material.baseColor, implemented to simplify the use of a color on a sprite, meshes don't use it

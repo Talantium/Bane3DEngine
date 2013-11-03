@@ -1,5 +1,5 @@
 //
-//  B3DBaseNode+Protected.h
+//  B3DNode+Protected.h
 //  Bane3D
 //
 //  Created by Andreas Hanft on 06.04.11.
@@ -26,14 +26,14 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-#import "B3DBaseNode.h"
+#import "B3DNode.h"
 
 
 /**
  *	Protected iVars for subclasses to be able to bypass properties and thus
  *  speed up access.
  */
-@interface B3DBaseNode ()
+@interface B3DNode ()
 {
     @protected
         BOOL					_visible;
@@ -43,7 +43,7 @@
         NSString*				_name;
     
         B3DScene*				__weak _parentScene;
-        B3DBaseNode*			__weak _parentNode;
+        B3DNode*			__weak _parentNode;
         NSMutableSet*			_mutableChildren;
         NSArray*				_immutableChildren;
         Bane3DEngine*           __weak _engine;

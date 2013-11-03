@@ -26,29 +26,43 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-#import <Bane3D/SceneGraph/B3DBaseNode.h>
+#import <Bane3D/SceneGraph/B3DNode.h>
 
 
 // Scene Camera Defaults
-extern const        GLfloat B3DCameraDefaultNearOrtho;                  //!< -1000.0
-extern const        GLfloat B3DCameraDefaultFarOrtho;                   //!< +1000.0
+extern const        GLfloat B3DCameraOrthoDefaultNear;                  //!< -1000.0
+extern const        GLfloat B3DCameraOrthoDefaultFar;                   //!< +1000.0
 
-extern const        GLfloat B3DCameraDefaultNearPerspective;            //!< +0.01
-extern const        GLfloat B3DCameraDefaultFarPerspective;             //!< +10000.0
+extern const        GLfloat B3DCameraPerspectiveDefaultNear;            //!< +0.01
+extern const        GLfloat B3DCameraPerspectiveDefaultFar;             //!< +10000.0
+extern const        GLfloat B3DCameraPerspectiveDefaultFov;             //!< 60.0
 
-extern const        GLfloat B3DCameraDefaultFov;                        //!< 60.0
 
-
-@interface B3DCamera : B3DBaseNode
+@interface B3DCamera : B3DNode
 
 @property (nonatomic, readonly) GLKMatrix4      viewMatrix;
 @property (nonatomic, readonly) CGRect          viewport;
-@property (nonatomic, assign)   GLfloat         near;
-@property (nonatomic, assign)   GLfloat         far;
-@property (nonatomic, assign)   GLfloat         fov;
-@property (nonatomic, assign, getter = isOrtho) BOOL ortho;
+@property (nonatomic,   assign) GLfloat         near;
+@property (nonatomic,   assign) GLfloat         far;
+@property (nonatomic, readonly, getter = isOrtho) BOOL ortho;
 
-- (id) initAsOrtho:(BOOL)ortho;
-- (id) initAsOrtho:(BOOL)ortho withNear:(GLfloat)near andFar:(GLfloat)far andFov:(GLfloat)fov;
+@end
+
+
+@interface B3DCameraPerspective : B3DCamera
+
+@property (nonatomic, readwrite,   weak) B3DNode*   target;
+@property (nonatomic, readwrite,   weak) B3DNode*   up;
+
+@property (nonatomic, readwrite, assign) GLfloat        fov;
+
+- (id) initWithFov:(GLfloat)fov near:(GLfloat)near far:(GLfloat)far;
+
+@end
+
+
+@interface B3DCameraOrtho : B3DCamera
+
+- (id) initWithNear:(GLfloat)near far:(GLfloat)far;
 
 @end

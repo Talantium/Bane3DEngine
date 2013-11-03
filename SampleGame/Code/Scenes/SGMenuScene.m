@@ -33,7 +33,7 @@
         B3DLabel* label = [[B3DLabel alloc] initWithFontNamed:SGCommonBaseSceneFontName size:SGCommonBaseSceneFontSize];
         label.color = [B3DColor colorWithRGBHex:0xcccccc];
         [label translateByX:2 andY:screenSize.height - 22 andZ:-3];
-        [label updateWithBlock:^(B3DBaseNode* node, double deltaTime)
+        [label updateWithBlock:^(B3DNode* node, double deltaTime)
         {
             ((B3DLabel*)node).text = [NSString stringWithFormat:NSLocalizedString(@"SGFPSLabelText", nil), 1.0f/deltaTime];
         }];
@@ -46,7 +46,7 @@
             model.lineWidth = 1;
             [model translateByX:0 andY:1 andZ:-4];
             [model rotateByX:-90 andY:0 andZ:0];
-            [model updateWithBlock:^(B3DBaseNode* node, double deltaTime)
+            [model updateWithBlock:^(B3DNode* node, double deltaTime)
              {
                  [node rotateByAngle:30 * deltaTime aroundX:1 andY:1 andZ:0];
              }];

@@ -1,5 +1,5 @@
 //
-//  B3DBaseNode.m
+//  B3DNode.m
 //  Bane3D
 //
 //  Created by Andreas Hanft on 06.04.11.
@@ -26,7 +26,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-#import "B3DBaseNode.h"
+#import "B3DNode.h"
 
 #import "Bane3DEngine.h"
 #import "B3DInputManager.h"
@@ -36,15 +36,15 @@
 #import "B3DAssetToken.h"
 #import "B3DAssert.h"
 #import "B3DTime.h"
-#import "B3DBaseNode+Protected.h"
+#import "B3DNode+Protected.h"
 
 
-@interface B3DBaseNode ()
+@interface B3DNode ()
 {
     @private
         GLKMatrix4              _transform;
         BOOL					_sceneGraphHierarchyDirty;
-        BOOL                    _receivesTouchEvents;
+        BOOL                    _userInteractionEnabled;
 }
 
 @property (nonatomic, weak, readwrite)					Bane3DEngine*		engine;
@@ -52,17 +52,17 @@
 @end
 
 
-@implementation B3DBaseNode
+@implementation B3DNode
 
 #pragma mark - Dynamic Properties
 
 @dynamic	visible;
 @dynamic	transform;
-@dynamic	absoluteTransform;
-@dynamic	absolutePosition;
-@dynamic	absoluteScale;
-@dynamic	absoluteRotation;
-@dynamic	receivesTouchEvents;
+@dynamic	worldTransform;
+@dynamic	worldPosition;
+@dynamic	worldScale;
+@dynamic	worldRotation;
+@dynamic	userInteractionEnabled;
 @dynamic	parentScene;
 @dynamic	children;
 
@@ -105,7 +105,7 @@
 {
     [self initAssets];
 	
-    for (B3DBaseNode* node in _mutableChildren)
+    for (B3DNode* node in _mutableChildren)
 	{
 		[node create];
 	}
@@ -121,7 +121,7 @@
         self.awakeBlock(self);
     }
 	
-	for (B3DBaseNode* node in _mutableChildren)
+	for (B3DNode* node in _mutableChildren)
 	{
 		[node awake];
 	}
@@ -134,7 +134,7 @@
 
 - (void) destroy
 {
-    for (B3DBaseNode* node in _mutableChildren)
+    for (B3DNode* node in _mutableChildren)
 	{
 		[node destroy];
 	}
@@ -186,7 +186,7 @@
         self.updateLoopBlock(self, [B3DTime deltaTime]);
     }
     
-    for (B3DBaseNode* node in _immutableChildren)
+    for (B3DNode* node in _immutableChildren)
     {
         if (node.isVisible)
         {
@@ -205,7 +205,7 @@
         _transformationDirty = NO;
     }
     
-    for (B3DBaseNode* node in _immutableChildren)
+    for (B3DNode* node in _immutableChildren)
     {
         if (node.isVisible)
         {
@@ -241,10 +241,10 @@
 
 #pragma mark > Sorting
 
-- (NSComparisonResult) compareByZValueDescending:(B3DBaseNode*)otherNode
+- (NSComparisonResult) compareByZValueDescending:(B3DNode*)otherNode
 {
-	float selfZ = abs(self.absolutePosition.z);
-	float otherZ = abs(otherNode.absolutePosition.z);
+	float selfZ = abs(self.worldPosition.z);
+	float otherZ = abs(otherNode.worldPosition.z);
 	if (selfZ < otherZ)
 	{
 		return NSOrderedDescending;
@@ -259,10 +259,10 @@
 	}
 }
 
-- (NSComparisonResult) compareByZValueAscending:(B3DBaseNode<B3DTouchResponder>*)otherNode
+- (NSComparisonResult) compareByZValueAscending:(B3DNode<B3DTouchResponder>*)otherNode
 {
-	float selfZ = abs(self.absolutePosition.z);
-	float otherZ = abs(otherNode.absolutePosition.z);
+	float selfZ = abs(self.worldPosition.z);
+	float otherZ = abs(otherNode.worldPosition.z);
 	if (selfZ < otherZ)
 	{
 		return NSOrderedAscending;
@@ -279,10 +279,12 @@
 
 #pragma mark > Altering Hierarchy
 
-- (void) addSubNode:(B3DBaseNode*)node
+- (void) addSubNode:(B3DNode*)node
 {
 	[B3DAssert that:(node != self) errorMessage:@"Adding Node to self as child!"];
 	
+    [node removeFromParentNode];
+    
 	[_mutableChildren addObject:node];
 	node.parentNode = self;
 	node.parentScene = _parentScene;
@@ -291,7 +293,7 @@
 }
 
 
-- (BOOL) removeSubNode:(B3DBaseNode*)node
+- (BOOL) removeSubNode:(B3DNode*)node
 {
 	// Is given node a child of this node?
 	if ([_mutableChildren containsObject:node])
@@ -339,7 +341,7 @@
 	
 	_parentScene = scene;
 
-	for (B3DBaseNode* node in _mutableChildren)
+	for (B3DNode* node in _mutableChildren)
 	{
 		node.parentScene = scene;
 	}
@@ -371,11 +373,11 @@
     _transformationDirty = YES;
 }
 
-- (GLKVector3) absolutePosition
+- (GLKVector3) worldPosition
 {
 	if (_parentNode)
 	{
-		return GLKVector3Add(_parentNode.absolutePosition, _position);
+		return GLKVector3Add(_parentNode.worldPosition, _position);
 	}
 	else
 	{
@@ -383,11 +385,11 @@
 	}
 }
 
-- (GLKVector3) absoluteScale
+- (GLKVector3) worldScale
 {
 	if (_parentNode)
 	{
-		return GLKVector3Multiply(_parentNode.absoluteScale, _scale);
+		return GLKVector3Multiply(_parentNode.worldScale, _scale);
 	}
 	else
 	{
@@ -395,11 +397,11 @@
 	}
 }
 
-- (GLKQuaternion) absoluteRotation
+- (GLKQuaternion) worldRotation
 {
 	if (_parentNode)
 	{
-		return GLKQuaternionMultiply(_parentNode.absoluteRotation, _rotation);
+		return GLKQuaternionMultiply(_parentNode.worldRotation, _rotation);
 	}
 	else
 	{
@@ -412,11 +414,11 @@
 	return _transform;
 }
 
-- (GLKMatrix4) absoluteTransform
+- (GLKMatrix4) worldTransform
 {
 	if (_parentNode)
 	{
-		return GLKMatrix4Multiply(_parentNode.absoluteTransform, _transform);
+		return GLKMatrix4Multiply(_parentNode.worldTransform, _transform);
 	}
 	else
 	{
@@ -563,14 +565,14 @@
 
 #pragma mark - Touch
 
-- (BOOL) isReceivingTouchEvents
+- (BOOL) isUserInteractionEnabled
 {
-	return _receivesTouchEvents;
+	return _userInteractionEnabled;
 }
 
-- (void) setReceivesTouchEvents:(BOOL)receive
+- (void) setuserInteractionEnabled:(BOOL)receive
 {
-	_receivesTouchEvents = receive;
+	_userInteractionEnabled = receive;
 	
 	// If we change reveiving state while we are in a scene graph
 	// an the scene is also visible, we directly communicate with
@@ -580,7 +582,7 @@
 	// runtime.
 	if (_parentScene && [_parentScene isVisible])
 	{
-		if (_receivesTouchEvents)
+		if (_userInteractionEnabled)
 		{
 			[[B3DInputManager sharedManager] registerForTouchEvents:self];
 		}
@@ -596,7 +598,7 @@
 
 - (void) viewportDidChangeTo:(CGRect)viewport
 {
-	for (B3DBaseNode* node in _immutableChildren)
+	for (B3DNode* node in _immutableChildren)
 	{
 		[node viewportDidChangeTo:viewport];
 	}
@@ -604,7 +606,7 @@
 
 - (void) print
 {
-	B3DBaseNode* parent = self.parentNode;
+	B3DNode* parent = self.parentNode;
 	NSMutableString* depth = [[NSMutableString alloc] initWithString:@""];
 	while (parent)
 	{
@@ -614,7 +616,7 @@
 	
 	LogDebug(@"%@%@%@", depth, ([depth length] > 0 ? @"|-> " : @""), [self description]);
 	
-	for (B3DBaseNode* node in self.children)
+	for (B3DNode* node in self.children)
 	{
 		[node print];
 	}
@@ -622,7 +624,7 @@
 
 - (NSString*) description
 {
-	return [NSString stringWithFormat:@"%@ @ {%.2f, %.2f, %.2f} {%.2f, %.2f, %.2f}", (_name ? _name : @"Node"), _position.x, _position.y, _position.z, self.absolutePosition.x, self.absolutePosition.y, self.absolutePosition.z];
+	return [NSString stringWithFormat:@"%@ @ {%.2f, %.2f, %.2f} {%.2f, %.2f, %.2f}", (_name ? _name : @"Node"), _position.x, _position.y, _position.z, self.worldPosition.x, self.worldPosition.y, self.worldPosition.z];
 }
 
 

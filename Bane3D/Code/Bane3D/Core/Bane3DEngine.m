@@ -308,9 +308,14 @@ static Bane3DEngine* sInstance = nil;
 
 #pragma mark - Touch/Accelerometer Input Handling
 
-- (void) enableAccelerometer
+- (void) startAccelerometer
 {
-	[_inputManager enableAccelerometerInput];
+	[_inputManager startAccelerometerInput];
+}
+
+- (void) stopAccelerometer
+{
+	[_inputManager stopAccelerometerInput];
 }
 
 
