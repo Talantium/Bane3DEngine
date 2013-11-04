@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Code/**/*'
   s.exclude_files = 'Code/Bane3D_Prefix.pch'
   s.header_mappings_dir = 'Code'
-  s.frameworks   = 'QuartzCore', 'GLKit', 'OpenGLES'
+  s.frameworks   = 'QuartzCore', 'GLKit', 'OpenGLES', 'CoreMotion'
   s.requires_arc = true
   s.xcconfig     = { 'OTHER_LDFLAGS' => '-lObjC', 'GCC_INPUT_FILETYPE' => 'sourcecode.cpp.objcpp' }
   s.prefix_header_file = 'Code/Bane3D_Prefix.pch'

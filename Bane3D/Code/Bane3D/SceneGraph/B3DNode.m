@@ -163,7 +163,7 @@
 #pragma mark - Update/Drawing
 
 - (void) updateWithSceneGraphInfo:(B3DSceneGraphInfo)info
-{
+{  
     if (_sceneGraphHierarchyDirty)
 	{
 		_children = [NSArray arrayWithArray:_childrenMutable];

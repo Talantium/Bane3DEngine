@@ -133,6 +133,9 @@ typedef void (^B3DAwakeBlock)(B3DNode* node);
 - (BOOL) removeChild:(B3DNode*)node;
 - (BOOL) removeFromParent;
 
+- (NSComparisonResult) compareByZValueDescending:(B3DNode*)otherNode;
+- (NSComparisonResult) compareByZValueAscending:(B3DNode<B3DTouchResponder>*)otherNode;
+
 @end
 
 

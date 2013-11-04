@@ -77,7 +77,7 @@
 		self.key                    = NSStringFromClass([self class]);
 		_handleSceneLoadingEvents   = NO;
 		self.assets                 = [[B3DAssetSet alloc] init];
-		_scene                = self;
+		_scene                      = self;
         
         // Create default scene cameras
         _mutableCameras = [[NSMutableDictionary alloc] init];
