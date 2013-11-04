@@ -32,9 +32,9 @@
 @protocol B3DTouchResponder <NSObject>
 
 @optional
-	- (BOOL) handleTouchesBegan:(UITouch*)touch forView:(UIView*)parentView;
-	- (BOOL) handleTouchesMoved:(UITouch*)touch forView:(UIView*)parentView;
-	- (BOOL) handleTouchesEnded:(UITouch*)touch forView:(UIView*)parentView;
-	- (BOOL) handleTouchesCancelled:(UITouch*)touch forView:(UIView*)parentView;
+  - (BOOL) handleTouchesBegan:(UITouch*)touch forView:(UIView*)parentView;
+  - (BOOL) handleTouchesMoved:(UITouch*)touch forView:(UIView*)parentView;
+  - (BOOL) handleTouchesEnded:(UITouch*)touch forView:(UIView*)parentView;
+  - (BOOL) handleTouchesCancelled:(UITouch*)touch forView:(UIView*)parentView;
 
 @end

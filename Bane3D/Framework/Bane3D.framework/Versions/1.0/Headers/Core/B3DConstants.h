@@ -36,10 +36,6 @@ extern NSString*    const   B3DEngineVersionString;
 // capabilities and is usualy 60 FPS (or 60Hz, the display refresh rate).
 extern const        int		B3DEngineMaxFps;                            //!< 60
 
-// Default polling frequency of accelerometer input, same as display refresh (60Hz)
-extern const        float   B3DInputAccelerometerDefaultFrequency;      //!< 60.0
-extern const        float   B3DInputAccelerometerDefaultFilterFactor;   //!< 0.1
-
 // Key of root scene
 extern NSString*    const   B3DSceneManagerRootSceneKey;
 

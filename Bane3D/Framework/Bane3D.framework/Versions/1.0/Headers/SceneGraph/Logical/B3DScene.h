@@ -26,7 +26,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-#import <Bane3D/SceneGraph/B3DBaseNode.h>
+#import <Bane3D/SceneGraph/B3DNode.h>
 #import <Bane3D/Resources/B3DSceneLoadingDelegate.h>
 
 @class B3DSceneManager;
@@ -35,7 +35,7 @@
 @class B3DAsset;
 
 
-@interface B3DScene : B3DBaseNode <B3DSceneLoadingDelegate>
+@interface B3DScene : B3DNode <B3DSceneLoadingDelegate>
 
 // Holds a reference to the currently used camera of the scene
 @property (nonatomic, weak, readonly)   B3DCamera*          mainCamera;
@@ -58,10 +58,12 @@
 // Called by scene manager when the scene has been visible and was replaced by another one
 - (void) didBecomeInactive;
 
+- (void) update;
+
 - (void) assetList; //!< Override and create the list of assets used in the scene by calling -registerAssetForUse:
 - (void) registerAssetForUse:(B3DAsset*)asset;
-- (void) lazyInitNode:(B3DBaseNode*)node;
-- (void) lazyCleanUpNode:(B3DBaseNode*)node;
+- (void) lazyInitNode:(B3DNode*)node;
+- (void) lazyCleanUpNode:(B3DNode*)node;
 
 @end
 

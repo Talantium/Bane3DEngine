@@ -23,6 +23,8 @@
 
 
 + (instancetype) point;
++ (instancetype) pointWithPoint:(B3DPoint*)otherPoint;
++ (instancetype) pointWithVector:(GLKVector3)position uv:(CGPoint)uvCoords;
 
 // Catmull Rom interpolation between point2 and point3 with the help of point1 and point4.
 // Amount specifies a value between p2 and p3 with amount[0] = p2 and amount[1] = p3.

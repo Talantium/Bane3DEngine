@@ -47,7 +47,7 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
                                                         color:[B3DColor colorWithRed:0.4 green:0.4 blue:0.4 alpha:0.8]];
         {
             [self.loadingShade translateByX:0 y:0 z:-1];
-            self.loadingShade.visible = NO;
+            self.loadingShade.hidden = YES;
         }
         [self addChild:self.loadingShade];
         
@@ -90,7 +90,7 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
 - (void) sceneLoadingDidBeganForScene:(B3DScene*)scene
 {
     [self.loadingCircle setProgress:0.0f];
-    self.loadingShade.visible = YES;
+    self.loadingShade.hidden = NO;
 }
 
 - (void) sceneLoadingForScene:(B3DScene*)scene didAchieveProgress:(float)progress
@@ -101,7 +101,7 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
 - (void) sceneLoadingDidFinishSuccessfulForScene:(B3DScene*)scene
 {
     [self.sceneManager setSceneAsVisible:scene];
-    self.loadingShade.visible = NO;
+    self.loadingShade.hidden = YES;
 }
 
 

@@ -41,23 +41,19 @@
 
         _zoom                   = 1.0f;
         _fractCenter            = GLKVector2Make(0.6f, 0.0f);
+
+        [self updateWithBlock:^(B3DNode *node, double deltaTime)
+        {
+            static float angle = 0;
+            angle += 10 * deltaTime;
+
+            B3DShader* shader = ((B3DVisibleNode*)node).material.shader;
+            [shader setVector2Value:_fractCenter forUniformNamed:[Mandelbrot uniformCenter]];
+            [shader setFloatValue:_zoom forUniformNamed:[Mandelbrot uniformScale]];
+        }];
     }
     
     return self;
-}
-
-- (void) update
-{
-    [super update];
-    
-    static float deltaTime = 0;
-    deltaTime = [B3DTime deltaTime];
-    static float angle = 0;
-    angle += 10 * deltaTime;
-
-    B3DShader* shader = self.material.shader;
-    [shader setVector2Value:_fractCenter forUniformNamed:[Mandelbrot uniformCenter]];
-    [shader setFloatValue:_zoom forUniformNamed:[Mandelbrot uniformScale]];
 }
 
 

@@ -27,6 +27,7 @@
 //
 
 #import <CoreGraphics/CoreGraphics.h>
+#import <GLKit/GLKit.h>
 #import <OpenGLES/ES2/gl.h>
 
 
@@ -127,3 +128,9 @@ typedef struct
     GLushort    texCoord1U;     // 2 Bytes
     GLushort    texCoord1V;     // 2 Bytes
 } B3DMeshVertexDataExtended;
+
+typedef struct
+{
+    GLKMatrixStackRef   matrixStack;
+    double              deltaTime;
+} B3DSceneGraphInfo;

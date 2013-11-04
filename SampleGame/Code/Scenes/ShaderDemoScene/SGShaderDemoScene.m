@@ -102,17 +102,17 @@
         [self addChild:self.currentShaderInfo];
         
         shader = [[SGShaderNode alloc] initWithShaderNamed:@"Julia"];
-        shader.visible = NO;
+        shader.hidden = YES;
         [array addObject:shader];
         [self addChild:shader];
         
         shader = [[SGShaderNode alloc] initWithShaderNamed:@"704"];
-        shader.visible = NO;
+        shader.hidden = YES;
         [array addObject:shader];
         [self addChild:shader];
         
         shader = [[SGShaderNode alloc] initWithShaderNamed:@"Apple"];
-        shader.visible = NO;
+        shader.hidden = YES;
         [array addObject:shader];
         [self addChild:shader];
         
@@ -134,8 +134,8 @@
     for (int i = 0; i < self.shaders.count; i++)
     {
         B3DGUIImage* shader = self.shaders[i];
-        shader.visible = (i == self.currentShaderIndex);
-        if (shader.visible)
+        shader.hidden = !(i == self.currentShaderIndex);
+        if (shader.isHidden == NO)
         {
             self.currentShaderInfo.text = [NSString stringWithFormat:@"Current shader: %@", shader.name];
         }

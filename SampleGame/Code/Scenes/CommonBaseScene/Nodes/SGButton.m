@@ -39,34 +39,32 @@ const UIEdgeInsets SGButtonDefaultPadding = {0, 6, 0, 6};
             [_label translateByX:0 y:0 z:0.5];
         }
         [self addChild:_label];
+
+        [self updateWithBlock:^(B3DNode *node, double deltaTime)
+        {
+            CGSize size = ((B3DSprite*)node).size;
+            CGSize labelSize = _label.size;
+            switch (_textAlignment)
+            {
+                case SGButtonTextAlignmentLeft:
+                    _label.position = GLKVector3Make(_padding.left, (int) (size.height/2 - labelSize.height/2), _label.position.z);
+                    break;
+
+                case SGButtonTextAlignmentCenter:
+                    _label.position = GLKVector3Make((int) (size.width/2 - labelSize.width/2), (int) (size.height/2 - labelSize.height/2), _label.position.z);
+                    break;
+
+                case SGButtonTextAlignmentRight:
+                    _label.position = GLKVector3Make(size.width - labelSize.width - _padding.right, (int) (size.height/2 - labelSize.height/2), _label.position.z);
+                    break;
+                    
+                default:
+                    break;
+            }
+        }];
     }
     
     return self;
-}
-
-- (void) update
-{
-    [super update];
-    
-    CGSize size = self.size;
-    CGSize labelSize = _label.size;
-    switch (_textAlignment)
-    {
-        case SGButtonTextAlignmentLeft:
-            _label.position = GLKVector3Make(_padding.left, (int) (size.height/2 - labelSize.height/2), _label.position.z);
-            break;
-            
-        case SGButtonTextAlignmentCenter:
-            _label.position = GLKVector3Make((int) (size.width/2 - labelSize.width/2), (int) (size.height/2 - labelSize.height/2), _label.position.z);
-            break;
-            
-        case SGButtonTextAlignmentRight:
-            _label.position = GLKVector3Make(size.width - labelSize.width - _padding.right, (int) (size.height/2 - labelSize.height/2), _label.position.z);
-            break;
-            
-        default:
-            break;
-    }
 }
 
 @end

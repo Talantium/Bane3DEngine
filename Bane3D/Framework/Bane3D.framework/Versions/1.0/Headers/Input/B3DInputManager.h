@@ -30,30 +30,45 @@
 #import <GLKit/GLKit.h>
 
 
-@class B3DBaseNode;
+@class B3DNode;
 @protocol B3DTouchResponder;
 
 
-@interface B3DInputManager : NSObject <UIAccelerometerDelegate>
+// Default polling frequency of accelerometer input, same as display refresh (60Hz)
+extern const NSTimeInterval B3DInputAccelerometerDefaultFrequency;      //!< 60.0
+extern const CGFloat        B3DInputAccelerometerDefaultFilterFactor;   //!< 0.1
 
-@property (nonatomic, readonly) GLKVector3  rawAcceleration;
-@property (nonatomic, readonly) GLKVector3  filteredAcceleration;
-@property (nonatomic, assign)   GLfloat     accelerometerFilterFactor;
+
+@interface B3DInputManager : NSObject
 
 + (B3DInputManager*) sharedManager;
 
 - (void) updateReceiverOrder;
 
-- (void) registerForTouchEvents:(B3DBaseNode<B3DTouchResponder>*)node;
-- (void) unregisterForTouchEvents:(B3DBaseNode<B3DTouchResponder>*)node;
+- (void) registerForTouchEvents:(B3DNode<B3DTouchResponder>*)node;
+- (void) unregisterForTouchEvents:(B3DNode<B3DTouchResponder>*)node;
+
+@end
+
+
+@interface B3DInputManager (Touch)
 
 - (void) touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event forView:(UIView*)parentView;
 - (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event forView:(UIView*)parentView;
 - (void) touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event forView:(UIView*)parentView;
 - (void) touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event forView:(UIView*)parentView;
 
-- (void) enableAccelerometerInput;
-- (void) enableAccelerometerInput:(float)acclerometerFrequency;
+@end
 
+
+@interface B3DInputManager (Acceleration)
+
+@property (nonatomic, readonly,  assign) GLKVector3  accelerationRaw;
+@property (nonatomic, readonly,  assign) GLKVector3  accelerationFiltered;
+@property (nonatomic, readwrite, assign) GLfloat     accelerationFilterFactor;
+
+- (void) startAccelerometerInput;
+- (void) startAccelerometerInputWithFrequency:(NSTimeInterval)acclerometerFrequency;
+- (void) stopAccelerometerInput;
 
 @end

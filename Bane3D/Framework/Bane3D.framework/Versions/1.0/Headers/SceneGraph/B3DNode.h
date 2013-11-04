@@ -1,5 +1,5 @@
 //
-//  B3DBaseNode.h
+//  B3DNode.h
 //  Bane3D
 //
 //  Created by Andreas Hanft on 06.04.11.
@@ -30,16 +30,18 @@
 #import <Bane3D/Input/B3DTouchResponder.h>
 
 @class Bane3DEngine;
-@class B3DBaseNode;
+@class B3DNode;
 @class B3DScene;
 @class B3DAssetToken;
 
 
-typedef void (^B3DUpdateLoopBlock)(B3DBaseNode* node, double deltaTime);
-typedef void (^B3DAwakeBlock)(B3DBaseNode* node);
+typedef void (^B3DUpdateLoopBlock)(B3DNode* node, double deltaTime);
+typedef void (^B3DAwakeBlock)(B3DNode* node);
 
 
-@interface B3DBaseNode : NSObject <B3DTouchResponder>
+@interface B3DNode : NSObject <B3DTouchResponder>
+
++ (instancetype) node;
 
 /**
  *
@@ -56,31 +58,31 @@ typedef void (^B3DAwakeBlock)(B3DBaseNode* node);
  *	be drawn.
  *
  */
-@property (nonatomic, assign, readonly)					GLKMatrix4			transform;
-@property (nonatomic, assign, readonly)					GLKMatrix4			absoluteTransform;
-@property (nonatomic, assign, readwrite)                GLKVector3			position;
-@property (nonatomic, assign, readonly)					GLKVector3			absolutePosition;
-@property (nonatomic, assign, readwrite)                GLKVector3			scale;
-@property (nonatomic, assign, readonly)					GLKVector3			absoluteScale;
-@property (nonatomic, assign, readwrite)                GLKQuaternion       rotation;
-@property (nonatomic, assign, readonly)					GLKQuaternion       absoluteRotation;
+@property (nonatomic, readwrite, assign) GLKMatrix4     transform;
+@property (nonatomic, readwrite, assign) GLKVector3     position;
+@property (nonatomic, readwrite, assign) GLKVector3     scale;
+@property (nonatomic, readwrite, assign) GLKQuaternion  rotation;
+
+@property (nonatomic, readonly,  assign) GLKMatrix4     worldTransform;
+@property (nonatomic, readwrite, assign) GLKVector3     worldPosition;
+@property (nonatomic, readonly,  assign) GLKVector3     worldScale;
+@property (nonatomic, readonly,  assign) GLKQuaternion  worldRotation;
 
 // Input
-@property (nonatomic, assign, readwrite, getter=isReceivingTouchEvents)     BOOL receivesTouchEvents;
+@property (nonatomic, readwrite, assign, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
 
 // Scene graph
-@property (nonatomic, assign, readwrite, getter=isVisible)	BOOL            visible;
-@property (nonatomic, weak, readwrite)                  B3DScene*			parentScene;
-@property (nonatomic, weak, readwrite)                  B3DBaseNode*		parentNode;
-@property (nonatomic, weak, readonly)					NSSet*				children;
-@property (nonatomic, weak, readonly)					Bane3DEngine*		engine;
+@property (nonatomic, readwrite, assign, getter=isHidden) BOOL hidden;
+@property (nonatomic, readwrite,  weak) B3DScene*       scene;
+@property (nonatomic, readwrite,  weak) B3DNode*        parentNode;
+@property (nonatomic, readonly, strong) NSArray*        children;
 
-
-@property (nonatomic, copy, readwrite)                  NSString*			name;
+@property (nonatomic, readwrite, copy) NSString*        name;
+@property (nonatomic, readonly,  weak) Bane3DEngine*    engine;
 
 // Blocks
-@property (nonatomic, copy, readwrite)                  B3DUpdateLoopBlock  updateLoopBlock;
-@property (nonatomic, copy, readwrite)                  B3DAwakeBlock       awakeBlock;
+@property (nonatomic, copy, readwrite) B3DUpdateLoopBlock updateLoopBlock;
+@property (nonatomic, copy, readwrite) B3DAwakeBlock    awakeBlock;
 
 
 /**
@@ -111,64 +113,64 @@ typedef void (^B3DAwakeBlock)(B3DBaseNode* node);
  *	Misc
  */
 
-- (void) updateMatrix;
+- (void) updateTransform;
 - (void) viewportDidChangeTo:(CGRect)viewport;
 - (void) print;
 
 @end
 
 
-@interface B3DBaseNode (GameLoop)
-
-- (void) update;
-- (void) draw;
+@interface B3DNode (GameLoop)
 
 - (void) updateWithBlock:(B3DUpdateLoopBlock)updateLoopBlock;
 
 @end
 
 
-@interface B3DBaseNode (SceneGraph)
+@interface B3DNode (SceneGraph)
 
-- (void) addSubNode:(B3DBaseNode*)node;
-- (BOOL) removeSubNode:(B3DBaseNode*)node;
-- (BOOL) removeFromParentNode;
+- (void) addChild:(B3DNode*)node;
+- (BOOL) removeChild:(B3DNode*)node;
+- (BOOL) removeFromParent;
+
+- (NSComparisonResult) compareByZValueDescending:(B3DNode*)otherNode;
+- (NSComparisonResult) compareByZValueAscending:(B3DNode<B3DTouchResponder>*)otherNode;
 
 @end
 
 
-@interface B3DBaseNode (Manipulation)
+@interface B3DNode (Manipulation)
 
 /**
  * Translating the node
  */
 
-- (void) setPositionToX:(GLfloat)xPos andY:(GLfloat)yPos andZ:(GLfloat)zPos;
+- (void) setPositionToX:(GLfloat)xPos y:(GLfloat)yPos z:(GLfloat)zPos;
 - (void) translateBy:(GLKVector3)translation;
-- (void) translateByX:(GLfloat)xTrans andY:(GLfloat)yTrans andZ:(GLfloat)zTrans;
+- (void) translateByX:(GLfloat)xTrans y:(GLfloat)yTrans z:(GLfloat)zTrans;
 
 /**
  * Rotating the node (all angles are in degree)
  */
 
 // Sets rotation to given angle
-- (void) setRotationToAngleX:(GLfloat)xAngle andY:(GLfloat)yAngle andZ:(GLfloat)zAngle;
-- (void) setRotationToAngle:(GLfloat)angle byAxisX:(GLfloat)xAxis andY:(GLfloat)yAxis andZ:(GLfloat)zAxis;
+- (void) setRotationToAngleX:(GLfloat)xAngle y:(GLfloat)yAngle z:(GLfloat)zAngle;
+- (void) setRotationToAngle:(GLfloat)angle byAxisX:(GLfloat)xAxis y:(GLfloat)yAxis z:(GLfloat)zAxis;
 
 // Rotates by given x-, y- and z-angle, rotations are applied in the order x * y * z.
 // If result is not as expected, try one of the rotateByAngle methods below!
 - (void) rotateBy:(GLKVector3)rotation;
-- (void) rotateByX:(GLfloat)xRot andY:(GLfloat)yRot andZ:(GLfloat)zRot;
+- (void) rotateByX:(GLfloat)xRot y:(GLfloat)yRot z:(GLfloat)zRot;
 
 // Rotates by given angle around given axis (as vector or components)
-- (void) rotateByAngle:(GLfloat)angle aroundX:(GLfloat)xAxis andY:(GLfloat)yAxis andZ:(GLfloat)zAxis;
+- (void) rotateByAngle:(GLfloat)angle aroundX:(GLfloat)xAxis y:(GLfloat)yAxis z:(GLfloat)zAxis;
 - (void) rotateByAngle:(GLfloat)angle aroundAxis:(GLKVector3)axisVector;
 
 /**
  * Scaling the node
  */
 
-- (void) setScaleUniform:(GLfloat)unifor_scale;
-- (void) setScaleToX:(GLfloat)xScale andY:(GLfloat)yScale andZ:(GLfloat)zScale;
+- (void) setScaleUniform:(GLfloat)uniformScale;
+- (void) setScaleToX:(GLfloat)xScale y:(GLfloat)yScale z:(GLfloat)zScale;
 
 @end

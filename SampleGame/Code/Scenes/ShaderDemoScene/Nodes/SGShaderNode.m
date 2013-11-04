@@ -25,25 +25,24 @@
         
         self.opaque = NO;
         self.batchable = NO;
+
+        [self updateWithBlock:^(B3DNode *node, double deltaTime)
+        {
+            static float time = 0;
+            time += deltaTime;
+
+            float scale = [Bane3DEngine entity].contentScale;
+
+            B3DSprite* nodeSelf = (B3DSprite*)node;
+
+            B3DShader* shader = nodeSelf.material.shader;
+            [shader setVector2Value:GLKVector2Make(nodeSelf.size.width * scale, nodeSelf.size.height * scale) forUniformNamed:@"resolution"];
+            [shader setFloatValue:time forUniformNamed:@"time"];
+            [shader setVector2Value:GLKVector2Make(nodeSelf.position.x * scale, nodeSelf.position.y * scale) forUniformNamed:@"u_offset"];
+        }];
     }
     
     return self;
-}
-
-- (void) update
-{
-    [super update];
-
-    static float time = 0;
-    time += [B3DTime deltaTime];
-    
-    float scale = [Bane3DEngine entity].contentScale;
-    
-    B3DShader* shader = self.material.shader;
-    [shader setVector2Value:GLKVector2Make(self.size.width * scale, self.size.height * scale) forUniformNamed:@"resolution"];
-    [shader setFloatValue:time forUniformNamed:@"time"];
-    [shader setVector2Value:GLKVector2Make(self.position.x * scale, self.position.y * scale) forUniformNamed:@"u_offset"];
-    
 }
 
 @end

@@ -26,7 +26,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-@class B3DBaseNode;
+@class B3DNode;
 @class B3DAsset;
 
 

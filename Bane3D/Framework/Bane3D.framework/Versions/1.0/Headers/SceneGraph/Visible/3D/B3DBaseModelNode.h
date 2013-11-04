@@ -34,6 +34,7 @@
 typedef enum
 {
     B3DModelRendererSolid,
+    B3DModelRendererSolidStrip,
     B3DModelRendererPoint,
     B3DModelRendererLines,
     B3DModelRendererLineStrip,

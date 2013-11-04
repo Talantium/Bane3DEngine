@@ -71,7 +71,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 			[self.loadingBar setPositionToX:screenSize.width/2 - SGLoadingBarSize.width/2 // center X
                                        y:screenSize.height - SGLoadingBarTopDistance - SGLoadingBarSize.height
                                        z:-128.0f];
-			self.loadingBar.visible = NO;
+			self.loadingBar.hidden = YES;
 		}
 		[self addChild:self.loadingBar];
 	}
@@ -97,7 +97,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 
 - (void) sceneLoadingDidBeganForScene:(B3DScene*)scene
 {
-	self.loadingBar.visible = YES;
+	self.loadingBar.hidden = NO;
 }
 
 - (void) sceneLoadingForScene:(B3DScene*)scene didAchieveProgress:(float)progress
@@ -109,7 +109,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 {
     if (self.buttonContinue)
     {
-        self.buttonContinue.visible = YES;
+        self.buttonContinue.hidden = NO;
         [self.buttonContinue setAction:@selector(startButtonTouched:) forTarget:self withObject:scene];
         
     }
@@ -126,7 +126,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 
 - (void) blinkTouchToStart:(B3DGUIImage*)image
 {
-    image.visible = !image.visible;
+    image.hidden = !image.hidden;
 }
 
 
