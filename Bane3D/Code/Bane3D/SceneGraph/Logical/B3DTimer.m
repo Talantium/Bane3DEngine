@@ -35,12 +35,11 @@
 @interface B3DTimer ()
 {
   @private
-    id						_target;
+    id						__weak _target; // Keep only weak link to target
     id						_object;
     SEL						_action;
 
     double					_delay;
-
     double					_timeElapsed;
 }
 
@@ -65,46 +64,58 @@
             return nil;
         }
 
-        _target		= target; // Keep only weak link to target
+        _target		= target;
         _action		= action;
         _object		= object;
         _delay		= delay;
         _repeating	= isRepeating;
 
+        __weak typeof(self) weakSelf = self;
         [self updateWithBlock:^(B3DNode *node, double deltaTime)
         {
             if (node.isHidden) return;
 
-            _timeElapsed += deltaTime;
-
-            if (_timeElapsed >= _delay)
-            {
-                if ([_target respondsToSelector:_action])
-                {
-                    if (_object)
-                        B3DSuppressPerformSelectorLeakWarning([_target performSelector:_action withObject:_object]);
-                    else
-                        B3DSuppressPerformSelectorLeakWarning([_target performSelector:_action]);
-                }
-
-                if (_repeating)
-                {
-                    _timeElapsed = 0;
-                }
-                else
-                {
-                    [node removeFromParent];
-                }
-            }
+            [weakSelf updateTimerWithDeltaTime:deltaTime];
         }];
 	}
 
 	return self;
 }
 
+- (void) updateTimerWithDeltaTime:(double)deltaTime
+{
+    _timeElapsed += deltaTime;
+    
+    if (_timeElapsed >= _delay)
+    {
+        if ([_target respondsToSelector:_action])
+        {
+            if (_object)
+                B3DSuppressPerformSelectorLeakWarning([_target performSelector:_action withObject:_object]);
+            else
+                B3DSuppressPerformSelectorLeakWarning([_target performSelector:_action]);
+        }
+        
+        if (_repeating)
+        {
+            _timeElapsed = 0;
+        }
+        else
+        {
+            [self removeFromParent];
+        }
+    }
+}
+
 - (NSString*) description
 {
-	return [NSString stringWithFormat:@"%@ @ {%.2f, %.2f, %.2f} (Repeats: %@, Delay: %0.3f)", (_name ? _name : @"Timer"), self.position.x, self.position.y, self.position.z, (_repeating ? @"YES" : @"NO"), _delay];
+	return [NSString stringWithFormat:@"%@ @ {%.2f, %.2f, %.2f} (Repeats: %@, Delay: %0.3f)",
+            (_name ? _name : @"Timer"),
+            self.position.x,
+            self.position.y,
+            self.position.z,
+            (_repeating ? @"YES" : @"NO"),
+            _delay];
 }
 
 @end
