@@ -74,15 +74,15 @@ typedef void (^B3DAwakeBlock)(B3DNode* node);
 // Scene graph
 @property (nonatomic, readwrite, assign, getter=isHidden) BOOL hidden;
 @property (nonatomic, readwrite,  weak) B3DScene*       scene;
-@property (nonatomic, readwrite,  weak) B3DNode*        parentNode;
+@property (nonatomic, readonly,   weak) B3DNode*        parent;
 @property (nonatomic, readonly, strong) NSArray*        children;
 
-@property (nonatomic, readwrite, copy) NSString*        name;
-@property (nonatomic, readonly,  weak) Bane3DEngine*    engine;
+@property (nonatomic, readwrite,  copy) NSString*       name;
+@property (nonatomic, readonly,   weak) Bane3DEngine*   engine;
 
 // Blocks
-@property (nonatomic, copy, readwrite) B3DUpdateLoopBlock updateLoopBlock;
-@property (nonatomic, copy, readwrite) B3DAwakeBlock    awakeBlock;
+@property (nonatomic, readwrite,  copy) B3DUpdateLoopBlock updateLoopBlock;
+@property (nonatomic, readwrite,  copy) B3DAwakeBlock   awakeBlock;
 
 
 /**

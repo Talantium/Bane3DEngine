@@ -46,6 +46,7 @@
 }
 
 @property (nonatomic, readwrite,   weak) Bane3DEngine*  engine;
+@property (nonatomic, readwrite,   weak) B3DNode*        parent;
 @property (nonatomic, readwrite, strong) NSArray*       children;
 
 @end
@@ -273,8 +274,8 @@
     [node removeFromParent];
     
 	[_childrenMutable addObject:node];
-	node.parentNode = self;
-	node.scene = _scene;
+	node.parent = self;
+	node.scene  = _scene;
     
     _sceneGraphHierarchyDirty = YES;
 }
@@ -283,19 +284,20 @@
 - (BOOL) removeChild:(B3DNode*)node
 {
 	// Is given node a child of this node?
-	if ([_childrenMutable containsObject:node])
+    NSUInteger index = [_childrenMutable indexOfObject:node];
+	if (index == NSNotFound)
+    {
+		return NO;
+	}
+    else
 	{
-		node.parentNode = nil;
-		node.scene = nil;
-		[_childrenMutable removeObject:node];
+		node.parent = nil;
+		node.scene  = nil;
+		[_childrenMutable removeObjectAtIndex:index];
         
         _sceneGraphHierarchyDirty = YES;
 		
 		return YES;
-	}
-	else
-	{
-		return NO;
 	}
 }
 
@@ -528,12 +530,12 @@
 
 - (void) print
 {
-	B3DNode* parent = self.parentNode;
+	B3DNode* parent = self.parent;
 	NSMutableString* depth = [[NSMutableString alloc] initWithString:@""];
 	while (parent)
 	{
 		[depth appendString:@"\t"];
-		parent = parent.parentNode;
+		parent = parent.parent;
 	}
 	
 	LogDebug(@"%@%@%@", depth, ([depth length] > 0 ? @"|-> " : @""), [self description]);
