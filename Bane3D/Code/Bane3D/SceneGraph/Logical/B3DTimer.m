@@ -34,15 +34,14 @@
 
 @interface B3DTimer ()
 {
-    @private
-        id						_target;
-        id						_object;
-        SEL						_action;
-        
-        BOOL					_repeats;
-        double					_delay;
-        
-        double					_timeElapsed;
+  @private
+    id						_target;
+    id						_object;
+    SEL						_action;
+
+    double					_delay;
+
+    double					_timeElapsed;
 }
 
 @end
@@ -61,61 +60,51 @@
 	self = [super init];
 	if (self)
 	{
-		if (target != nil && delay > 0)
+		if (target == nil || delay <= 0)
 		{
-			_target		= target; // Keep only weak link to target
-			_action		= action;
-			_object		= object;
-			_delay		= delay;
-			_repeats	= isRepeating;
-		}
-		else
-		{
-			self = nil;
-		}
-	}
-	
-	return self;
-}
+            return nil;
+        }
 
-- (void) updateWithSceneGraphInfo:(B3DSceneGraphInfo)info
-{
-    if (_hidden == NO)
-    {
-        [super updateWithSceneGraphInfo:info];
-        
-        _timeElapsed += [B3DTime deltaTime];
-        
-        if (_timeElapsed >= _delay)
+        _target		= target; // Keep only weak link to target
+        _action		= action;
+        _object		= object;
+        _delay		= delay;
+        _repeating	= isRepeating;
+
+        [self updateWithBlock:^(B3DNode *node, double deltaTime)
         {
-            if ([_target respondsToSelector:_action])
+            if (node.isHidden) return;
+
+            _timeElapsed += deltaTime;
+
+            if (_timeElapsed >= _delay)
             {
-                if (_object)
+                if ([_target respondsToSelector:_action])
                 {
-                    B3DSuppressPerformSelectorLeakWarning([_target performSelector:_action withObject:_object]);
+                    if (_object)
+                        B3DSuppressPerformSelectorLeakWarning([_target performSelector:_action withObject:_object]);
+                    else
+                        B3DSuppressPerformSelectorLeakWarning([_target performSelector:_action]);
+                }
+
+                if (_repeating)
+                {
+                    _timeElapsed = 0;
                 }
                 else
                 {
-                    B3DSuppressPerformSelectorLeakWarning([_target performSelector:_action]);
+                    [node removeFromParent];
                 }
             }
-            
-            if (_repeats)
-            {
-                _timeElapsed = 0;
-            }
-            else
-            {
-                [self removeFromParent];
-            }
-        }
-    }
-}
+        }];
+	}
 
+	return self;
+}
 
 - (NSString*) description
 {
-	return [NSString stringWithFormat:@"%@ @ {%.2f, %.2f, %.2f} (Repeats: %@, Delay: %0.3f)", (_name ? _name : @"Timer"), self.position.x, self.position.y, self.position.z, (_repeats ? @"YES" : @"NO"), _delay];
+	return [NSString stringWithFormat:@"%@ @ {%.2f, %.2f, %.2f} (Repeats: %@, Delay: %0.3f)", (_name ? _name : @"Timer"), self.position.x, self.position.y, self.position.z, (_repeating ? @"YES" : @"NO"), _delay];
 }
 
 @end

@@ -31,8 +31,8 @@
 
 @interface B3DTimer : B3DNode
 
-@property (nonatomic, assign, getter = isRepeating)	BOOL    repeats;
-@property (nonatomic, assign, readwrite)            double	delay;
+@property (nonatomic, readwrite, assign, getter=isRepeating) BOOL repeating;
+@property (nonatomic, readwrite, assign) double	delay;
 
 - (id) initWithTarget:(id)target
                action:(SEL)action
