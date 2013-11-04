@@ -135,6 +135,8 @@
 
 - (void) assetLoadingDidComplete
 {
+    [self updateSceneGraphHierarchy];
+    
     for (B3DNode* node in _children)
 	{
 		[node create];

@@ -50,6 +50,8 @@
     Bane3DEngine*           __weak _engine;
 }
 
+- (void) updateSceneGraphHierarchy;
+
 - (void) updateWithSceneGraphInfo:(B3DSceneGraphInfo)info;
 - (void) draw;
 

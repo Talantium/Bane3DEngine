@@ -93,6 +93,7 @@
 
 - (void) create
 {
+    [self updateSceneGraphHierarchy];
     [self initAssets];
 	
     for (B3DNode* node in _children)
@@ -163,12 +164,17 @@
 
 #pragma mark - Update/Drawing
 
+- (void) updateSceneGraphHierarchy
+{
+    _children = [NSArray arrayWithArray:_childrenMutable];
+    _sceneGraphHierarchyDirty = NO;
+}
+
 - (void) updateWithSceneGraphInfo:(B3DSceneGraphInfo)info
 {  
     if (_sceneGraphHierarchyDirty)
 	{
-		_children = [NSArray arrayWithArray:_childrenMutable];
-		_sceneGraphHierarchyDirty = NO;
+        [self updateSceneGraphHierarchy];
 	}
     
     if (_transformDirty) [self updateTransform];
