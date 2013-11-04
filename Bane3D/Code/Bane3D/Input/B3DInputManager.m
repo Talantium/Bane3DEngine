@@ -231,14 +231,14 @@ const CGFloat           B3DInputAccelerometerDefaultFilterFactor    = 0.1f;
     
     NSOperationQueue *accelerometerQueue = [[NSOperationQueue alloc] init];
     
-    __block typeof(self) blockSelf = self;
+    __weak typeof(self) weakSelf = self;
     [_motionManager
      startAccelerometerUpdatesToQueue:accelerometerQueue
      withHandler:^(CMAccelerometerData* accelerometerData, NSError* error)
      {
          if (error != nil)
          {
-             [blockSelf motionManagerDidProduceAccelerometerData:accelerometerData];
+             [weakSelf motionManagerDidProduceAccelerometerData:accelerometerData];
          }
      }];
 
