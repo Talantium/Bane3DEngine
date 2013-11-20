@@ -103,13 +103,17 @@
 
 - (void) updateBufferWithNodesInSet:(NSSet*)set
 {
+    [self.prototypeNode updateVerticeData];
+
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
 
-//    glBufferData(GL_ARRAY_BUFFER, _bufferSize, NULL, GL_STREAM_DRAW);
-//    B3DSpriteVertexData* currentElementVertices = (B3DSpriteVertexData*) glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-//    memcpy(currentElementVertices, [self updateVerticeData], _bufferSize);
-//    glUnmapBufferOES(GL_ARRAY_BUFFER);
-    
+    GLsizeiptr size = sizeof(B3DSpriteVertexData) * self.prototypeNode.vertexCount;
+
+    glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_STREAM_DRAW);
+    B3DSpriteVertexData* currentElementVertices = (B3DSpriteVertexData*) glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    memcpy(currentElementVertices, self.prototypeNode.vertexData.bytes, size);
+    glUnmapBufferOES(GL_ARRAY_BUFFER);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -132,7 +136,7 @@
 
 //    glDrawElements(GL_TRIANGLES, <#GLsizei count#>, <#GLenum type#>, <#const GLvoid *indices#>)
 
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, self.prototypeNode.vertexCount);
     
     [material disable];
     

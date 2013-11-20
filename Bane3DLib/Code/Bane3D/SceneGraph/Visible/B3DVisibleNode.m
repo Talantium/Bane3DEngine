@@ -100,6 +100,9 @@
     _renderID = self.material.renderID;
 }
 
+- (void) updateVerticeData
+{}
+
 
 #pragma mark - Properties
 

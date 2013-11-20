@@ -125,11 +125,6 @@
 		}
 
 		_textureInfo	= B3DTextureInfo(0, 0, 0, 0, "");
-//        static B3DSpriteVertexData vertice = {0.0f, 0.0f, 0.0f, 255, 255, 255, 255, 0, 0};
-//        _vertices[0] = vertice;
-//        _vertices[1] = vertice;
-//        _vertices[2] = vertice;
-//        _vertices[3] = vertice;
     }
 	
 	return self;
@@ -320,7 +315,7 @@
     // Transmit the data of the sprite to the buffer
     glBufferData(GL_ARRAY_BUFFER, _bufferSize, NULL, GL_STREAM_DRAW);
     B3DSpriteVertexData* currentElementVertices = (B3DSpriteVertexData*) glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    memcpy(currentElementVertices, [self updateVerticeData], _bufferSize);
+    memcpy(currentElementVertices, _vertexData.bytes, _vertexData.length);
     glUnmapBufferOES(GL_ARRAY_BUFFER);
     
     // Finally draw
@@ -347,31 +342,38 @@
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-- (B3DSpriteVertexData*) updateVerticeData
+- (void) updateVerticeData
 {
     B3DTexture* texture = _material.texture;
-//    B3DColor* color = _color;
-    
-    // @TODO: Cache as much as possible of these calculations and assignments!
-    
+    B3DColor* color = _color;
+
+    _vertexCount = 4;
+    B3DSpriteVertexData vertices[4];
+
+    static B3DSpriteVertexData vertice = {0.0f, 0.0f, 0.0f, 255, 255, 255, 255, 0, 0};
+    vertices[0] = vertice;
+    vertices[1] = vertice;
+    vertices[2] = vertice;
+    vertices[3] = vertice;
+
     // Update the positions of the four corner vertices
     // Bottom left corner is left unchanged at 0, 0
-//    _vertices[0].posX = (0.0f - _origin.x) * _size.width;
-//    _vertices[0].posY = (0.0f - _origin.y) * _size.height;
-//    _vertices[0].posZ = 0.0f;
-//    
-//    _vertices[1].posX = (1.0f - _origin.x) * _size.width;//_size.width;   // Bottom right
-//    _vertices[1].posY = (0.0f - _origin.y) * _size.height;   // Bottom right
-//    _vertices[1].posZ = 0.0f;
-//    
-//    _vertices[2].posX = (0.0f - _origin.x) * _size.width;  // Top left
-//    _vertices[2].posY = (1.0f - _origin.y) * _size.height;  // Top left
-//    _vertices[2].posZ = 0.0f;
-//
-//    _vertices[3].posX = (1.0f - _origin.x) * _size.width;   // Top right
-//    _vertices[3].posY = (1.0f - _origin.y) * _size.height;  // Top right
-//    _vertices[3].posZ = 0.0f;
+    vertices[0].posX = (0.0f - _origin.x) * _size.width;
+    vertices[0].posY = (0.0f - _origin.y) * _size.height;
+    vertices[0].posZ = 0.0f;
     
+    vertices[1].posX = (1.0f - _origin.x) * _size.width;//_size.width;   // Bottom right
+    vertices[1].posY = (0.0f - _origin.y) * _size.height;   // Bottom right
+    vertices[1].posZ = 0.0f;
+    
+    vertices[2].posX = (0.0f - _origin.x) * _size.width;  // Top left
+    vertices[2].posY = (1.0f - _origin.y) * _size.height;  // Top left
+    vertices[2].posZ = 0.0f;
+
+    vertices[3].posX = (1.0f - _origin.x) * _size.width;   // Top right
+    vertices[3].posY = (1.0f - _origin.y) * _size.height;  // Top right
+    vertices[3].posZ = 0.0f;
+
     // Generate texture UV coords
     if (texture)
     {
@@ -394,34 +396,34 @@
             yMax = yTemp;
         }
         
-//        _vertices[0].texCoord0U = xMin;
-//        _vertices[0].texCoord0V = yMin;
-//        _vertices[1].texCoord0U = xMax;
-//        _vertices[1].texCoord0V = yMin;
-//        _vertices[2].texCoord0U = xMin;
-//        _vertices[2].texCoord0V = yMax;
-//        _vertices[3].texCoord0U = xMax;
-//        _vertices[3].texCoord0V = yMax;
+        vertices[0].texCoord0U = xMin;
+        vertices[0].texCoord0V = yMin;
+        vertices[1].texCoord0U = xMax;
+        vertices[1].texCoord0V = yMin;
+        vertices[2].texCoord0U = xMin;
+        vertices[2].texCoord0V = yMax;
+        vertices[3].texCoord0U = xMax;
+        vertices[3].texCoord0V = yMax;
     }
     
     // Recalculate and set color
-//    GLubyte colors[4] =
-//    {
-//        static_cast<GLubyte>(color.r * 255),
-//        static_cast<GLubyte>(color.g * 255),
-//        static_cast<GLubyte>(color.b * 255),
-//        static_cast<GLubyte>(color.a * 255)
-//    };
-    
+    GLubyte colors[4] =
+    {
+        static_cast<GLubyte>(color.r * 255),
+        static_cast<GLubyte>(color.g * 255),
+        static_cast<GLubyte>(color.b * 255),
+        static_cast<GLubyte>(color.a * 255)
+    };
+
     for (int i = 0; i < 4; i++)
     {
-//        _vertices[i].colR = colors[0];
-//        _vertices[i].colG = colors[1];
-//        _vertices[i].colB = colors[2];
-//        _vertices[i].colA = colors[3];
+        vertices[i].colR = colors[0];
+        vertices[i].colG = colors[1];
+        vertices[i].colB = colors[2];
+        vertices[i].colA = colors[3];
     }
-    
-    return 0;//_vertices;
+
+    _vertexData = [NSMutableData dataWithBytes:vertices length:sizeof(B3DSpriteVertexData)*4];
 }
 
 @end

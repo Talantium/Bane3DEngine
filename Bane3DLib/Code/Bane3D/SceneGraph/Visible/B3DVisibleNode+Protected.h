@@ -37,6 +37,10 @@
     
     B3DRenderMan*           __weak _renderMan;
     B3DGLStateManager*      __weak _stateManager;
+
+    NSUInteger              _vertexCount;
+    NSMutableData*          _indexData;
+    NSMutableData*          _vertexData;
 }
 
 @end
