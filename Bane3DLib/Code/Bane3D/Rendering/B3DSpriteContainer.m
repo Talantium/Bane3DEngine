@@ -129,7 +129,9 @@
     [shader setIntValue:0 forUniformNamed:B3DShaderUniformTextureBase];
     
     [material enable];
-    
+
+//    glDrawElements(GL_TRIANGLES, <#GLsizei count#>, <#GLenum type#>, <#const GLvoid *indices#>)
+
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
     [material disable];

@@ -11,6 +11,6 @@
 
 @interface SGAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (nonatomic, strong, readwrite) UIWindow*      window;
+@property (nonatomic, readwrite, strong) UIWindow* window;
 
 @end

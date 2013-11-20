@@ -33,12 +33,13 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 
 - (id) init
 {
-	self = [super init];
+    B3DLayer* layer = [B3DLayer layerWithCamera:[B3DCameraOrtho camera]];
+	self = [super initWithLayers:@[layer]];
 	if (self != nil)
 	{
         CGSize screenSize = [UIApplication currentSize];
         
-		[self addChild:[B3DGUIDefaultSplashImage landscapeImage]];
+		[layer addChild:[B3DGUIDefaultSplashImage landscapeImage]];
         
 //		self.buttonContinue = [[B3DGUIButton alloc] initWithSize:screenSize
 //                                                        andColor:[B3DColor colorWithRed:0 green:0 blue:0 alpha:0]];
@@ -73,7 +74,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
                                        z:-128.0f];
 			self.loadingBar.hidden = YES;
 		}
-		[self addChild:self.loadingBar];
+		[layer addChild:self.loadingBar];
 	}
 	
 	return self;
@@ -92,7 +93,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 												object:sceneToLoadKey
 												 delay:0.1
 											   repeats:NO];
-	[self addChild:timer];
+//	[self.layers.firstObject addChild:timer];
 }
 
 - (void) sceneLoadingDidBeganForScene:(B3DScene*)scene
