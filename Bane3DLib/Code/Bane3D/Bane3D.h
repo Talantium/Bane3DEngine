@@ -57,7 +57,6 @@
 #pragma mark • Visible/2D
 #import <Bane3D/SceneGraph/Visible/2D/B3DSprite.h>
 #import <Bane3D/SceneGraph/Visible/2D/B3DLabel.h>
-#import <Bane3D/SceneGraph/Visible/2D/GUI/B3DGUIImage.h>
 #import <Bane3D/SceneGraph/Visible/2D/GUI/B3DGUITouchable.h>
 #import <Bane3D/SceneGraph/Visible/2D/GUI/B3DGUIButton.h>
 #import <Bane3D/SceneGraph/Visible/2D/GUI/B3DGUIDraggable.h>

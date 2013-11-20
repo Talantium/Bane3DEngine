@@ -9,7 +9,7 @@
 #import <Bane3D/Bane3D.h>
 
 
-@interface SGShaderNode : B3DGUIImage
+@interface SGShaderNode : B3DSprite
 
 - (id) initWithShaderNamed:(NSString*)shaderName;
 

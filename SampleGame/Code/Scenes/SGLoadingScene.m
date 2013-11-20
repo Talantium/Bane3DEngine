@@ -17,7 +17,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 
 @interface SGLoadingScene ()
 
-@property (nonatomic, readwrite, strong) B3DGUIImage*			loadingBar;
+@property (nonatomic, readwrite, strong) B3DSprite*             loadingBar;
 @property (nonatomic, readwrite, strong) B3DGUIButton*			buttonContinue;
 
 @end
@@ -46,10 +46,10 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 //			[self.buttonContinue setPositionToX:0 y:0 z:-10.0f];
 //            self.buttonContinue.visible = NO;
 //            
-//            B3DGUIImage* image = [[B3DGUIImage alloc] initWithPNGTexture:@"touch_to_continue"];
+//            B3DSprite* image = [[B3DSprite alloc] initWithPNGTexture:@"touch_to_continue"];
 //            [image awakeWithBlock:^(B3DNode* node)
 //            {
-//                CGSize size = ((B3DGUIImage*)node).size;
+//                CGSize size = ((B3DSprite*)node).size;
 //                [node setPositionToX:_loadingBar.position.x + SGLoadingBarSize.width - size.width
 //                                y:104
 //                                z:4.0f];
@@ -65,7 +65,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 //		}
 //		[self addChild:self.buttonContinue];
         
-        self.loadingBar = [[B3DGUIImage alloc] initWithSize:CGSizeMake(SGLoadingBarSize.width * 0.02, SGLoadingBarSize.height)
+        self.loadingBar = [[B3DSprite alloc] initWithSize:CGSizeMake(SGLoadingBarSize.width * 0.02, SGLoadingBarSize.height)
                                                       color:[B3DColor whiteColor]];
 		{
 			[self.loadingBar setPositionToX:screenSize.width/2 - SGLoadingBarSize.width/2 // center X
@@ -124,7 +124,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
     [self.sceneManager setSceneAsVisible:scene];
 }
 
-- (void) blinkTouchToStart:(B3DGUIImage*)image
+- (void) blinkTouchToStart:(B3DSprite*)image
 {
     image.hidden = !image.hidden;
 }

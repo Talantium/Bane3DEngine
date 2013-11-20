@@ -24,7 +24,6 @@
         [self useShader:[B3DShader tokenWithName:shaderName]];
         
         self.opaque = NO;
-        self.batchable = NO;
 
         [self updateWithBlock:^(B3DNode *node, double deltaTime)
         {

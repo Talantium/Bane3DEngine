@@ -19,7 +19,7 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
 @interface SGCommonBaseScene ()
 
 @property (nonatomic, readwrite, strong) SGLoadingCircle*   loadingCircle;
-@property (nonatomic, readwrite, strong) B3DGUIImage*       loadingShade;
+@property (nonatomic, readwrite, strong) B3DSprite*         loadingShade;
 
 @end
 
@@ -43,7 +43,7 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
         
         self.handleSceneLoadingEvents = YES;
         
-        self.loadingShade = [[B3DGUIImage alloc] initWithSize:screenSize
+        self.loadingShade = [[B3DSprite alloc] initWithSize:screenSize
                                                         color:[B3DColor colorWithRed:0.4 green:0.4 blue:0.4 alpha:0.8]];
         {
             [self.loadingShade translateByX:0 y:0 z:-1];

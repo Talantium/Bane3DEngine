@@ -91,7 +91,7 @@
         
         NSMutableArray* array = [NSMutableArray array];
                
-        B3DGUIImage* shader = [[MandelbrotNode alloc] init];
+        B3DSprite* shader = [[MandelbrotNode alloc] init];
         [array addObject:shader];
         [self addChild:shader];
         
@@ -133,7 +133,7 @@
     
     for (int i = 0; i < self.shaders.count; i++)
     {
-        B3DGUIImage* shader = self.shaders[i];
+        B3DSprite* shader = self.shaders[i];
         shader.hidden = !(i == self.currentShaderIndex);
         if (shader.isHidden == NO)
         {

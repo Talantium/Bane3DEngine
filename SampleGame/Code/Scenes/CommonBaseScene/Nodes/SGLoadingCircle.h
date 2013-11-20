@@ -9,7 +9,7 @@
 #import <Bane3D/Bane3D.h>
 
 
-@interface SGLoadingCircle : B3DGUIImage
+@interface SGLoadingCircle : B3DSprite
 
 + (SGLoadingCircle*) loadingCircle;
 

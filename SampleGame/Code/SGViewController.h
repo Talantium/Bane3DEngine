@@ -9,6 +9,6 @@
 #import <Bane3D/Bane3D.h>
 
 
-@interface SGViewController : B3DGLViewController
+@interface SGViewController : B3DViewController
 
 @end

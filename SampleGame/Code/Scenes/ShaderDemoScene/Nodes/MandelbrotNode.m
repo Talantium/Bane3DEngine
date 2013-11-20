@@ -37,7 +37,6 @@
         [self setPositionToX:0 y:0 z:-50.0f];
         
         self.multitouchEnabled  = YES;
-        self.batchable          = NO;
 
         _zoom                   = 1.0f;
         _fractCenter            = GLKVector2Make(0.6f, 0.0f);

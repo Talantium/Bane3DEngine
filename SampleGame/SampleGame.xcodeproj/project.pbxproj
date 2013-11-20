@@ -27,6 +27,7 @@
 		1084D58A1727F6F400E3B0F8 /* Julia.frag in Resources */ = {isa = PBXBuildFile; fileRef = 1084D5861727F6A200E3B0F8 /* Julia.frag */; };
 		1084D58B1727F6F400E3B0F8 /* Julia.vert in Resources */ = {isa = PBXBuildFile; fileRef = 1084D5871727F6A200E3B0F8 /* Julia.vert */; };
 		664AB895182814C000C6F323 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 664AB894182814C000C6F323 /* CoreMotion.framework */; };
+		66A07D54183CD395002CF2F4 /* libBane3DEngine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 66A07D53183CD395002CF2F4 /* libBane3DEngine.a */; };
 		D928B45016E4EAB500915830 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D928B44F16E4EAB500915830 /* UIKit.framework */; };
 		D928B45216E4EAB500915830 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D928B45116E4EAB500915830 /* Foundation.framework */; };
 		D928B45416E4EAB500915830 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D928B45316E4EAB500915830 /* CoreGraphics.framework */; };
@@ -41,7 +42,6 @@
 		D928B49316E4ECF800915830 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D928B48316E4ECF800915830 /* Default@2x.png */; };
 		D928B49416E4ECF800915830 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D928B48516E4ECF800915830 /* InfoPlist.strings */; };
 		D928B49516E4ECF800915830 /* Teddy.3ds in Resources */ = {isa = PBXBuildFile; fileRef = D928B48916E4ECF800915830 /* Teddy.3ds */; };
-		D928B49816E4EDC500915830 /* Bane3D.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D928B49716E4EDC500915830 /* Bane3D.framework */; };
 		D928B49A16E4F0CE00915830 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D928B49916E4F0CE00915830 /* OpenGLES.framework */; };
 		D928B49C16E4F0DC00915830 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D928B49B16E4F0DC00915830 /* GLKit.framework */; };
 		D928B49E16E4F0F400915830 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D928B49D16E4F0F400915830 /* QuartzCore.framework */; };
@@ -80,6 +80,7 @@
 		1084D5861727F6A200E3B0F8 /* Julia.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Julia.frag; sourceTree = "<group>"; };
 		1084D5871727F6A200E3B0F8 /* Julia.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Julia.vert; sourceTree = "<group>"; };
 		664AB894182814C000C6F323 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		66A07D53183CD395002CF2F4 /* libBane3DEngine.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libBane3DEngine.a; path = "../Bane3DLib/build/Debug-iphoneos/libBane3DEngine.a"; sourceTree = "<group>"; };
 		D928B44C16E4EAB500915830 /* SampleGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D928B44F16E4EAB500915830 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D928B45116E4EAB500915830 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -99,7 +100,6 @@
 		D928B48616E4ECF800915830 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D928B48916E4ECF800915830 /* Teddy.3ds */ = {isa = PBXFileReference; lastKnownFileType = file; path = Teddy.3ds; sourceTree = "<group>"; };
 		D928B48A16E4ECF800915830 /* SampleGame-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SampleGame-Info.plist"; sourceTree = "<group>"; };
-		D928B49716E4EDC500915830 /* Bane3D.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bane3D.framework; path = ../Bane3D/Framework/Bane3D.framework; sourceTree = "<group>"; };
 		D928B49916E4F0CE00915830 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		D928B49B16E4F0DC00915830 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		D928B49D16E4F0F400915830 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -116,11 +116,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66A07D54183CD395002CF2F4 /* libBane3DEngine.a in Frameworks */,
 				664AB895182814C000C6F323 /* CoreMotion.framework in Frameworks */,
 				D928B49E16E4F0F400915830 /* QuartzCore.framework in Frameworks */,
 				D928B49C16E4F0DC00915830 /* GLKit.framework in Frameworks */,
 				D928B49A16E4F0CE00915830 /* OpenGLES.framework in Frameworks */,
-				D928B49816E4EDC500915830 /* Bane3D.framework in Frameworks */,
 				D928B45016E4EAB500915830 /* UIKit.framework in Frameworks */,
 				D928B45216E4EAB500915830 /* Foundation.framework in Frameworks */,
 				D928B45416E4EAB500915830 /* CoreGraphics.framework in Frameworks */,
@@ -229,11 +229,11 @@
 		D928B44E16E4EAB500915830 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				66A07D53183CD395002CF2F4 /* libBane3DEngine.a */,
 				664AB894182814C000C6F323 /* CoreMotion.framework */,
 				D928B49D16E4F0F400915830 /* QuartzCore.framework */,
 				D928B49B16E4F0DC00915830 /* GLKit.framework */,
 				D928B49916E4F0CE00915830 /* OpenGLES.framework */,
-				D928B49716E4EDC500915830 /* Bane3D.framework */,
 				D928B44F16E4EAB500915830 /* UIKit.framework */,
 				D928B45116E4EAB500915830 /* Foundation.framework */,
 				D928B45316E4EAB500915830 /* CoreGraphics.framework */,
@@ -530,11 +530,16 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../Bane3D/Framework\"",
+					"\"$(SRCROOT)/../Bane3DLib/Code\"",
 				);
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Code/Supporting/SampleGame-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/../Bane3DLib/Code\"",
+				);
 				INFOPLIST_FILE = "Resources/SampleGame-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
@@ -549,11 +554,16 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../Bane3D/Framework\"",
+					"\"$(SRCROOT)/../Bane3DLib/Code\"",
 				);
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Code/Supporting/SampleGame-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/../Bane3DLib/Code\"",
+				);
 				INFOPLIST_FILE = "Resources/SampleGame-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";

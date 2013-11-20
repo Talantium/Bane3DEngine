@@ -15,7 +15,7 @@
 
 @implementation SGViewController
 
-- (void) setupGLforView:(B3DGLView*)view
+- (void)setupGLforView:(GLKView*)view
 {
     // Always call super first!
     [super setupGLforView:view];
