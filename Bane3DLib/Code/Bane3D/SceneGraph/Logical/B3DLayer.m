@@ -44,10 +44,13 @@
     if (self)
     {
         _camera = camera;
+
         _renderer = [[B3DLayerRenderer alloc] initWithLayer:self];
         _layer  = self;
+
+        [self addChild:_camera];
     }
-    
+
     return self;
 }
 

@@ -140,6 +140,8 @@
 {
     if (_indexesToUpdate.count > 0)
     {
+        [self createBuffers];
+
         [self updateBufferWithNodesInSet:_indexesToUpdate];
         _indexesToUpdate = nil;
     }

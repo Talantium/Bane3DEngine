@@ -195,7 +195,14 @@
         
         _drawRect = rect;
     }
-    
+
+    // Dirty fix for flicker with GLKViewController
+    static BOOL updateCalled = NO;
+    if (!updateCalled) {
+        [self update];
+        updateCalled = YES;
+    }
+
     // Draw all nodes
     [_engine draw];
 }

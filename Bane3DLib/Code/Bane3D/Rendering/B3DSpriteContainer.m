@@ -47,6 +47,8 @@
 
 - (void) createBuffers
 {
+    if (_vertexArrayObject != 0) return;
+
     // Creating VAO's must be done on the main thread, see
     // http://stackoverflow.com/questions/7125257/can-vertex-array-objects-vaos-be-shared-across-eaglcontexts-in-opengl-es
     

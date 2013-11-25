@@ -80,7 +80,7 @@
 		1084D5861727F6A200E3B0F8 /* Julia.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Julia.frag; sourceTree = "<group>"; };
 		1084D5871727F6A200E3B0F8 /* Julia.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Julia.vert; sourceTree = "<group>"; };
 		664AB894182814C000C6F323 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		66A07D53183CD395002CF2F4 /* libBane3DEngine.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libBane3DEngine.a; path = "../Bane3DLib/build/Debug-iphoneos/libBane3DEngine.a"; sourceTree = "<group>"; };
+		66A07D53183CD395002CF2F4 /* libBane3DEngine.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBane3DEngine.a; path = "../Bane3DLib/build/Debug-iphoneos/libBane3DEngine.a"; sourceTree = "<group>"; };
 		D928B44C16E4EAB500915830 /* SampleGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D928B44F16E4EAB500915830 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D928B45116E4EAB500915830 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };

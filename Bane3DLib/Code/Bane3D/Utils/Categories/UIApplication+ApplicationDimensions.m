@@ -71,8 +71,9 @@
     {
         size = CGSizeMake(size.height, size.width);
     }
-    
-    if (application.statusBarHidden == NO)
+
+    BOOL usesNewStatusBarBehaviour = [UIViewController instancesRespondToSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+    if (usesNewStatusBarBehaviour == NO && application.statusBarHidden == NO)
     {
         size.height -= MIN(application.statusBarFrame.size.width, application.statusBarFrame.size.height);
     }
