@@ -93,7 +93,7 @@ const   CGFloat         SGLoadingBarTopDistance   = 390/2;        // Retina was 
 												object:sceneToLoadKey
 												 delay:0.1
 											   repeats:NO];
-//	[self.layers.firstObject addChild:timer];
+	[self.layers.firstObject addChild:timer];
 }
 
 - (void) sceneLoadingDidBeganForScene:(B3DScene*)scene

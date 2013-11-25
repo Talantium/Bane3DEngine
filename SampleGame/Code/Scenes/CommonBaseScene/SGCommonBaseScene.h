@@ -16,6 +16,9 @@ extern const       float   SGCommonBaseSceneButtonFontSize;
 
 @interface SGCommonBaseScene : B3DScene
 
+@property (nonatomic, readonly, strong) B3DLayer* perspectiveLayer;
+@property (nonatomic, readonly, strong) B3DLayer* orthoLayer;
+
 - (void) presentSceneWithKey:(NSString*)key;
 
 @end

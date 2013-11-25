@@ -28,9 +28,9 @@
     [self.engine setAndLoadRootScene:scene];
     
     // Register additional scenes
-//    scene = [[SGMenuScene alloc] init];
-//    [self.engine addScene:scene];
-//    
+    scene = [[SGMenuScene alloc] init];
+    [self.engine addScene:scene];
+//
 //    scene = [[SGShaderDemoScene alloc] init];
 //    [self.engine addScene:scene];
 }

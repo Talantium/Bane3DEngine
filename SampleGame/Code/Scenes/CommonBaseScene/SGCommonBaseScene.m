@@ -18,6 +18,9 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
 
 @interface SGCommonBaseScene ()
 
+@property (nonatomic, readwrite, strong) B3DLayer* perspectiveLayer;
+@property (nonatomic, readwrite, strong) B3DLayer* orthoLayer;
+
 @property (nonatomic, readwrite, strong) SGLoadingCircle*   loadingCircle;
 @property (nonatomic, readwrite, strong) B3DSprite*         loadingShade;
 
@@ -36,9 +39,14 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
 
 - (id) init
 {
-	self = [super init];
+	self = [super initWithLayers:nil];
 	if (self != nil)
 	{
+        _perspectiveLayer = [B3DLayer layerWithCamera:[B3DCameraPerspective camera]];
+        _orthoLayer       = [B3DLayer layerWithCamera:[B3DCameraOrtho camera]];
+        
+        self.layers =  @[_perspectiveLayer, _orthoLayer];
+        
         CGSize screenSize = [UIApplication currentSize];
         
         self.handleSceneLoadingEvents = YES;
@@ -49,7 +57,7 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
             [self.loadingShade translateByX:0 y:0 z:-1];
             self.loadingShade.hidden = YES;
         }
-        [self addChild:self.loadingShade];
+        [_orthoLayer addChild:self.loadingShade];
         
         
         self.loadingCircle = [SGLoadingCircle loadingCircle];
@@ -64,7 +72,7 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
             label.color = [B3DColor colorWithRGBHex:0xffffff];
             [label translateByX:4 y:0 z:0.6];
         }
-        [self.loadingShade addChild:label];
+//        [self.loadingShade addChild:label];
 	}
 	
 	return self;
