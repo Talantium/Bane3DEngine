@@ -52,7 +52,7 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
         self.handleSceneLoadingEvents = YES;
         
         self.loadingShade = [[B3DSprite alloc] initWithSize:screenSize
-                                                        color:[B3DColor colorWithRed:0.4 green:0.4 blue:0.4 alpha:0.8]];
+                                                        color:[B3DColor colorWithRed:0.4 green:0.4 blue:0.4 alpha:0.6]];
         {
             [self.loadingShade translateByX:0 y:0 z:-1];
             self.loadingShade.hidden = YES;
@@ -72,7 +72,7 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
             label.color = [B3DColor colorWithRGBHex:0xffffff];
             [label translateByX:4 y:0 z:0.6];
         }
-//        [self.loadingShade addChild:label];
+        [self.loadingShade addChild:label];
 	}
 	
 	return self;

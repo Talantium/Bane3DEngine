@@ -54,7 +54,6 @@ NSString*   const   B3DAssetTypeLocal                       = @"B3DAssetTypeLoca
 
 
 NSString*   const   B3DDefaultMaterialName                  = @"B3DDefaultMaterialName";
-const       int		B3DLabelMaxLabelLength                  = 128;
 const       float   B3DLabelDefaultFontSize                 = 12.0f;
 
 

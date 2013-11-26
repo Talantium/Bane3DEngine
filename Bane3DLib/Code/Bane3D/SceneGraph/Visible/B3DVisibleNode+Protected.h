@@ -38,6 +38,7 @@
     B3DRenderMan*           __weak _renderMan;
     B3DGLStateManager*      __weak _stateManager;
 
+    BOOL                    _dirty;
     NSUInteger              _vertexCount;
     NSMutableData*          _indexData;
     NSMutableData*          _vertexData;

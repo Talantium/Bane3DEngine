@@ -28,17 +28,17 @@
 	self = [super init];
     if (self)
     {
-//        CGSize screenSize = [UIApplication currentSize];
-        
-//        B3DLabel* label = [[B3DLabel alloc] initWithFontNamed:SGCommonBaseSceneFontName size:SGCommonBaseSceneFontSize];
-//        label.color = [B3DColor colorWithRGBHex:0xcccccc];
-//        [label translateByX:2 y:screenSize.height - 22 z:-3];
-//        [label updateWithBlock:^(B3DNode* node, double deltaTime)
-//        {
-//            ((B3DLabel*)node).text = [NSString stringWithFormat:NSLocalizedString(@"SGFPSLabelText", nil), 1.0f/deltaTime];
-//        }];
-//        [self.orthoLayer addChild:label];
-        
+        CGSize screenSize = [UIApplication currentSize];
+
+        B3DLabel* label = [[B3DLabel alloc] initWithFontNamed:SGCommonBaseSceneFontName size:SGCommonBaseSceneFontSize];
+        label.color = [B3DColor colorWithRGBHex:0xcccccc];
+        [label translateByX:2 y:screenSize.height - 22 z:-3];
+        [label updateWithBlock:^(B3DNode* node, double deltaTime)
+        {
+            ((B3DLabel*)node).text = [NSString stringWithFormat:NSLocalizedString(@"SGFPSLabelText", nil), 1.0f/deltaTime];
+        }];
+        [self.orthoLayer addChild:label];
+
 //        B3DBaseModelNode* model = [[B3DBaseModelNode alloc] initWithMesh:@"Teddy" ofType:B3DAssetMesh3DSDefaultExtension
 //                                                                 texture:nil ofType:nil];
 //        {

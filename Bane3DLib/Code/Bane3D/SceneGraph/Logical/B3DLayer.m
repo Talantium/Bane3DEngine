@@ -70,7 +70,7 @@
     }
 }
 
-- (void)draw
+- (void) draw
 {
     [_renderer draw];
 }

@@ -169,8 +169,8 @@ static Bane3DEngine* sInstance = nil;
     [_sceneManager.currentScene draw];
 	
     // Let the renderman draw the optimized nodes
-	[_renderMan render];
-    
+//	[_renderMan render];
+
     // Rebind in case framebuffer changed
     [_stateManager bindFrameBuffer:_defaultFrameBuffer.framebuffer];
     [_defaultFrameBuffer discard];
@@ -191,27 +191,28 @@ static Bane3DEngine* sInstance = nil;
             
             return;
         }
-        
-        // Basic OpenGL settings
-        {
-            // Enable culling
-            glCullFace(GL_BACK);
-            glEnable(GL_CULL_FACE);
-            
-            // Blending/Alpha setting to one minus alpha
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            
-            // Default depth sort function
-            glEnable(GL_DEPTH_TEST);
-            glDepthFunc(GL_LEQUAL);
-            
-            // No stencil test required by default
-            glDisable(GL_STENCIL_TEST);
-        }
-        
-        [_renderMan createBuffers];
     }
-    
+
+    // Basic OpenGL settings
+    {
+        // Enable culling
+        glCullFace(GL_BACK);
+        glEnable(GL_CULL_FACE);
+
+        // Blending/Alpha setting to one minus alpha
+        [_stateManager enableBlending];
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // Default depth sort function
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+
+        // No stencil test required by default
+        glDisable(GL_STENCIL_TEST);
+    }
+
+    [_renderMan createBuffers];
+
 #if DEBUG
     checkGLError();
 #endif

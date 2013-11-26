@@ -59,7 +59,6 @@ extern NSString*    const   B3DAssetTypeLocal;
 
 // Some Defaults
 extern NSString*    const   B3DDefaultMaterialName;
-extern const        int     B3DLabelMaxLabelLength;                     //!< 128
 extern const        float   B3DLabelDefaultFontSize;                    //!< 12.0f
 
 // Sprite batcher settings

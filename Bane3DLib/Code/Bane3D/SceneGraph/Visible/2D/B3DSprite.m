@@ -47,18 +47,6 @@
 #import "B3DSpriteContainer.h"
 
 
-@interface B3DSprite ()
-{
-    @private
-        GLsizeiptr          _bufferSize;
-}
-
-- (void) createBuffers;
-- (void) tearDownBuffers;
-
-@end
-
-
 @implementation B3DSprite
 
 @dynamic	center;
@@ -130,12 +118,6 @@
 	return self;
 }
 
-- (void) dealloc
-{
-    [self tearDownBuffers];
-
-}
-
 - (void) create
 {
     [super create];
@@ -150,78 +132,6 @@
             self.size = CGSizeMake(texture.width, texture.height);
         }
     }
-    
-//    [self createBuffers];
-}
-
-- (void) destroy
-{
-    [self tearDownBuffers];
-
-    [super destroy];
-}
-
-#pragma mark - Buffer Handling
-
-- (void) createBuffers
-{
-    // Creating VAO's must be done on the main thread, see
-    // http://stackoverflow.com/questions/7125257/can-vertex-array-objects-vaos-be-shared-across-eaglcontexts-in-opengl-es
-    
-    dispatch_block_t block = ^(void)
-    {
-        // Create a buffer and array storage to render a single sprite node
-//        if (_vertexArrayObject == 0)
-//        {
-//            // Create and bind a vertex array object.
-//            glGenVertexArraysOES(1, &_vertexArrayObject);
-//            glBindVertexArrayOES(_vertexArrayObject);
-//            
-//            GLsizei size = sizeof(B3DSpriteVertexData);
-//            _bufferSize = size * 4;
-//            
-//            // Configure the attributes in the VAO.
-//            glGenBuffers(1, &_vertexBufferObject);
-//            glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
-//            glBufferData(GL_ARRAY_BUFFER, _bufferSize, NULL, GL_STREAM_DRAW);// GL_DYNAMIC_DRAW);
-//            
-//            glEnableVertexAttribArray(B3DVertexAttributesPosition);
-//            glVertexAttribPointer(B3DVertexAttributesPosition, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(0));
-////            
-////            glEnableVertexAttribArray(B3DVertexAttributesNormal);
-////            glVertexAttribPointer(B3DVertexAttributesNormal, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(12));
-//            
-//            glEnableVertexAttribArray(B3DVertexAttributesColor);
-//            glVertexAttribPointer(B3DVertexAttributesColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, size, BUFFER_OFFSET(12));
-//            
-//            glEnableVertexAttribArray(B3DVertexAttributesTexCoord0);
-//            glVertexAttribPointer(B3DVertexAttributesTexCoord0, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(16));
-//            
-////            glEnableVertexAttribArray(B3DVertexAttributesTexCoord1);
-////            glVertexAttribPointer(B3DVertexAttributesTexCoord1, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(32));
-//            
-//            // Bind back to the default state.
-//            glBindVertexArrayOES(0);
-//        }
-    };
-    
-    if ([NSThread isMainThread])
-    {
-        block();
-    }
-    else
-    {
-        dispatch_sync(dispatch_get_main_queue(), block);
-    }
-}
-
-- (void) tearDownBuffers
-{
-//    if (_vertexArrayObject != 0)
-//    {
-//        glDeleteBuffers(1, &_vertexBufferObject);
-//        glDeleteVertexArraysOES(1, &_vertexArrayObject);
-//    }
 }
 
 - (Class) classForRenderContainer
@@ -255,91 +165,7 @@
 
 - (void) setSize:(CGSize)size
 {
-    //[self setScaleToX:size.width y:size.height z:self.scale.z];
     _size = size;
-}
-/*
-- (void) drawInLayer:(B3DLayer*)layer
-{
-    [super drawInLayer:layer];
-
-    if (self.isOpaque)
-    {
-        if (_batchable)
-        {
-            // Send to renderman for sorting by material and batched rendering
-            [_renderMan drawOpaqueSprite:self];
-        }
-        else
-        {
-            // If we cannot be batched for any reason, draw sprite immediately
-            [self render];
-        }
-    }
-    else
-    {
-        // We need to z-sort any nodes prior drawing!
-        [_renderMan drawTransparentSprite:self];
-    }
-}
-*/
-- (void) render
-{
-    // This call is just for counting!
-    [_renderMan renderSprite:self];
-    
-    // -------------------------------------------------------------------------
-    
-    // Optimize access to some properties
-//    static B3DTexture* texture = nil;
-//    texture = self.material.texture;
-    B3DShader* shader = self.material.shader;
-
-    // Bind the vertex array storage for single sprite rendering
-//    glBindVertexArrayOES(_vertexArrayObject);
-//    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
-    
-//    [_stateManager useProgram:shader.openGlName];
-    
-    static GLKMatrix4 matrix_mvp;
-    B3DCamera* camera = self.layer.camera;
-    
-    // Create Model-View-Projection-Matrix based on currently used scene camera
-    matrix_mvp = GLKMatrix4Multiply(camera.viewMatrix, self.worldTransform);
-    [shader setMatrix4Value:matrix_mvp forUniformNamed:B3DShaderUniformMatrixMVP];
-    
-    [shader setIntValue:0 forUniformNamed:B3DShaderUniformTextureBase];
-    
-    [_material enable];
-    
-    // Transmit the data of the sprite to the buffer
-    glBufferData(GL_ARRAY_BUFFER, _bufferSize, NULL, GL_STREAM_DRAW);
-    B3DSpriteVertexData* currentElementVertices = (B3DSpriteVertexData*) glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    memcpy(currentElementVertices, _vertexData.bytes, _vertexData.length);
-    glUnmapBufferOES(GL_ARRAY_BUFFER);
-    
-    // Finally draw
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    [_material disable];
-    
-    
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(B3DSpriteVertexData) * 4, NULL, GL_STREAM_DRAW);// GL_DYNAMIC_DRAW);
-//    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(B3DSpriteVertexData) * 4, [self updateVerticeData]);
-
-    // http://playcontrol.net/ewing/jibberjabber/opengl_vertex_buffer_object.html
-    // http://lists.apple.com/archives/mac-opengl/2008/Feb/msg00029.html
-    // ??? APPLE_flush_buffer_range
-    //    GLvoid* vbo_buffer = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    //	// transfer the vertex data to the VBO
-    //	memcpy(vbo_buffer, vertices, sizeof(B3DSpriteVertexData) * 4);
-    //    glUnmapBufferOES(GL_ARRAY_BUFFER); 
-
-    // Finally draw
-//    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4); //GL_POINTS
-
-    glBindVertexArrayOES(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 - (void) updateVerticeData
@@ -348,7 +174,7 @@
     B3DColor* color = _color;
 
     _vertexCount = 4;
-    B3DSpriteVertexData vertices[4];
+    B3DSpriteVertexData vertices[_vertexCount];
 
     static B3DSpriteVertexData vertice = {0.0f, 0.0f, 0.0f, 255, 255, 255, 255, 0, 0};
     vertices[0] = vertice;

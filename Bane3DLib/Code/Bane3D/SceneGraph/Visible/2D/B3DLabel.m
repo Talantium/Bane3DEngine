@@ -3,7 +3,27 @@
 //  Bane3D
 //
 //  Created by Andreas Hanft on 14.01.13.
-//  Copyright (c) 2013 talantium.net. All rights reserved.
+//
+//
+//  Copyright (C) 2012 Andreas Hanft (talantium.net)
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a
+//  copy of this software and associated documentation files (the "Software"),
+//  to deal in the Software without restriction, including without limitation
+//  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//  and/or sell copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included
+//  in all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+//  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+//  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//  DEALINGS IN THE SOFTWARE.
 //
 
 #import <UIKit/UIKit.h>
@@ -20,22 +40,15 @@
 #import "B3DCamera.h"
 #import "B3DNode+Protected.h"
 #import "B3DVisibleNode+Protected.h"
+#import "B3DTextureFontContainer.h"
+
+
+const       int		B3DLabelMaxLabelLength                  = 256;
 
 
 @interface B3DLabel ()
-{
-    @private
-        BOOL                _textDirty;
-        GLint               _vertices;
-    
-        GLuint              _vertexArrayObject;
-        GLuint              _vertexBufferObject;
-}
 
 @property (nonatomic, readwrite, weak) B3DTextureFont*     textureFont;
-
-- (void) createBuffers;
-- (void) tearDownBuffers;
 
 @end
 
@@ -77,23 +90,11 @@
         if (text)
         {
             _text = [text copy];
-            _textDirty = YES;
+            _dirty = YES;
         }
     }
     
     return self;
-}
-
-- (void) dealloc
-{
-    [self tearDownBuffers];
-}
-
-- (void) create
-{
-    [super create];
-    
-    [self createBuffers];
 }
 
 - (void) awake
@@ -103,77 +104,10 @@
     self.material.baseColor = self.color;
 }
 
-- (void) destroy
+- (Class) classForRenderContainer
 {
-    [self tearDownBuffers];
-    
-    [super destroy];
+    return [B3DTextureFontContainer class];
 }
-
-
-#pragma mark - Buffer Handling
-
-- (void) createBuffers
-{
-    // Creating VAO's must be done on the main thread, see
-    // http://stackoverflow.com/questions/7125257/can-vertex-array-objects-vaos-be-shared-across-eaglcontexts-in-opengl-es
-    
-    dispatch_block_t block = ^(void)
-    {
-        // Create a buffer and array storage to render a single sprite node
-        if (_vertexArrayObject == 0)
-        {
-            // Create and bind a vertex array object.
-            glGenVertexArraysOES(1, &_vertexArrayObject);
-            glBindVertexArrayOES(_vertexArrayObject);
-            
-            // Configure the attributes in the VAO.
-            glGenBuffers(1, &_vertexBufferObject);
-            glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(B3DTextureFontCharSprite) * B3DLabelMaxLabelLength, NULL, GL_STREAM_DRAW);
-            
-            GLsizei size = sizeof(B3DTextureFontCharVertice);
-            
-            glEnableVertexAttribArray(B3DVertexAttributesPosition);
-            glVertexAttribPointer(B3DVertexAttributesPosition, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(0));
-            
-            glEnableVertexAttribArray(B3DVertexAttributesTexCoord0);
-            glVertexAttribPointer(B3DVertexAttributesTexCoord0, 2, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(12));
-            
-            // Bind back to the default state.
-            glBindVertexArrayOES(0);
-        }
-    };
-    
-    if ([NSThread isMainThread])
-    {
-        block();
-    }
-    else
-    {
-        dispatch_sync(dispatch_get_main_queue(), block);
-    }
-}
-
-- (void) tearDownBuffers
-{
-    if (_vertexBufferObject != 0)
-    {
-        glDeleteBuffers(1, &_vertexBufferObject);
-        
-        _vertexBufferObject = 0;
-    }
-    
-    if (_vertexArrayObject != 0)
-    {
-        glDeleteVertexArraysOES(1, &_vertexArrayObject);
-        
-        _vertexArrayObject = 0;
-    }
-    
-    _textDirty = YES;
-}
-
 
 #pragma mark - Properties
 
@@ -183,128 +117,68 @@
     {
         _text = [text copy];
         _size = CGSizeZero;
-        _textDirty = YES;
+        _dirty = YES;
     }
 }
 
 
-#pragma mark - Loop
-
-- (void) updateWithSceneGraphInfo:(B3DSceneGraphInfo)info
+- (void) updateVerticeData
 {
-    [super updateWithSceneGraphInfo:info];
-    
-    if (_textDirty)
+    if (_dirty)
     {
-        [self updateTextData];
-    }
-}
+        NSUInteger vertexCount = 0;
+        NSDictionary* charDict = _textureFont.charDict;
 
-- (void) drawInLayer:(B3DLayer*)layer
-{
-//    [super drawInLayer:layer];
-    
-    if (_opaque)
-    {
-        // No batching atm
-        [self render];
-    }
-    else
-    {
-        // We need to z-sort any nodes prior drawing!
-        [_renderMan drawTransparentLabel:self];
-    }
-}
+        NSUInteger length = _text.length;
+        unichar buffer[length + 1];
+        [_text getCharacters:buffer range:NSMakeRange(0, length)];
 
-- (void) render
-{
-    // Optimize access to some properties
-    B3DShader* shader = self.material.shader;
-    
-    // Bind the vertex array storage for single sprite rendering
-    glBindVertexArrayOES(_vertexArrayObject);
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
-    
-    // Create Model-View-Projection-Matrix based on currently used scene camera
-    static GLKMatrix4 matrix_mvp;
-    matrix_mvp = GLKMatrix4Multiply(self.layer.camera.viewMatrix, self.worldTransform);
-    [shader setMatrix4Value:matrix_mvp forUniformNamed:B3DShaderUniformMatrixMVP];
-    [shader setIntValue:0 forUniformNamed:B3DShaderUniformTextureBase];
-    [shader setBoolValue:YES forUniformNamed:B3DShaderUniformToggleTextureAlphaOnly];
-    
-    [_material enable];
-    
-    // Finally draw
-    glDisable(GL_CULL_FACE);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, _vertices);
-    glEnable(GL_CULL_FACE);
-    
-    [_material disable];
-    
-    glBindVertexArrayOES(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
+        CGFloat spacing = 0.0f;
+        CGPoint currentPosition = CGPointZero;
 
-- (void) updateTextData
-{
-    _vertices = 0;
-    NSDictionary* charDict = _textureFont.charDict;
-    
-    NSUInteger length = _text.length;
-    unichar buffer[length + 1];
-    [_text getCharacters:buffer range:NSMakeRange(0, length)];
-    
-    CGFloat spacing = 0.0f;
-    CGPoint currentPosition = CGPointZero;
-    
-    NSString* currentCharAsString = nil;
-    B3DTextureFontCharMapInfo currentCharInfo;
-    
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
-    B3DTextureFontCharSprite* textRepresentation = (B3DTextureFontCharSprite*) glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    if (textRepresentation)
-    {
+        NSString* currentCharAsString = nil;
+        B3DTextureFontCharMapInfo currentCharInfo;
+
+        B3DTextureFontCharSprite textRepresentation[length];
         for (int i = 0; i < length; ++i)
         {
             unichar currentChar = buffer[i];
             currentCharAsString = [NSString stringWithCharacters:&currentChar length:1];
-            
+
             NSValue* value = [charDict objectForKey:currentCharAsString];
             if (value == nil)
             {
                 value = [charDict objectForKey:@"?"];
             }
             [value getValue:&currentCharInfo];
-            
+
             textRepresentation[i].bottomLeft.position   = GLKVector3Make(currentPosition.x, currentPosition.y, 0.0f);
             textRepresentation[i].bottomRight.position  = GLKVector3Make(currentPosition.x + currentCharInfo.size.width, currentPosition.y, 0.0f);
             textRepresentation[i].topLeft.position      = GLKVector3Make(currentPosition.x, currentPosition.y + currentCharInfo.size.height, 0.0f);
             textRepresentation[i].topRight.position     = GLKVector3Make(currentPosition.x + currentCharInfo.size.width, currentPosition.y + currentCharInfo.size.height, 0.0f);
             currentPosition.x += spacing + currentCharInfo.size.width;
-            
+
             _size.width = currentPosition.x - spacing; // Remove spacing for bounding size
             _size.height = MAX(_size.height, currentCharInfo.size.height);
-            
+
             textRepresentation[i].bottomLeft.texCoords  = currentCharInfo.textCoords[0];
             textRepresentation[i].bottomRight.texCoords = currentCharInfo.textCoords[1];
             textRepresentation[i].topLeft.texCoords     = currentCharInfo.textCoords[2];
             textRepresentation[i].topRight.texCoords    = currentCharInfo.textCoords[3];
-            
+
             textRepresentation[i].degeneratedFirst      = textRepresentation[i].bottomLeft;
             textRepresentation[i].degeneratedLast       = textRepresentation[i].topRight;
-            
-            _vertices += 6;
+
+            vertexCount += 6;
         }
-        
+
         // Discard last degenerated sprite
-        _vertices -= 1;
-        glUnmapBufferOES(GL_ARRAY_BUFFER);
+        vertexCount -= 1;
         
-        _textDirty = NO;
-    }
-    else
-    {
-        LogError(@"No VBO available for label!");
+        _vertexCount = vertexCount;
+        _vertexData = [NSMutableData dataWithBytes:textRepresentation length:sizeof(B3DTextureFontCharVertice) * vertexCount];
+        
+        _dirty = NO;
     }
 }
 

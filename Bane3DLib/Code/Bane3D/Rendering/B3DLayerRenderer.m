@@ -109,6 +109,8 @@
     
     for (B3DVisibleNode* node in _nodes)
     {
+        if (node.isHidden) continue;
+
         if ([container isSuitableForNode:node])
         {
             [container addNode:node];

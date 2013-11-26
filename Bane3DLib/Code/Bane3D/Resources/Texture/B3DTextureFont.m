@@ -8,6 +8,7 @@
 
 #import "B3DTextureFont.h"
 
+#import "B3DTextureFontContainer.h"
 #import "B3DAssetToken.h"
 #import "B3DMathHelper.h"
 #import "B3DAsset+Protected.h"

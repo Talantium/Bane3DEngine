@@ -38,7 +38,7 @@ const UIEdgeInsets SGButtonDefaultPadding = {0, 6, 0, 6};
             _label.color = [B3DColor blackColor];
             [_label translateByX:0 y:0 z:0.5];
         }
-//        [self addChild:_label];
+        [self addChild:_label];
 
         [self updateWithBlock:^(B3DNode *node, double deltaTime)
         {
