@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <OpenGLES/ES2/gl.h>
 
 @class B3DLayer;
 @class B3DVisibleNode;
@@ -18,7 +19,7 @@
 
 @property (nonatomic, readonly,    weak) B3DVisibleNode*    prototypeNode;
 @property (nonatomic, readwrite, assign) NSUInteger         capacity;
-@property (nonatomic, readwrite, assign) NSUInteger         vertexCount;
+@property (nonatomic, readwrite, assign) GLsizei            vertexCount;
 
 -(id) initWithNode:(B3DVisibleNode*)node;
 

@@ -86,7 +86,7 @@
     model->Create([self.path UTF8String]);
     
     // @TODO: ATM only a single mesh is supported per model file, this should be extended.
-    uint verticeCount = model->m_pMeshs[0].iNumVerts;
+    int verticeCount = model->m_pMeshs[0].iNumVerts;
     if (verticeCount > 0)
     {
 //        dispatch_block_t block = ^(void)
@@ -105,7 +105,7 @@
         
                 // Set the buffer's data
                 GLsizei size = sizeof(B3DMeshVertexData);
-                unsigned int uiSize = verticeCount * size;
+                NSUInteger uiSize = verticeCount * size;
                 
                 // Create empty buffer, we have to rewrite the data to get it interleaved.
 //                [_vertexBuffer setData:NULL size:uiSize usage:GL_STATIC_DRAW];
@@ -173,8 +173,8 @@
         
         self.vertexIndexCount = model->m_pMeshs[0].iNumIndices;
         
-        self.vertexIndexData = [NSData dataWithBytes:model->m_pMeshs[0].pIndices
-                                              length:(model->m_pMeshs[0].iNumIndices * sizeof(unsigned short))];
+        self.vertexIndexData = [NSData dataWithBytes:(model->m_pMeshs[0].pIndices)
+                                              length:((model->m_pMeshs[0].iNumIndices) * sizeof(unsigned short))];
         
         success = YES;
         self.dirty = YES;
