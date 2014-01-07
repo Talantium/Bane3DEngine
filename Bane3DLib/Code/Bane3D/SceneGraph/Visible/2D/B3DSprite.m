@@ -45,6 +45,7 @@
 #import "B3DNode+Protected.h"
 #import "B3DVisibleNode+Protected.h"
 #import "B3DSpriteContainer.h"
+#import "B3DMesh.h"
 
 
 @implementation B3DSprite
@@ -113,6 +114,8 @@
 		}
 
 		_textureInfo	= B3DTextureInfo(0, 0, 0, 0, "");
+        _mesh           = [[B3DMesh alloc] initWithMesh:@"" ofType:B3DAssetTypeVolatile];
+        _mesh.vertexCount = 4;
     }
 	
 	return self;
@@ -173,8 +176,7 @@
     B3DTexture* texture = _material.texture;
     B3DColor* color = _color;
 
-    _vertexCount = 4;
-    B3DSpriteVertexData vertices[_vertexCount];
+    B3DSpriteVertexData vertices[_mesh.vertexCount];
 
     static B3DSpriteVertexData vertice = {0.0f, 0.0f, 0.0f, 255, 255, 255, 255, 0, 0};
     vertices[0] = vertice;
@@ -249,7 +251,8 @@
         vertices[i].colA = colors[3];
     }
 
-    _vertexData = [NSMutableData dataWithBytes:vertices length:sizeof(B3DSpriteVertexData)*4];
+    _mesh.vertexData = [NSMutableData dataWithBytes:vertices length:sizeof(B3DSpriteVertexData) * _mesh.vertexCount];
+    _mesh.dirty = YES;
 }
 
 @end

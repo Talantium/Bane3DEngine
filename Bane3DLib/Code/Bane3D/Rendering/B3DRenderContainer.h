@@ -18,6 +18,7 @@
 
 @property (nonatomic, readonly,    weak) B3DVisibleNode*    prototypeNode;
 @property (nonatomic, readwrite, assign) NSUInteger         capacity;
+@property (nonatomic, readwrite, assign) NSUInteger         vertexCount;
 
 -(id) initWithNode:(B3DVisibleNode*)node;
 

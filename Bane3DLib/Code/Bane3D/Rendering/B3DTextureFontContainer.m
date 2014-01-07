@@ -20,6 +20,7 @@
 #import "B3DShader.h"
 #import "B3DMaterial.h"
 #import "B3DLabel.h"
+#import "B3DMesh.h"
 
 
 @interface B3DTextureFontContainer ()
@@ -112,11 +113,12 @@
 
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
 
-    GLsizeiptr size = sizeof(B3DTextureFontCharVertice) * self.prototypeNode.vertexCount;
+    self.vertexCount = self.prototypeNode.mesh.vertexCount;
+    GLsizeiptr size = sizeof(B3DTextureFontCharVertice) * self.prototypeNode.mesh.vertexCount;
 
     glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_STREAM_DRAW);
     B3DTextureFontCharVertice* currentElementVertices = (B3DTextureFontCharVertice*) glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    memcpy(currentElementVertices, self.prototypeNode.vertexData.bytes, size);
+    memcpy(currentElementVertices, self.prototypeNode.mesh.vertexData.bytes, size);
     glUnmapBufferOES(GL_ARRAY_BUFFER);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -142,7 +144,7 @@
 
     // Finally draw
     glDisable(GL_CULL_FACE);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, self.prototypeNode.vertexCount);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, self.vertexCount);
     glEnable(GL_CULL_FACE);
 
     [material disable];

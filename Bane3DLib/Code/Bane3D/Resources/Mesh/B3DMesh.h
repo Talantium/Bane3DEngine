@@ -28,18 +28,15 @@
 
 #import <Bane3D/Resources/B3DAsset.h>
 
-@class B3DVertexBuffer;
-
 
 @interface B3DMesh : B3DAsset
-{
-    @protected
-        B3DVertexBuffer*        _vertexBuffer;
-}
 
-@property (nonatomic, strong) B3DVertexBuffer*  vertexBuffer;
-@property (nonatomic, assign) int               vertexIndexLength;
-@property (nonatomic, strong) NSData*           vertexIndexData; // TODO: Also use a B3DVertexBuffer here!
+@property (nonatomic, readwrite, strong) NSData*    vertexData;
+@property (nonatomic, readwrite, assign) GLsizei    vertexCount;
+@property (nonatomic, readwrite, strong) NSData*    vertexIndexData;
+@property (nonatomic, readwrite, assign) GLsizei    vertexIndexCount;
+
+@property (nonatomic, readwrite, assign, getter = isDirty) BOOL dirty;
 
 - (id) initWithMesh:(NSString*)name ofType:(NSString*)type;
 

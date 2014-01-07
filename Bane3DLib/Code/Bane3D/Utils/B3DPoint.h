@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <OpenGLES/ES2/glext.h>
 #import <GLKit/GLKit.h>
-#import <Bane3D/Core/B3DDatatypes.h>
+#import <Bane3D/Rendering/B3DMeshContainer.h>
 
 
 @interface B3DPoint : NSObject

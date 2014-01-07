@@ -38,13 +38,10 @@
 {
 	self = [super initWithResourceNamed:name ofType:type];
 	if (self != nil)
-	{
-        _vertexBuffer = [[B3DVertexBuffer alloc] initWithMeshName:name];
-	}
+	{}
 	
 	return self;
 }
-
 
 - (void) unloadContent
 {
@@ -57,18 +54,14 @@
 	_loaded = NO;
 }
 
-- (void) enable
+- (void) cleanUp
 {
-    [super enable];
-    
-    [_vertexBuffer enable];
-}
+    self.vertexData = nil;
+    self.vertexCount = 0;
+    self.vertexIndexData = nil;
+    self.vertexIndexCount = 0;
 
-- (void) disable
-{
-    [_vertexBuffer disable];
-    
-    [super disable];
+    [super cleanUp];
 }
 
 @end

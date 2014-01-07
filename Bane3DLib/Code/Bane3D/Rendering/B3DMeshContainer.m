@@ -1,14 +1,14 @@
 //
-//  B3DSpriteContainer.m
+//  B3DMeshContainer.m
 //  Bane3DEngine
 //
-//  Created by Andreas Hanft on 19.11.13.
+//  Created by Andreas Hanft on 20.12.13.
 //  Copyright (c) 2013 talantium.net. All rights reserved.
 //
 
 #import <GLKit/GLKit.h>
 
-#import "B3DSpriteContainer.h"
+#import "B3DMeshContainer.h"
 
 #import "B3DConstants.h"
 #import "B3DDatatypes.h"
@@ -19,10 +19,11 @@
 
 #import "B3DShader.h"
 #import "B3DMaterial.h"
+#import "B3DBaseModelNode.h"
 #import "B3DMesh.h"
 
 
-@interface B3DSpriteContainer ()
+@interface B3DMeshContainer ()
 {
   @private
     GLuint                  _vertexArrayObject;
@@ -32,7 +33,7 @@
 @end
 
 
-@implementation B3DSpriteContainer
+@implementation B3DMeshContainer
 
 - (id) initWithNode:(B3DVisibleNode *)node
 {
@@ -49,7 +50,7 @@
 - (void) createBuffers
 {
     if (_vertexArrayObject != 0) return;
-
+    
     // Creating VAO's must be done on the main thread, see
     // http://stackoverflow.com/questions/7125257/can-vertex-array-objects-vaos-be-shared-across-eaglcontexts-in-opengl-es
     
@@ -62,23 +63,21 @@
             glGenVertexArraysOES(1, &_vertexArrayObject);
             glBindVertexArrayOES(_vertexArrayObject);
             
-            GLsizei size = sizeof(B3DSpriteVertexData);
-            GLsizeiptr bufferSize = size * 4;
+            GLsizei size = sizeof(B3DMeshVertexData);
             
             // Configure the attributes in the VAO.
             glGenBuffers(1, &_vertexBufferObject);
             glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
-            glBufferData(GL_ARRAY_BUFFER, bufferSize, NULL, GL_STREAM_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, 128000, NULL, GL_STREAM_DRAW);
+            
+//            glBufferData(GL_ARRAY_BUFFER, self.prototypeNode.mesh.vertexData.length, self.prototypeNode.mesh.vertexData.bytes, GL_WRITE_ONLY_OES);
             
             glEnableVertexAttribArray(B3DVertexAttributesPosition);
             glVertexAttribPointer(B3DVertexAttributesPosition, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(0));
             
-            glEnableVertexAttribArray(B3DVertexAttributesColor);
-            glVertexAttribPointer(B3DVertexAttributesColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, size, BUFFER_OFFSET(12));
-            
             glEnableVertexAttribArray(B3DVertexAttributesTexCoord0);
-            glVertexAttribPointer(B3DVertexAttributesTexCoord0, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(16));
-            
+            glVertexAttribPointer(B3DVertexAttributesTexCoord0, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(12));
+
             // Bind back to the default state.
             glBindVertexArrayOES(0);
         }
@@ -99,14 +98,14 @@
     if (_vertexBufferObject != 0)
     {
         glDeleteBuffers(1, &_vertexBufferObject);
-
+        
         _vertexBufferObject = 0;
     }
-
+    
     if (_vertexArrayObject != 0)
     {
         glDeleteVertexArraysOES(1, &_vertexArrayObject);
-
+        
         _vertexArrayObject = 0;
     }
 }
@@ -114,18 +113,15 @@
 - (void) updateBufferWithNodesInSet:(NSSet*)set
 {
     [self.prototypeNode updateVerticeData];
-
+    
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
     
     self.vertexCount = self.prototypeNode.mesh.vertexCount;
 
-    GLsizeiptr size = sizeof(B3DSpriteVertexData) * self.vertexCount;
-
-    glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_STREAM_DRAW);
-    B3DSpriteVertexData* currentElementVertices = (B3DSpriteVertexData*) glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    memcpy(currentElementVertices, self.prototypeNode.mesh.vertexData.bytes, size);
-    glUnmapBufferOES(GL_ARRAY_BUFFER);
-
+    GLsizeiptr size = sizeof(B3DMeshVertexData) * self.vertexCount;
+    
+    glBufferData(GL_ARRAY_BUFFER, size, self.prototypeNode.mesh.vertexData.bytes, GL_WRITE_ONLY_OES);
+    
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -133,28 +129,77 @@
 {
     glBindVertexArrayOES(_vertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
-
+    
+    B3DBaseModelNode* node = (B3DBaseModelNode*)self.prototypeNode;
+    
     B3DMaterial* material = self.prototypeNode.material;
     B3DShader* shader = material.shader;
     B3DCamera* camera = layer.camera;
     
     // Create Model-View-Projection-Matrix based on currently used scene camera
-    GLKMatrix4 matrix_mvp = GLKMatrix4Multiply(camera.viewMatrix, self.prototypeNode.worldTransform);
+    GLKMatrix4 matrix_mvp = GLKMatrix4Multiply(camera.viewMatrix, node.worldTransform);
     [shader setMatrix4Value:matrix_mvp forUniformNamed:B3DShaderUniformMatrixMVP];
     
     [shader setIntValue:0 forUniformNamed:B3DShaderUniformTextureBase];
     
     [material enable];
-
-//    glDrawElements(GL_TRIANGLES, <#GLsizei count#>, <#GLenum type#>, <#const GLvoid *indices#>)
-
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, self.vertexCount);
-
+    
+    B3DModelRenderer renderer = node.renderer;
+    CGFloat lineWidth = node.lineWidth;
+    GLenum mode;
+    switch (renderer)
+    {
+        case B3DModelRendererPoint:
+            // Draws every vertice as a single point
+            mode = GL_POINTS;
+            glDisable(GL_CULL_FACE);
+            break;
+            
+        case B3DModelRendererLines:
+            // Draws every vertice as lines
+            mode = GL_LINES;
+            glLineWidth(lineWidth);
+            break;
+            
+        case B3DModelRendererLineStrip:
+            // Draws every vertice as lines
+            mode = GL_LINE_STRIP;
+            glLineWidth(lineWidth);
+            break;
+            
+        case B3DModelRendererLineLoop:
+            // Draws every vertice as lines
+            mode = GL_LINE_LOOP;
+            glLineWidth(lineWidth);
+            break;
+            
+        case B3DModelRendererSolidStrip:
+            mode = GL_TRIANGLE_STRIP;
+            break;
+            
+        default:
+            // Regular drawing as indexed triangles
+            mode = GL_TRIANGLES;
+            break;
+    }
+        
+    // Regular drawing as indexed triangles
+    glDrawElements(mode, node.mesh.vertexIndexCount, GL_UNSIGNED_SHORT, node.mesh.vertexIndexData.bytes);
+    
     [material disable];
+    
+    switch (renderer)
+    {
+        case B3DModelRendererPoint:
+            glEnable(GL_CULL_FACE);
+            break;
+            
+        default:
+            break;
+    }
     
     glBindVertexArrayOES(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-
 
 @end

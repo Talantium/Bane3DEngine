@@ -39,19 +39,19 @@
         }];
         [self.orthoLayer addChild:label];
 
-//        B3DBaseModelNode* model = [[B3DBaseModelNode alloc] initWithMesh:@"Teddy" ofType:B3DAssetMesh3DSDefaultExtension
-//                                                                 texture:nil ofType:nil];
-//        {
-//            model.renderer = B3DModelRendererLines;
-//            model.lineWidth = 1;
-//            [model translateByX:0 y:1 z:-4];
-//            [model rotateByX:-90 y:0 z:0];
-//            [model updateWithBlock:^(B3DNode* node, double deltaTime)
-//             {
-//                 [node rotateByAngle:30 * deltaTime aroundX:1 y:1 z:0];
-//             }];
-//        }
-//        [self.perspectiveLayer addChild:model];
+        B3DBaseModelNode* model = [[B3DBaseModelNode alloc] initWithMesh:@"Teddy" ofType:B3DAssetMesh3DSDefaultExtension
+                                                                 texture:nil ofType:nil];
+        {
+            model.renderer = B3DModelRendererLines;
+            model.lineWidth = 1;
+            [model translateByX:0 y:1 z:-4];
+            [model rotateByX:-90 y:0 z:0];
+            [model updateWithBlock:^(B3DNode* node, double deltaTime)
+             {
+                 [node rotateByAngle:30 * deltaTime aroundX:1 y:1 z:0];
+             }];
+        }
+        [self.perspectiveLayer addChild:model];
         
         SGButton* button = [SGButton buttonWithText:NSLocalizedString(@"SGMenuSceneShaderDemoButtonLabelText", nil)];
         {
@@ -60,6 +60,8 @@
             [button setAction:@selector(presentSceneWithKey:) forTarget:self withObject:NSStringFromClass([SGShaderDemoScene class])];
         }
         [self.orthoLayer addChild:button];
+        
+        self.orthoLayer.hidden = YES;
     }
     
     return self;

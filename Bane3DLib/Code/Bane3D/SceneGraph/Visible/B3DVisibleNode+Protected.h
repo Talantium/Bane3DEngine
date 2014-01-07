@@ -28,6 +28,7 @@
 
 #import "B3DVisibleNode.h"
 
+
 @interface B3DVisibleNode ()
 {
   @protected
@@ -39,9 +40,10 @@
     B3DGLStateManager*      __weak _stateManager;
 
     BOOL                    _dirty;
-    NSUInteger              _vertexCount;
-    NSMutableData*          _indexData;
-    NSMutableData*          _vertexData;
+    B3DMesh*                _mesh;
+//    NSUInteger              _vertexCount;
+//    NSMutableData*          _indexData;
+//    NSMutableData*          _vertexData;
 }
 
 @end

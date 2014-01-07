@@ -33,6 +33,7 @@
 @class B3DColor;
 @class B3DRenderMan;
 @class B3DGLStateManager;
+@class B3DMesh;
 
 
 @interface B3DVisibleNode : B3DNode
@@ -40,9 +41,7 @@
 @property (nonatomic, readonly,  assign) NSUInteger     renderID;
 @property (nonatomic, readonly,  assign, getter = isDirty) BOOL dirty;
 
-@property (nonatomic, readonly,  assign) NSUInteger     vertexCount;
-@property (nonatomic, readonly,  strong) NSMutableData* indexData;
-@property (nonatomic, readonly,  strong) NSMutableData* vertexData;
+@property (nonatomic, readwrite, strong) B3DMesh*       mesh;
 
 @property (nonatomic, readwrite,   copy) B3DMaterial*   material;   //!< We need to copy the material so each node has its own settings for color etc.
 @property (nonatomic, readwrite, strong) B3DColor*      color;      //!< More or less equals to material.baseColor, implemented to simplify the use of a color on a sprite, meshes don't use it

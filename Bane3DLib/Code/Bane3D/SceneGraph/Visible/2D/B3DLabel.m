@@ -41,6 +41,7 @@
 #import "B3DNode+Protected.h"
 #import "B3DVisibleNode+Protected.h"
 #import "B3DTextureFontContainer.h"
+#import "B3DMesh.h"
 
 
 const       int		B3DLabelMaxLabelLength                  = 256;
@@ -92,6 +93,8 @@ const       int		B3DLabelMaxLabelLength                  = 256;
             _text = [text copy];
             _dirty = YES;
         }
+        
+        _mesh = [[B3DMesh alloc] initWithMesh:@"" ofType:B3DAssetTypeVolatile];
     }
     
     return self;
@@ -175,8 +178,9 @@ const       int		B3DLabelMaxLabelLength                  = 256;
         // Discard last degenerated sprite
         vertexCount -= 1;
         
-        _vertexCount = vertexCount;
-        _vertexData = [NSMutableData dataWithBytes:textRepresentation length:sizeof(B3DTextureFontCharVertice) * vertexCount];
+        _mesh.vertexCount = vertexCount;
+        _mesh.vertexData = [NSMutableData dataWithBytes:textRepresentation length:sizeof(B3DTextureFontCharVertice) * vertexCount];
+        _mesh.dirty = YES;
         
         _dirty = NO;
     }

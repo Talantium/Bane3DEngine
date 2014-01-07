@@ -42,6 +42,7 @@
 #import "B3DMesh.h"
 #import "B3DNode+Protected.h"
 #import "B3DVisibleNode+Protected.h"
+#import "B3DMeshContainer.h"
 
 
 @implementation B3DBaseModelNode
@@ -86,6 +87,10 @@
 	return self;
 }
 
+- (Class) classForRenderContainer
+{
+    return [B3DMeshContainer class];
+}
 
 - (void) awake
 {
@@ -93,94 +98,6 @@
     
     // Set default value
     [_material.shader setBoolValue:NO forUniformNamed:B3DShaderUniformToggleTextureAlphaOnly];
-}
-
-
-- (void) drawInLayer:(B3DLayer*)layer
-{
-//    [super drawInLayer:layer];
-
-    // Complex 3D models are generally not considered batchable...
-    if (_opaque)
-    {   
-        // ... if it is opaque we can render it right away...
-        [self render];
-    }
-    else
-    {
-        // ... otherwise need to z-sort all transparent nodes prior drawing!
-        [_renderMan.transparentNodeSorter addNode:self];
-    }
-}
-
-- (void) render
-{
-    // Just for counting
-    [_renderMan renderModel:self];
-    
-    static GLKMatrix4 matrix_mvp;
-
-    // Create Model-View-Projection-Matrix based on currently used scene camera
-    matrix_mvp = GLKMatrix4Multiply(self.layer.camera.viewMatrix, self.worldTransform);
-    [_material.shader setMatrix4Value:matrix_mvp forUniformNamed:B3DShaderUniformMatrixMVP];
-    [_material.shader setIntValue:0 forUniformNamed:B3DShaderUniformTextureBase];
-    
-    GLenum mode;
-    switch (_renderer)
-    {
-        case B3DModelRendererPoint:
-            // Draws every vertice as a single point
-            mode = GL_POINTS;
-            glDisable(GL_CULL_FACE);
-            break;
-            
-        case B3DModelRendererLines:
-            // Draws every vertice as lines
-            mode = GL_LINES;
-            glLineWidth(_lineWidth);
-            break;
-            
-        case B3DModelRendererLineStrip:
-            // Draws every vertice as lines
-            mode = GL_LINE_STRIP;
-            glLineWidth(_lineWidth);
-            break;
-            
-        case B3DModelRendererLineLoop:
-            // Draws every vertice as lines
-            mode = GL_LINE_LOOP;
-            glLineWidth(_lineWidth);
-            break;
-            
-        case B3DModelRendererSolidStrip:
-            mode = GL_TRIANGLE_STRIP;
-            break;
-            
-        default:
-            // Regular drawing as indexed triangles
-            mode = GL_TRIANGLES;
-            break;
-    }
-
-    // Set shader and texture
-    [_material enable];
-    [_mesh enable];
-    
-    // Regular drawing as indexed triangles
-    glDrawElements(mode, _mesh.vertexIndexLength, GL_UNSIGNED_SHORT, [_mesh.vertexIndexData bytes]);
-
-    [_mesh disable];
-    [_material disable];
-        
-    switch (_renderer)
-    {
-        case B3DModelRendererPoint:
-            glEnable(GL_CULL_FACE);
-            break;
-            
-        default:
-            break;
-    }
 }
 
 @end

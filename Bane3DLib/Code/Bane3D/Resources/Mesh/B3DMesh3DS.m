@@ -31,6 +31,7 @@
 
 #import "B3DMesh3DS.h"
 
+#import "B3DMeshContainer.h"
 #import "B3DAsset+Protected.h"
 #import "B3DDatatypes.h"
 #import "B3DConstants.h"
@@ -38,13 +39,7 @@
 #import "CB3DMeshLoader3DS.h"
 
 
-
 @interface B3DMesh3DS ()
-{
-    @private
-        GLuint                  _vertexArrayObject;
-}
-
 @end
 
 
@@ -54,7 +49,7 @@
 
 + (B3DMesh3DS*) meshNamed:(NSString*)name
 {
-	B3DMesh3DS* mesh = [[B3DMesh3DS alloc] initWithMesh:name];
+	B3DMesh3DS* mesh = [[self alloc] initWithMesh:name];
 	return mesh;
 }
 
@@ -94,31 +89,33 @@
     uint verticeCount = model->m_pMeshs[0].iNumVerts;
     if (verticeCount > 0)
     {
-        dispatch_block_t block = ^(void)
-        {
-            if (_vertexArrayObject == 0)
-            {
-                // Create and bind a vertex array object.
-                glGenVertexArraysOES(1, &_vertexArrayObject);
-                glBindVertexArrayOES(_vertexArrayObject);
-                
-                // Generate the vertex buffer object (VBO)
-                [_vertexBuffer loadContent];
-                
-                // Bind the VBO so we can fill it with data
-                [_vertexBuffer enable];
-                
+//        dispatch_block_t block = ^(void)
+//        {
+//            if (_vertexArrayObject == 0)
+//            {
+//                // Create and bind a vertex array object.
+//                glGenVertexArraysOES(1, &_vertexArrayObject);
+//                glBindVertexArrayOES(_vertexArrayObject);
+//                
+//                // Generate the vertex buffer object (VBO)
+//                [_vertexBuffer loadContent];
+//                
+//                // Bind the VBO so we can fill it with data
+//                [_vertexBuffer enable];
+        
                 // Set the buffer's data
                 GLsizei size = sizeof(B3DMeshVertexData);
                 unsigned int uiSize = verticeCount * size;
                 
                 // Create empty buffer, we have to rewrite the data to get it interleaved.
-                [_vertexBuffer setData:NULL size:uiSize usage:GL_STATIC_DRAW];
-                
+//                [_vertexBuffer setData:NULL size:uiSize usage:GL_STATIC_DRAW];
+        
                 // Account for the model having a different coord sys in 3DS vs OpenGL and rotate by 270° around x
                 GLKMatrix3 rotateBy = GLKMatrix3MakeRotation(GLKMathDegreesToRadians(270.0f), 1.0f, 0.0f, 0.0f);
                 
-                B3DMeshVertexData* vertexBuffer = (B3DMeshVertexData*)glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+//        B3DMeshVertexData* vertexBuffer = (B3DMeshVertexData*)glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+        B3DMeshVertexData* vertexBuffer = (B3DMeshVertexData*) malloc(uiSize);
+        
                 for (int i = 0; i < verticeCount; i++)
                 {
                     GLKVector3 vertice = GLKVector3Make(model->m_pMeshs[0].pVerts[i].x,
@@ -137,47 +134,50 @@
 //                    vertexBuffer[i].texCoord1U  = 0;
 //                    vertexBuffer[i].texCoord1V  = 0;
                 }
-                glUnmapBufferOES(GL_ARRAY_BUFFER);
-                
+//                glUnmapBufferOES(GL_ARRAY_BUFFER);
+        
+        self.vertexCount = verticeCount;
+        self.vertexData = [NSData dataWithBytesNoCopy:vertexBuffer length:uiSize freeWhenDone:YES];        
                 // Set VAO values
                 {
-                    glEnableVertexAttribArray(B3DVertexAttributesPosition);
-                    glVertexAttribPointer(B3DVertexAttributesPosition, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(0));
+//!!                    glEnableVertexAttribArray(B3DVertexAttributesPosition);
+//  !!                  glVertexAttribPointer(B3DVertexAttributesPosition, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(0));
                     
                     //            glEnableVertexAttribArray(B3DVertexAttributesNormal);
                     //            glVertexAttribPointer(B3DVertexAttributesNormal, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(12));
                     
-                    glEnableVertexAttribArray(B3DVertexAttributesTexCoord0);
-                    glVertexAttribPointer(B3DVertexAttributesTexCoord0, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(12));
+//!!                    glEnableVertexAttribArray(B3DVertexAttributesTexCoord0);
+//  !!                  glVertexAttribPointer(B3DVertexAttributesTexCoord0, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(12));
                     
                     //            glEnableVertexAttribArray(B3DVertexAttributesTexCoord1);
                     //            glVertexAttribPointer(B3DVertexAttributesTexCoord1, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(28));
                 }
                 // Bind back to the default state.
-                glBindVertexArrayOES(0);
-                
-                
-                [_vertexBuffer disable];
-            }
-        };
+//!!                glBindVertexArrayOES(0);
         
-        if ([NSThread isMainThread])
-        {
-            block();
-        }
-        else
-        {
-            dispatch_sync(dispatch_get_main_queue(), block);
-        }
-        
+                
+//                [_vertexBuffer disable];
+//            }
+//        };
+//    
+//        if ([NSThread isMainThread])
+//        {
+//            block();
+//        }
+//        else
+//        {
+//            dispatch_sync(dispatch_get_main_queue(), block);
+//        }
+    
 
         
-        self.vertexIndexLength = model->m_pMeshs[0].iNumIndices;
+        self.vertexIndexCount = model->m_pMeshs[0].iNumIndices;
         
         self.vertexIndexData = [NSData dataWithBytes:model->m_pMeshs[0].pIndices
-                                               length:(model->m_pMeshs[0].iNumIndices * sizeof(unsigned short))];
+                                              length:(model->m_pMeshs[0].iNumIndices * sizeof(unsigned short))];
         
         success = YES;
+        self.dirty = YES;
     }
 
     model->Release();
@@ -187,31 +187,5 @@
 	
 	return success;
 }
-
-- (void) enable
-{
-    [super enable];
-    
-    glBindVertexArrayOES(_vertexArrayObject);
-}
-
-- (void) disable
-{
-    glBindVertexArrayOES(0);
-    
-    [super disable];
-}
-
-- (void) cleanUp
-{
-    if (_vertexArrayObject != 0)
-    {
-        glDeleteVertexArraysOES(1, &_vertexArrayObject);
-        _vertexArrayObject = 0;
-    }
-    
-    [super cleanUp];
-}
-
 
 @end

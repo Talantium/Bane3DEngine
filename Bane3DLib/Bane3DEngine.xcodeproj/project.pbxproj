@@ -84,6 +84,7 @@
 		100EB025182CE7FB00D93C0D /* B3DLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 100EB024182CE7FB00D93C0D /* B3DLayer.m */; };
 		105212591833D945002F910F /* B3DLayerRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 105212581833D945002F910F /* B3DLayerRenderer.m */; };
 		1052125C18353C60002F910F /* B3DRenderContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1052125B18353C60002F910F /* B3DRenderContainer.m */; };
+		106319BE1864530000653BF0 /* B3DMeshContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 106319BD1864530000653BF0 /* B3DMeshContainer.m */; };
 		109A500C183C097600A45700 /* B3DSpriteContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 109A500B183C097600A45700 /* B3DSpriteContainer.m */; };
 		663EEB6E1844E5580011E165 /* B3DTextureFontContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 663EEB6D1844E5580011E165 /* B3DTextureFontContainer.m */; };
 /* End PBXBuildFile section */
@@ -263,6 +264,8 @@
 		105212581833D945002F910F /* B3DLayerRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = B3DLayerRenderer.m; sourceTree = "<group>"; };
 		1052125A18353C60002F910F /* B3DRenderContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = B3DRenderContainer.h; sourceTree = "<group>"; };
 		1052125B18353C60002F910F /* B3DRenderContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = B3DRenderContainer.m; sourceTree = "<group>"; };
+		106319BC1864530000653BF0 /* B3DMeshContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = B3DMeshContainer.h; sourceTree = "<group>"; };
+		106319BD1864530000653BF0 /* B3DMeshContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = B3DMeshContainer.m; sourceTree = "<group>"; };
 		109A500A183C097600A45700 /* B3DSpriteContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = B3DSpriteContainer.h; sourceTree = "<group>"; };
 		109A500B183C097600A45700 /* B3DSpriteContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = B3DSpriteContainer.m; sourceTree = "<group>"; };
 		663EEB6C1844E5580011E165 /* B3DTextureFontContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = B3DTextureFontContainer.h; sourceTree = "<group>"; };
@@ -415,6 +418,8 @@
 				1052125B18353C60002F910F /* B3DRenderContainer.m */,
 				109A500A183C097600A45700 /* B3DSpriteContainer.h */,
 				109A500B183C097600A45700 /* B3DSpriteContainer.m */,
+				106319BC1864530000653BF0 /* B3DMeshContainer.h */,
+				106319BD1864530000653BF0 /* B3DMeshContainer.m */,
 				663EEB6C1844E5580011E165 /* B3DTextureFontContainer.h */,
 				663EEB6D1844E5580011E165 /* B3DTextureFontContainer.m */,
 				10093A08182CDA860055ABD6 /* B3DRenderMan.h */,
@@ -498,8 +503,8 @@
 		10093A2D182CDA860055ABD6 /* Loader */ = {
 			isa = PBXGroup;
 			children = (
-				10093A2E182CDA860055ABD6 /* CB3DMeshLoader3DS.cpp */,
 				10093A2F182CDA860055ABD6 /* CB3DMeshLoader3DS.h */,
+				10093A2E182CDA860055ABD6 /* CB3DMeshLoader3DS.cpp */,
 			);
 			path = Loader;
 			sourceTree = "<group>";
@@ -810,6 +815,7 @@
 				105212591833D945002F910F /* B3DLayerRenderer.m in Sources */,
 				10093A94182CDA860055ABD6 /* B3DGeometryHelper.m in Sources */,
 				10093AC5182CDA860055ABD6 /* B3DHelper.c in Sources */,
+				106319BE1864530000653BF0 /* B3DMeshContainer.m in Sources */,
 				10093AC4182CDA860055ABD6 /* B3DDebug.m in Sources */,
 				10093AB1182CDA860055ABD6 /* B3DSceneManager.m in Sources */,
 				10093AA1182CDA860055ABD6 /* B3DMaterial.m in Sources */,

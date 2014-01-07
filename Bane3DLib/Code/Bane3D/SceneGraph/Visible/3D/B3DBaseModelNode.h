@@ -30,8 +30,7 @@
 
 @class B3DMesh;
 
-
-typedef enum
+typedef NS_ENUM(NSUInteger, B3DModelRenderer)
 {
     B3DModelRendererSolid,
     B3DModelRendererSolidStrip,
@@ -39,16 +38,11 @@ typedef enum
     B3DModelRendererLines,
     B3DModelRendererLineStrip,
     B3DModelRendererLineLoop
-} B3DModelRenderer;
+};
 
 
 @interface B3DBaseModelNode : B3DVisibleNode
-{
-    @protected
-        B3DMesh*                _mesh;
-}
 
-@property (nonatomic, strong)   B3DMesh*            mesh;
 @property (nonatomic, assign)   B3DModelRenderer    renderer;
 @property (nonatomic, assign)   CGFloat             lineWidth; // !< Default: 4.0f
 

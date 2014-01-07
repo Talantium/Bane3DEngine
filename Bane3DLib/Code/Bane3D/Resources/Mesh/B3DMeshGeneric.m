@@ -30,6 +30,7 @@
 
 #import "B3DMeshGeneric.h"
 
+#import "B3DMeshContainer.h"
 #import "B3DAsset+Protected.h"
 #import "B3DDatatypes.h"
 #import "B3DConstants.h"
@@ -38,10 +39,6 @@
 
 
 @interface B3DMeshGeneric ()
-{
-  @private
-    GLuint                  _vertexArrayObject;
-}
 
 @property (nonatomic, readwrite, copy) NSString* meshName;
 @property (nonatomic, readwrite, copy) NSString* meshFileType;
@@ -73,121 +70,48 @@
 
 - (BOOL) loadContent
 {
-	if (_loaded)
-	{
-		return YES;
-	}
-	
-	BOOL success	= NO;
+	if (_loaded) return YES;
+	   
+    if (_loadingBlock == nil) return NO;
     
-    if (self.loadingBlock == nil)
-    {
-        return NO;
-    }
-    
+    BOOL success = NO;
+
     NSArray* points = self.loadingBlock(self.meshName, self.meshFileType);
-    
     NSUInteger verticeCount = points.count;
     if (verticeCount > 0)
     {
-        dispatch_block_t block = ^(void)
-        {
-            if (_vertexArrayObject == 0)
-            {
-                // Create and bind a vertex array object.
-                glGenVertexArraysOES(1, &_vertexArrayObject);
-                glBindVertexArrayOES(_vertexArrayObject);
-                
-                // Generate the vertex buffer object (VBO)
-                [_vertexBuffer loadContent];
-                
-                // Bind the VBO so we can fill it with data
-                [_vertexBuffer enable];
-                
-                NSAssert(_vertexBuffer != nil, @"No vertex buffer!");
-                
-                // Set the buffer's data
-                GLsizei size = sizeof(B3DMeshVertexData);
-                NSInteger uiSize = verticeCount * size;
-                
-                // Create empty buffer, we have to rewrite the data to get it interleaved.
-                [_vertexBuffer setData:NULL size:uiSize usage:GL_STATIC_DRAW];
-                
-                B3DMeshVertexData* vertexBuffer = (B3DMeshVertexData*)glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-                for (NSUInteger i = 0; i < verticeCount; i++)
-                {
-                    B3DPoint* point = points[i];
-                    vertexBuffer[i]             = [point pointAsMeshData];
-                }
-                glUnmapBufferOES(GL_ARRAY_BUFFER);
-                
-                // Set VAO values
-                {
-                    glEnableVertexAttribArray(B3DVertexAttributesPosition);
-                    glVertexAttribPointer(B3DVertexAttributesPosition, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(0));
-
-                    glEnableVertexAttribArray(B3DVertexAttributesTexCoord0);
-                    glVertexAttribPointer(B3DVertexAttributesTexCoord0, 2, GL_UNSIGNED_SHORT, GL_TRUE, size, BUFFER_OFFSET(12));
-                }
-                // Bind back to the default state.
-                glBindVertexArrayOES(0);
-                
-                [_vertexBuffer disable];
-            }
-        };
+        // Set the buffer's data
+        GLsizei size = sizeof(B3DMeshVertexData);
+        NSInteger uiSize = verticeCount * size;
         
-        if ([NSThread isMainThread])
+        B3DMeshVertexData* vertexBuffer = (B3DMeshVertexData*) malloc(uiSize);
+        for (NSUInteger i = 0; i < verticeCount; i++)
         {
-            block();
+            B3DPoint* point = points[i];
+            vertexBuffer[i]             = [point pointAsMeshData];
         }
-        else
-        {
-            dispatch_sync(dispatch_get_main_queue(), block);
-        }
+        
+        self.vertexCount = verticeCount;
+        self.vertexData = [NSData dataWithBytesNoCopy:vertexBuffer length:uiSize freeWhenDone:YES];
         
         unsigned short indices[verticeCount];
-        
         for (unsigned short i = 0; i < verticeCount; i++)
         {
             indices[i] = i;
         }
         
-        self.vertexIndexLength = verticeCount;
+        self.vertexIndexCount = verticeCount;
         
         self.vertexIndexData = [NSData dataWithBytes:indices
                                               length:(verticeCount * sizeof(unsigned short))];
         
         success = YES;
+        self.dirty = YES;
     }
     
 	_loaded = success;
 	
 	return success;
-}
-
-- (void) enable
-{
-    [super enable];
-    
-    glBindVertexArrayOES(_vertexArrayObject);
-}
-
-- (void) disable
-{
-    glBindVertexArrayOES(0);
-    
-    [super disable];
-}
-
-- (void) cleanUp
-{
-    if (_vertexArrayObject != 0)
-    {
-        glDeleteVertexArraysOES(1, &_vertexArrayObject);
-        _vertexArrayObject = 0;
-    }
-    
-    [super cleanUp];
 }
 
 @end
