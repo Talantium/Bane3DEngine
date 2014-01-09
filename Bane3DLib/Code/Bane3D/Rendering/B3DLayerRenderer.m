@@ -66,9 +66,10 @@
     {
         [self reassignContainer];
     }
-    
+
     for (B3DRenderContainer* container in _container)
     {
+        [container refreshNodes];
         [container updateBuffers];
         [container drawInLayer:_layer];
     }
@@ -85,6 +86,8 @@
             if ([node hasSceneGraphChanges])
             {
                 needResorting = YES;
+                [node sceneGraphChangesWereCommited];
+
                 break;
             }
         }
@@ -135,17 +138,16 @@
             }
         }
     }
-    
-    NSUInteger location = index + 1;
-    NSUInteger length = _container.count - location;
-    if (length > 0)
+
+    // Remove trailing containers if any
+    if (_container.count > 0)
     {
-        [_container removeObjectsInRange:NSMakeRange(location, length)];
-    }
-    
-    for (B3DRenderContainer* container in _container)
-    {
-        [container refreshNodes];
+        NSUInteger location = index + 1;
+        NSUInteger length = _container.count - location;
+        if (length > 0)
+        {
+            [_container removeObjectsInRange:NSMakeRange(location, length)];
+        }
     }
 }
 

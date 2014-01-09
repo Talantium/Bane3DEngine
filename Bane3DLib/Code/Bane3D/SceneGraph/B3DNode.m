@@ -43,6 +43,8 @@
 {
   @private
     BOOL					_sceneGraphHierarchyDirty;
+    BOOL                    _oldHidden;
+    GLfloat                 _oldWorldZPosition;
 }
 
 @property (nonatomic, readwrite,   weak) Bane3DEngine*  engine;
@@ -172,11 +174,13 @@
 - (void) updateWithSceneGraphInfo:(B3DSceneGraphInfo)info
 {  
     if (_sceneGraphHierarchyDirty)
-	{
+    {
         [self updateSceneGraphHierarchy];
-	}
-    
-    if (_transformDirty) [self updateTransform];
+        _hasSceneGraphChanges = YES;
+    }
+
+    if (_transformDirty)
+        [self updateTransform];
     
     GLKMatrixStackRef matrixStack = info.matrixStack;
     GLKMatrixStackPush(matrixStack);
@@ -186,30 +190,33 @@
     
     GLKVector4 translation = GLKMatrix4GetColumn(_worldTransform, 3);
     _worldPosition  = GLKVector3Make(translation.x, translation.y, translation.z);
-    
+
+    if (_oldWorldZPosition != _worldPosition.z)
+    {
+        _oldWorldZPosition = _worldPosition.z;
+        _hasSceneGraphChanges = YES;
+    }
+
+    _parentHidden = info.parentHidden;
+    if (_oldHidden != self.hidden)
+    {
+        _oldHidden = self.hidden;
+        _hasSceneGraphChanges = YES;
+    }
+
     if (_updateLoopBlock)
     {
         self.updateLoopBlock(self, info.deltaTime);
     }
-    
+
+    info.parentHidden = self.isHidden;
     for (B3DNode* node in _children)
     {
-        if (node.isHidden) continue;
-        
         [node updateWithSceneGraphInfo:info];
     }
+    info.parentHidden = _parentHidden;
     
     GLKMatrixStackPop(matrixStack);
-}
-
-- (void) drawInLayer:(B3DLayer*)layer
-{
-    for (B3DNode* node in _children)
-    {
-        if (node.isHidden) continue;
-        
-        [node drawInLayer:layer];
-    }
 }
 
 - (void) updateWithBlock:(B3DUpdateLoopBlock)updateLoopBlock
@@ -229,7 +236,17 @@
 		return YES;
 	}
 	
-	return (_hidden && _scene.isHidden);
+	return (_hidden || _parentHidden);
+}
+
+- (BOOL) hasSceneGraphChanges
+{
+    return _hasSceneGraphChanges;
+}
+
+- (void) sceneGraphChangesWereCommited
+{
+    _hasSceneGraphChanges = NO;
 }
 
 #pragma mark > Sorting

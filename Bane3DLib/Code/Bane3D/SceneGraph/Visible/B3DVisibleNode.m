@@ -90,11 +90,6 @@
     return Nil;
 }
 
-- (BOOL) hasSceneGraphChanges
-{
-    return NO;
-}
-
 - (void) updateRenderID
 {
     _renderID = self.material.renderID;

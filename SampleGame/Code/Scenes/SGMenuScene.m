@@ -53,7 +53,7 @@
         }
         [self.perspectiveLayer addChild:model];
         
-        SGButton* button = [SGButton buttonWithText:NSLocalizedString(@"SGMenuSceneShaderDemoButtonLabelText", nil)];
+        SGButton* button = [SGButton buttonWithText:@"DummyButton :)"];//NSLocalizedString(@"SGMenuSceneShaderDemoButtonLabelText", nil)];
         {
             button.textAlignment = SGButtonTextAlignmentCenter;
             [button setPositionToX:24 y:196 z:-3];
@@ -61,7 +61,7 @@
         }
         [self.orthoLayer addChild:button];
         
-        self.orthoLayer.hidden = YES;
+//        self.orthoLayer.hidden = YES;
     }
     
     return self;

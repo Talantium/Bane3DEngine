@@ -76,6 +76,7 @@
 	if (self)
 	{
 		_hidden                     = YES;
+        _parentHidden               = NO;
 		self.key                    = NSStringFromClass([self class]);
 		_handleSceneLoadingEvents   = NO;
 		_assetSet                   = [[B3DAssetSet alloc] init];
@@ -230,6 +231,7 @@
         B3DSceneGraphInfo info;
         info.matrixStack    = matrixStack;
         info.deltaTime      = [B3DTime deltaTime];
+        info.parentHidden   = _hidden;
         
         [layer updateWithSceneGraphInfo:info];
         

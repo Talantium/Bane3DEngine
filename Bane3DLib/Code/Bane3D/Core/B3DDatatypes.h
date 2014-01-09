@@ -85,5 +85,5 @@ typedef struct
 {
     GLKMatrixStackRef   matrixStack;
     double              deltaTime;
-//    __unsafe_unretained B3DScene* scene;
+    BOOL                parentHidden;
 } B3DSceneGraphInfo;

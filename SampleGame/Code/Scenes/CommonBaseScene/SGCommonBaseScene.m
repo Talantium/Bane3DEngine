@@ -57,7 +57,7 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
             [self.loadingShade translateByX:0 y:0 z:-1];
             self.loadingShade.hidden = YES;
         }
-//        [_orthoLayer addChild:self.loadingShade];
+        [_orthoLayer addChild:self.loadingShade];
 
         self.loadingCircle = [SGLoadingCircle loadingCircle];
         [self.loadingCircle translateByX:4 y:20 z:0.5];

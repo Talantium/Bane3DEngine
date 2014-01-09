@@ -148,35 +148,38 @@
     NSMutableSet* indexesToUpdate = [NSMutableSet set];
     
     BOOL nodesChanged = NO;
-    
-    B3DVisibleNode* newNode = nil;
-    B3DVisibleNode* presentNode = nil;
-    for (NSUInteger index = 0; index < _nodesNew.count; index++)
+
+    if (_nodesNew.count > 0)
     {
-        newNode = _nodesNew[index];
-        presentNode = (index < _nodesPresent.count ? _nodesPresent[index] : nil);
-        
-        if (presentNode == nil)
+        B3DVisibleNode* newNode = nil;
+        B3DVisibleNode* presentNode = nil;
+        for (NSUInteger index = 0; index < _nodesNew.count; index++)
         {
-            NSAssert((index <= _nodesPresent.count), @"Adding node with invalid index to currentNodes");
-            [_nodesPresent insertObject:newNode atIndex:index];
-            nodesChanged = YES;
-            [indexesToUpdate addObject:@(index)];
+            newNode = _nodesNew[index];
+            presentNode = (index < _nodesPresent.count ? _nodesPresent[index] : nil);
+
+            if (presentNode == nil)
+            {
+                NSAssert((index <= _nodesPresent.count), @"Adding node with invalid index to currentNodes");
+                [_nodesPresent insertObject:newNode atIndex:index];
+                nodesChanged = YES;
+                [indexesToUpdate addObject:@(index)];
+            }
+            else if (newNode != presentNode)
+            {
+                [_nodesPresent replaceObjectAtIndex:index withObject:newNode];
+                nodesChanged = YES;
+                [indexesToUpdate addObject:@(index)];
+            }
         }
-        else if (newNode != presentNode)
+
+        if (_nodesNew.count < _nodesPresent.count)
         {
-            [_nodesPresent replaceObjectAtIndex:index withObject:newNode];
+            [_nodesPresent removeObjectsInRange:NSMakeRange(_nodesNew.count, _nodesPresent.count - _nodesNew.count)];
             nodesChanged = YES;
-            [indexesToUpdate addObject:@(index)];
         }
     }
-    
-    if (_nodesNew.count < _nodesPresent.count)
-    {
-        [_nodesPresent removeObjectsInRange:NSMakeRange(_nodesNew.count, _nodesPresent.count - _nodesNew.count)];
-        nodesChanged = YES;
-    }
-    
+
     if (nodesChanged == NO)
     {
         for (NSUInteger index = 0; index < _nodesPresent.count; index++)

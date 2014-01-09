@@ -73,7 +73,7 @@ typedef void (^B3DAwakeBlock)(B3DNode* node);
 @property (nonatomic, readwrite, assign, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
 
 // Scene graph
-@property (nonatomic, readwrite, assign, getter=isHidden) BOOL hidden;
+@property (nonatomic, readwrite, assign, getter = isHidden) BOOL hidden;
 @property (nonatomic, readwrite, weak) B3DScene*       scene;
 @property (nonatomic, readwrite, weak) B3DLayer*       layer;
 @property (nonatomic, readonly,  weak) B3DNode*        parent;
@@ -134,6 +134,9 @@ typedef void (^B3DAwakeBlock)(B3DNode* node);
 - (void) addChild:(B3DNode*)node;
 - (BOOL) removeChild:(B3DNode*)node;
 - (BOOL) removeFromParent;
+
+- (BOOL) hasSceneGraphChanges;
+- (void) sceneGraphChangesWereCommited;
 
 - (NSComparisonResult) compareByZValueDescending:(B3DNode*)otherNode;
 - (NSComparisonResult) compareByZValueAscending:(B3DNode<B3DTouchResponder>*)otherNode;

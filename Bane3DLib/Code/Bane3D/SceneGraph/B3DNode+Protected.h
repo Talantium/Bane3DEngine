@@ -39,7 +39,9 @@
 {
   @protected
     BOOL					_hidden;
+    BOOL					_parentHidden;
     BOOL					_transformDirty;
+    BOOL                    _hasSceneGraphChanges;
     
     NSMutableDictionary*    _assetTokens;
     NSString*				_name;

@@ -49,7 +49,6 @@
 @property (nonatomic, readwrite, assign, getter = isOpaque) BOOL opaque;     //!< Does the node use alpha or transparency either in its color or texture? If yes, we must z-sort the node prior drawing it.
 
 - (Class) classForRenderContainer;
-- (BOOL) hasSceneGraphChanges;
 - (void) updateRenderID;
 - (void) updateVerticeData;
 
