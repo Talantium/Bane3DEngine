@@ -38,15 +38,15 @@
 
 @interface B3DVisibleNode : B3DNode
 
-@property (nonatomic, readonly,  assign) NSUInteger     renderID;
-@property (nonatomic, readonly,  assign, getter = isDirty) BOOL dirty;
+@property (nonatomic, readonly,  assign) NSUInteger         renderID;
+@property (nonatomic, readonly,  assign, getter = isDirty)  BOOL dirty;
 
-@property (nonatomic, readwrite, strong) B3DMesh*       mesh;
+@property (nonatomic, readwrite, strong) B3DMesh*           mesh;
 
-@property (nonatomic, readwrite,   copy) B3DMaterial*   material;   //!< We need to copy the material so each node has its own settings for color etc.
-@property (nonatomic, readwrite, strong) B3DColor*      color;      //!< More or less equals to material.baseColor, implemented to simplify the use of a color on a sprite, meshes don't use it
+@property (nonatomic, readwrite,   copy) B3DMaterial*       material;   //!< We need to copy the material so each node has its own settings for color etc.
+@property (nonatomic, readwrite, strong) B3DColor*          color;      //!< More or less equals to material.baseColor, implemented to simplify the use of a color on a sprite, meshes don't use it
 
-@property (nonatomic, readwrite, assign, getter=isOpaque) BOOL opaque;     //!< Does the node use alpha or transparency either in its color or texture? If yes, we must z-sort the node prior drawing it.
+@property (nonatomic, readwrite, assign, getter = isOpaque) BOOL opaque;     //!< Does the node use alpha or transparency either in its color or texture? If yes, we must z-sort the node prior drawing it.
 
 - (Class) classForRenderContainer;
 - (BOOL) hasSceneGraphChanges;

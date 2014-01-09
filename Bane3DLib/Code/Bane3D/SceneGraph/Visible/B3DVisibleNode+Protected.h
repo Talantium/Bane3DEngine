@@ -41,9 +41,6 @@
 
     BOOL                    _dirty;
     B3DMesh*                _mesh;
-//    NSUInteger              _vertexCount;
-//    NSMutableData*          _indexData;
-//    NSMutableData*          _vertexData;
 }
 
 @end

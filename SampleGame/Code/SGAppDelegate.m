@@ -30,7 +30,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor blackColor];
 
-    SGViewController* controller = [[SGViewController alloc] initWithNibName:nil bundle:nil];
+    SGViewController* controller = [[SGViewController alloc] init];
     self.window.rootViewController = controller;
 }
 

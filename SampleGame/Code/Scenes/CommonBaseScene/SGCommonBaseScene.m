@@ -45,7 +45,7 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
         _perspectiveLayer = [B3DLayer layerWithCamera:[B3DCameraPerspective camera]];
         _orthoLayer       = [B3DLayer layerWithCamera:[B3DCameraOrtho camera]];
         
-        self.layers =  @[_perspectiveLayer];//, _orthoLayer];
+        self.layers =  @[_perspectiveLayer, _orthoLayer];
         
         CGSize screenSize = [UIApplication currentSize];
         
@@ -58,8 +58,7 @@ const       float   SGCommonBaseSceneButtonFontSize     = 20.0f;
             self.loadingShade.hidden = YES;
         }
 //        [_orthoLayer addChild:self.loadingShade];
-        
-        
+
         self.loadingCircle = [SGLoadingCircle loadingCircle];
         [self.loadingCircle translateByX:4 y:20 z:0.5];
         [self.loadingShade addChild:self.loadingCircle];

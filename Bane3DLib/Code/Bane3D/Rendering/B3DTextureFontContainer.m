@@ -24,12 +24,6 @@
 
 
 @interface B3DTextureFontContainer ()
-{
-  @private
-    GLuint                  _vertexArrayObject;
-    GLuint                  _vertexBufferObject;
-}
-
 @end
 
 
@@ -40,99 +34,32 @@
     self = [super initWithNode:node];
     if (self)
     {
-        self.capacity = 1;
+        _capacity               = 1;
+        _defaultBufferSize      = sizeof(B3DTextureFontCharSprite) * B3DLabelMaxLabelLength;
+        _defaultBufferUsage     = GL_STREAM_DRAW;
     }
 
     return self;
 }
 
-- (void) createBuffers
+- (void) configureVertexArrayObject
 {
-    if (_vertexArrayObject != 0) return;
+    GLsizei size = sizeof(B3DTextureFontCharVertice);
 
-    // Creating VAO's must be done on the main thread, see
-    // http://stackoverflow.com/questions/7125257/can-vertex-array-objects-vaos-be-shared-across-eaglcontexts-in-opengl-es
+    glEnableVertexAttribArray(B3DVertexAttributesPosition);
+    glVertexAttribPointer(B3DVertexAttributesPosition, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(0));
 
-    dispatch_block_t block = ^(void)
-    {
-        // Create a buffer and array storage to render a single sprite node
-        if (_vertexArrayObject == 0)
-        {
-            // Create and bind a vertex array object.
-            glGenVertexArraysOES(1, &_vertexArrayObject);
-            glBindVertexArrayOES(_vertexArrayObject);
-
-            // Configure the attributes in the VAO.
-            glGenBuffers(1, &_vertexBufferObject);
-            glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(B3DTextureFontCharSprite) * B3DLabelMaxLabelLength, NULL, GL_STREAM_DRAW);
-
-            GLsizei size = sizeof(B3DTextureFontCharVertice);
-
-            glEnableVertexAttribArray(B3DVertexAttributesPosition);
-            glVertexAttribPointer(B3DVertexAttributesPosition, 3, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(0));
-
-            glEnableVertexAttribArray(B3DVertexAttributesTexCoord0);
-            glVertexAttribPointer(B3DVertexAttributesTexCoord0, 2, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(12));
-
-            // Bind back to the default state.
-            glBindVertexArrayOES(0);
-        }
-    };
-
-    if ([NSThread isMainThread])
-    {
-        block();
-    }
-    else
-    {
-        dispatch_sync(dispatch_get_main_queue(), block);
-    }
-}
-
-- (void) tearDownBuffers
-{
-    if (_vertexBufferObject != 0)
-    {
-        glDeleteBuffers(1, &_vertexBufferObject);
-
-        _vertexBufferObject = 0;
-    }
-
-    if (_vertexArrayObject != 0)
-    {
-        glDeleteVertexArraysOES(1, &_vertexArrayObject);
-
-        _vertexArrayObject = 0;
-    }
-}
-
-- (void) updateBufferWithNodesInSet:(NSSet*)set
-{
-    [self.prototypeNode updateVerticeData];
-
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
-
-    self.vertexCount = self.prototypeNode.mesh.vertexCount;
-    GLsizeiptr size = sizeof(B3DTextureFontCharVertice) * self.prototypeNode.mesh.vertexCount;
-
-    glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_STREAM_DRAW);
-    B3DTextureFontCharVertice* currentElementVertices = (B3DTextureFontCharVertice*) glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    memcpy(currentElementVertices, self.prototypeNode.mesh.vertexData.bytes, size);
-    glUnmapBufferOES(GL_ARRAY_BUFFER);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glEnableVertexAttribArray(B3DVertexAttributesTexCoord0);
+    glVertexAttribPointer(B3DVertexAttributesTexCoord0, 2, GL_FLOAT, GL_FALSE, size, BUFFER_OFFSET(12));
 }
 
 - (void) drawInLayer:(B3DLayer*)layer
 {
+    glBindVertexArrayOES(_vertexArrayObject);
+
     B3DMaterial* material = self.prototypeNode.material;
     B3DShader* shader = material.shader;
     B3DCamera* camera = layer.camera;
-
-    // Bind the vertex array storage for single sprite rendering
-    glBindVertexArrayOES(_vertexArrayObject);
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject);
 
     // Create Model-View-Projection-Matrix based on currently used scene camera
     GLKMatrix4 matrix_mvp = GLKMatrix4Multiply(camera.viewMatrix, self.prototypeNode.worldTransform);
@@ -144,13 +71,12 @@
 
     // Finally draw
     glDisable(GL_CULL_FACE);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, self.vertexCount);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, _vertexCount);
     glEnable(GL_CULL_FACE);
 
     [material disable];
 
     glBindVertexArrayOES(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 @end

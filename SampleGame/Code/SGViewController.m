@@ -19,6 +19,8 @@
 {
     // Always call super first!
     [super setupGLforView:view];
+
+    self.preferredFramesPerSecond = 60;
     
     // If needed, change some engine settings
     self.engine.clearColor = [B3DColor colorWithRGBHex:0x4e4e4e];

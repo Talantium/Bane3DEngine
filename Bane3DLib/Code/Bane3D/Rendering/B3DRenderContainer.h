@@ -14,14 +14,23 @@
 
 
 @interface B3DRenderContainer : NSObject
+{
+  @protected
+    NSUInteger  _capacity;
+    GLsizei     _vertexCount;
+
+    GLuint      _vertexArrayObject;
+    GLuint      _vertexBuffer;
+    NSUInteger  _vertexBufferSize;
+    NSUInteger  _defaultBufferSize;
+    GLenum      _defaultBufferUsage;
+}
 
 + (instancetype) containerWithNode:(B3DVisibleNode*)node;
 
 @property (nonatomic, readonly,    weak) B3DVisibleNode*    prototypeNode;
-@property (nonatomic, readwrite, assign) NSUInteger         capacity;
-@property (nonatomic, readwrite, assign) GLsizei            vertexCount;
 
--(id) initWithNode:(B3DVisibleNode*)node;
+- (id) initWithNode:(B3DVisibleNode*)node;
 
 - (BOOL) isSuitableForNode:(B3DVisibleNode*)node;
 - (void) addNode:(B3DVisibleNode*)node;
@@ -35,6 +44,8 @@
 @interface B3DRenderContainer (Protected)
 
 - (void) createBuffers;
+- (void) createBuffersWithVertexBufferSize:(NSUInteger)vertexBufferSize usage:(GLenum)usage;
+- (void) configureVertexArrayObject;
 - (void) tearDownBuffers;
 
 @end
