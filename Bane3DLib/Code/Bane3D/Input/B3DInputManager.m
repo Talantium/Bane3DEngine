@@ -236,7 +236,7 @@ const CGFloat           B3DInputAccelerometerDefaultFilterFactor    = 0.1f;
      startAccelerometerUpdatesToQueue:accelerometerQueue
      withHandler:^(CMAccelerometerData* accelerometerData, NSError* error)
      {
-         if (error != nil)
+         if (error == nil)
          {
              [weakSelf motionManagerDidProduceAccelerometerData:accelerometerData];
          }

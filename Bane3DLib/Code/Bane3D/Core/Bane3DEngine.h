@@ -108,8 +108,8 @@
  */
 @interface Bane3DEngine (Input)
 
-- (void) startAccelerometer;
-- (void) stopAccelerometer;
+- (void) enableAccelerometerInput;
+- (void) disableAccelerometerInput;
 
 - (void) handleTouchesBegan:(NSSet*)touches withEvent:(UIEvent*)event forView:(UIView*)parentView;
 - (void) handleTouchesMoved:(NSSet*)touches withEvent:(UIEvent*)event forView:(UIView*)parentView;
