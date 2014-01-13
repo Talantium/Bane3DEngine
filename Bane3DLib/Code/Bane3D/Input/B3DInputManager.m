@@ -33,6 +33,7 @@
 #import "SynthesizeSingleton.h"
 #import "B3DNode.h"
 #import "B3DConstants.h"
+#import "B3DMathHelper.h"
 
 
 const NSTimeInterval    B3DInputAccelerometerDefaultFrequency       = 60.0f;
@@ -260,6 +261,15 @@ const CGFloat           B3DInputAccelerometerDefaultFilterFactor    = 0.1f;
 	_accelerationFiltered.x = _accelerationRaw.x * factor + _accelerationFiltered.x * (1.0f - factor);
 	_accelerationFiltered.y = _accelerationRaw.y * factor + _accelerationFiltered.y * (1.0f - factor);
 	_accelerationFiltered.z = _accelerationRaw.z * factor + _accelerationFiltered.z * (1.0f - factor);
+
+    _accelerationFiltered.x = fmin(fmax(_accelerationFiltered.x, -1.0), 1.0);
+	_accelerationFiltered.y = fmin(fmax(_accelerationFiltered.y, -1.0), 1.0);
+	_accelerationFiltered.z = fmin(fmax(_accelerationFiltered.z, -1.0), 1.0);
+
+    if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        _accelerationFiltered.y *= -1.0;
+    }
 }
 
 

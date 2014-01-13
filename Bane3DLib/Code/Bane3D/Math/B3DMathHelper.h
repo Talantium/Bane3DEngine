@@ -118,6 +118,11 @@ inline float Random01()
 {
     return (double)arc4random() / (double)UINT32_MAX;
 }
+
+inline double quadraticFilter(double value)
+{
+    return copysign(pow(value, 2.0), value);
+}
     
 #else
 #warning This code requires to be compiled as Objective-C++!
