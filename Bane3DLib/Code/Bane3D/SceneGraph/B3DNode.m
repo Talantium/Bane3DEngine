@@ -97,7 +97,7 @@
 {
     [self initAssets];
 	
-    for (B3DNode* node in _childrenMutable)
+    for (B3DNode* node in _children)
 	{
 		[node create];
 	}
@@ -113,7 +113,7 @@
         self.awakeBlock(self);
     }
 	
-	for (B3DNode* node in _childrenMutable)
+	for (B3DNode* node in _children)
 	{
 		[node awake];
 	}
@@ -169,6 +169,16 @@
 {
     _children = [NSArray arrayWithArray:_childrenMutable];
     _sceneGraphHierarchyDirty = NO;
+}
+
+- (void) recursivelyUpdateSceneGraphHierarchy
+{
+    [self updateSceneGraphHierarchy];
+
+    for (B3DNode* node in _children)
+	{
+		[node recursivelyUpdateSceneGraphHierarchy];
+	}
 }
 
 - (void) updateWithSceneGraphInfo:(B3DSceneGraphInfo)info

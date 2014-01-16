@@ -57,14 +57,18 @@
         {
             button.textAlignment = SGButtonTextAlignmentCenter;
             [button setPositionToX:24 y:196 z:-3];
-            [button setAction:@selector(presentSceneWithKey:) forTarget:self withObject:NSStringFromClass([SGShaderDemoScene class])];
+//            [button setAction:@selector(presentSceneWithKey:) forTarget:self withObject:NSStringFromClass([SGShaderDemoScene class])];
+            [button setAction:@selector(doSomething:) forTarget:self withObject:button];
         }
         [self.orthoLayer addChild:button];
-        
-//        self.orthoLayer.hidden = YES;
     }
     
     return self;
+}
+
+- (void) doSomething:(id)sender
+{
+    NSLog(@"Button!");
 }
 
 

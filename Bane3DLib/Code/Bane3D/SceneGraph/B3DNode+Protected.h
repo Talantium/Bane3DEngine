@@ -55,6 +55,7 @@
 }
 
 - (void) updateSceneGraphHierarchy;
+- (void) recursivelyUpdateSceneGraphHierarchy;
 
 - (void) updateWithSceneGraphInfo:(B3DSceneGraphInfo)info;
 

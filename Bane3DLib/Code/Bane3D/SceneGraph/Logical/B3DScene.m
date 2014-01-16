@@ -123,7 +123,7 @@
 
 - (void) assetLoadingDidComplete
 {
-    [self updateSceneGraphHierarchy];
+    [self recursivelyUpdateSceneGraphHierarchy];
     
     for (B3DNode* node in _children)
 	{
@@ -241,9 +241,17 @@
 
 - (void) draw
 {
+    BOOL first = YES;
     for (B3DLayer* layer in _layers)
 	{
-        glClear(GL_DEPTH_BUFFER_BIT);
+        if (first)
+        {
+            first = NO;
+        }
+        else
+        {
+            glClear(GL_DEPTH_BUFFER_BIT);
+        }
 
 		[layer draw];        
 	}
