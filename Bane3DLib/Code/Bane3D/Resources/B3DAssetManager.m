@@ -133,12 +133,12 @@
                 return;
             }
         }
-        
+
         if ([_delegate respondsToSelector:@selector(sceneLoadingDidBeganForScene:)])
         {
-            [_delegate sceneLoadingDidBeganForScene:scene];
+            [self performBlockOnMainThread:^{ [_delegate sceneLoadingDidBeganForScene:scene]; }];
         }
-	
+
         [_activeAssets addAssets:scene.assetSet];
         NSSet* assets = [_activeAssets assetsToLoad];
         BOOL success = ([assets count] == 0);
@@ -167,12 +167,13 @@
             
             loadedAssetsCount++;
             progress = loadedAssetsCount/(float)([assets count] + 1);
+
             if ([_delegate respondsToSelector:@selector(sceneLoadingForScene:didAchieveProgress:)])
             {
-                [_delegate sceneLoadingForScene:scene didAchieveProgress:progress];
+                [self performBlockOnMainThread:^{ [_delegate sceneLoadingForScene:scene didAchieveProgress:progress]; }];
             }
         }
-	
+
         if (success)
         {
             [scene assetLoadingDidComplete];
@@ -182,7 +183,7 @@
             // Send 1 last progress message, to make sure the delegate receives a 100% message
             if ([_delegate respondsToSelector:@selector(sceneLoadingForScene:didAchieveProgress:)])
             {
-                [_delegate sceneLoadingForScene:scene didAchieveProgress:1.0f];
+                [self performBlockOnMainThread:^{ [_delegate sceneLoadingForScene:scene didAchieveProgress:1.0f]; }];
             }
             
             // Send message for further initialisation
@@ -191,14 +192,14 @@
             
             if ([_delegate respondsToSelector:@selector(sceneLoadingDidFinishSuccessfulForScene:)])
             {
-                [_delegate sceneLoadingDidFinishSuccessfulForScene:scene];
+                [self performBlockOnMainThread:^{ [_delegate sceneLoadingDidFinishSuccessfulForScene:scene]; }];
             }
         }
         else
         {
             if ([_delegate respondsToSelector:@selector(sceneLoadingDidFailForScene:)])
             {
-                [_delegate sceneLoadingDidFailForScene:scene];
+                [self performBlockOnMainThread:^{ [_delegate sceneLoadingDidFailForScene:scene]; }];
             }
         }
         
@@ -211,6 +212,18 @@
         // Cleanup
         secondContext = nil;
 	}
+}
+
+- (void) performBlockOnMainThread:(dispatch_block_t)block
+{
+    if ([NSThread isMainThread])
+    {
+        block();
+    }
+    else
+    {
+        dispatch_sync(dispatch_get_main_queue(), block);
+    }
 }
 
 - (void) cleanUpAssetsForScene:(B3DScene*)scene
